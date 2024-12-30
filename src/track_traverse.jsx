@@ -5,7 +5,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
 import CannonDebugger from "cannon-es-debugger";
 
-// Import config (sceneData.json provided by you)
+// Import config (assuming it's in the same directory, adjust the path accordingly)
 import config from "./sceneData.json"; // Import the sceneData.json file here
 
 // Scene, Camera, and Renderer Setup
@@ -22,7 +22,7 @@ document.body.appendChild(renderer.domElement);
 
 // Physics World Setup
 const world = new CANNON.World();
-world.gravity.set(0, -9.82, 0);
+world.gravity.set(0, -9.82, 0); // Ensure gravity is applied correctly
 
 // Cannon Debugger
 const cannonDebugger = new CannonDebugger(scene, world);
@@ -38,26 +38,27 @@ scene.add(directionalLight);
 const ballMaterial = new CANNON.Material("ballMaterial");
 const trackMaterial = new CANNON.Material("trackMaterial");
 
-// Define Contact Material between ball and track
+// Adjust Contact Material for Ball and Track
 const contactMaterial = new CANNON.ContactMaterial(
   ballMaterial,
   trackMaterial,
   {
-    friction: config.friction || 0.5, // Use JSON config for friction
-    restitution: config.restitution || 0.001, // Use JSON config for restitution
+    friction: 1.0, // Increase friction to make the ball stop
+    restitution: 0.1, // Low restitution so the ball doesn't bounce too much
   }
 );
 world.addContactMaterial(contactMaterial);
 
-// Load Track Model
+// Load Track
 const loader = new GLTFLoader();
 loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
   const track = gltf.scene;
   scene.add(track);
 
-  // Iterate over each mesh in the track model and create Trimesh
+  // Iterate over each mesh in the track model
   track.traverse((child) => {
     if (child.isMesh) {
+      // Clone geometry to avoid modifying the original
       const geometry = child.geometry.clone();
 
       // Apply world transformations to the geometry
@@ -70,7 +71,7 @@ loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
       // Create a Trimesh shape
       const shape = new CANNON.Trimesh(vertices, indices);
 
-      // Create a static body with mass 0
+      // Create a static body with mass 0 (static body)
       const body = new CANNON.Body({
         mass: 0, // Static body (doesn't move)
         material: trackMaterial,
@@ -78,34 +79,24 @@ loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
 
       body.addShape(shape);
 
-      // Manually set the position and rotation based on the JSON data
-      const position = config.trackPositions?.[child.name] || {
-        x: 0,
-        y: 0,
-        z: 0,
-      };
-      const rotation = config.trackRotations?.[child.name] || {
-        x: 0,
-        y: 0,
-        z: 0,
-      };
+      // Manually set the position from config.json
+      const position = new THREE.Vector3(
+        config.trackPositions?.[child.name]?.x || 0,
+        config.trackPositions?.[child.name]?.y || 0,
+        config.trackPositions?.[child.name]?.z || 0
+      );
 
-      // Set the position and rotation from the JSON config
+      // Set the position and rotation from the mesh
       body.position.set(position.x, position.y, position.z);
-      body.quaternion.setFromEuler(
-        new THREE.Euler(rotation.x, rotation.y, rotation.z)
+      body.quaternion.set(
+        child.rotation.x,
+        child.rotation.y,
+        child.rotation.z,
+        child.rotation.w
       );
 
       // Add body to the world
       world.addBody(body);
-
-      // For debugging, visualize the Trimesh in the scene
-      const material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true,
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
     }
   });
   console.log("Track model processed:", track);
@@ -124,6 +115,8 @@ const ballShape = new CANNON.Sphere(ballRadius);
 const ballBody = new CANNON.Body({
   mass: config.ballMass || 5,
   material: ballMaterial, // Use ball material
+  linearDamping: 0.9, // Apply damping to slow down the ball's linear motion
+  angularDamping: 0.9, // Damping the ball's rotational motion
 });
 ballBody.addShape(ballShape);
 ballBody.position.set(
@@ -152,6 +145,7 @@ window.addEventListener("keyup", (event) => {
   if (event.key in keys) keys[event.key] = false;
 });
 
+// Update Ball Controls
 function updateBallControls() {
   const force = config.ballForce || 7;
   if (keys.w) {
@@ -197,5 +191,3 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-export default App;
