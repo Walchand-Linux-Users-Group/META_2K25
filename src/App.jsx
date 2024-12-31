@@ -6,7 +6,7 @@ import * as CANNON from "cannon-es";
 import CannonDebugger from "cannon-es-debugger";
 
 // Import config (sceneData.json provided by you)
-import config from "./sceneData.json"; // Import the sceneData.json file here
+import config from "./sceneData.json";
 
 // Scene, Camera, and Renderer Setup
 const scene = new THREE.Scene();
@@ -43,24 +43,24 @@ const contactMaterial = new CANNON.ContactMaterial(
   ballMaterial,
   trackMaterial,
   {
-    friction: config.friction || 0.5, // Use JSON config for friction
-    restitution: config.restitution || 0.001, // Use JSON config for restitution
+    friction: config.friction || 0.5,
+    restitution: config.restitution || 0.1,
   }
 );
 world.addContactMaterial(contactMaterial);
 
-// Load Track Model
+// Load Track Model and Generate Trimesh
 const loader = new GLTFLoader();
 loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
   const track = gltf.scene;
   scene.add(track);
 
-  // Iterate over each mesh in the track model and create Trimesh
+  // Process each mesh in the track
   track.traverse((child) => {
     if (child.isMesh) {
       const geometry = child.geometry.clone();
 
-      // Apply world transformations to the geometry
+      // Apply world transformations
       geometry.applyMatrix4(child.matrixWorld);
 
       // Extract vertices and indices
@@ -70,15 +70,14 @@ loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
       // Create a Trimesh shape
       const shape = new CANNON.Trimesh(vertices, indices);
 
-      // Create a static body with mass 0
+      // Create a static body for the Trimesh
       const body = new CANNON.Body({
-        mass: 0, // Static body (doesn't move)
+        mass: 0,
         material: trackMaterial,
       });
-
       body.addShape(shape);
 
-      // Manually set the position and rotation based on the JSON data
+      // Set position and rotation from JSON config
       const position = config.trackPositions?.[child.name] || {
         x: 0,
         y: 0,
@@ -89,29 +88,40 @@ loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
         y: 0,
         z: 0,
       };
-
-      // Set the position and rotation from the JSON config
       body.position.set(position.x, position.y, position.z);
-      body.quaternion.setFromEuler(
-        new THREE.Euler(rotation.x, rotation.y, rotation.z)
-      );
+      body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
 
-      // Add body to the world
+      // Add body to the physics world
       world.addBody(body);
 
-      // For debugging, visualize the Trimesh in the scene
-      const material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        wireframe: true,
-      });
-      const mesh = new THREE.Mesh(geometry, material);
-      scene.add(mesh);
+      // Add debugging wireframe
+      addWireframe(body);
     }
   });
-  console.log("Track model processed:", track);
 });
 
-// Ball Setup from config.json
+// Function to Add Green Wireframe for Debugging
+function addWireframe(body) {
+  body.shapes.forEach((shape) => {
+    if (shape instanceof CANNON.Trimesh) {
+      const vertices = shape.vertices;
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(new Float32Array(vertices), 3)
+      );
+
+      const edges = new THREE.EdgesGeometry(geometry);
+      const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+      const wireframe = new THREE.LineSegments(edges, material);
+
+      wireframe.position.copy(body.position);
+      scene.add(wireframe);
+    }
+  });
+}
+
+// Ball Setup from Config
 const ballRadius = config.ballRadius || 0.5;
 const ballGeometry = new THREE.SphereGeometry(ballRadius, 32, 32);
 const ballMaterialMesh = new THREE.MeshStandardMaterial({
@@ -123,7 +133,7 @@ scene.add(ballMesh);
 const ballShape = new CANNON.Sphere(ballRadius);
 const ballBody = new CANNON.Body({
   mass: config.ballMass || 5,
-  material: ballMaterial, // Use ball material
+  material: ballMaterial,
 });
 ballBody.addShape(ballShape);
 ballBody.position.set(
@@ -133,7 +143,7 @@ ballBody.position.set(
 );
 world.addBody(ballBody);
 
-// Camera Position from config
+// Camera Position from Config
 camera.position.set(
   config.cameraPosition?.x || 10,
   config.cameraPosition?.y || 20,
@@ -185,7 +195,7 @@ function animate() {
   // Update Cannon Debugger
   cannonDebugger.update();
 
-  // Render the Scene
+  // Render Scene
   renderer.render(scene, camera);
 }
 
