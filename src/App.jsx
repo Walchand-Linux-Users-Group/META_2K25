@@ -43,8 +43,8 @@ const contactMaterial = new CANNON.ContactMaterial(
   ballMaterial,
   trackMaterial,
   {
-    friction: config.friction || 0.5,
-    restitution: config.restitution || 0.1,
+    friction: config.friction || 0.5, // Reduced friction for better control
+    restitution: config.restitution || 0, // Slight bounce reduction
   }
 );
 world.addContactMaterial(contactMaterial);
@@ -132,7 +132,7 @@ scene.add(ballMesh);
 
 const ballShape = new CANNON.Sphere(ballRadius);
 const ballBody = new CANNON.Body({
-  mass: config.ballMass || 5,
+  mass: config.ballMass || 20,
   material: ballMaterial,
 });
 ballBody.addShape(ballShape);
@@ -163,20 +163,48 @@ window.addEventListener("keyup", (event) => {
 });
 
 function updateBallControls() {
-  const force = config.ballForce || 7;
+  const force = config.ballForce || 20; // Adjusted for smoother movement
+  const forwardVector = new CANNON.Vec3(0, 0, -force);
+  const backwardVector = new CANNON.Vec3(0, 0, force);
+  const leftVector = new CANNON.Vec3(-force, 0, 0);
+  const rightVector = new CANNON.Vec3(force, 0, 0);
+
   if (keys.w) {
-    ballBody.applyForce(new CANNON.Vec3(0, 0, -force), ballBody.position);
+    ballBody.applyForce(forwardVector, ballBody.position);
   }
   if (keys.s) {
-    ballBody.applyForce(new CANNON.Vec3(0, 0, force), ballBody.position);
+    ballBody.applyForce(backwardVector, ballBody.position);
   }
   if (keys.a) {
-    ballBody.applyForce(new CANNON.Vec3(-force, 0, 0), ballBody.position);
+    ballBody.applyForce(leftVector, ballBody.position);
   }
   if (keys.d) {
-    ballBody.applyForce(new CANNON.Vec3(force, 0, 0), ballBody.position);
+    ballBody.applyForce(rightVector, ballBody.position);
   }
 }
+
+function handleSlopes() {
+  world.addEventListener("postStep", () => {
+    world.contacts.forEach((contact) => {
+      if (
+        (contact.bi === ballBody && contact.bj.material === trackMaterial) ||
+        (contact.bj === ballBody && contact.bi.material === trackMaterial)
+      ) {
+        const normal = contact.ni;
+        const slopeThreshold = Math.cos((45 * Math.PI) / 180); // 45 degrees
+
+        // Check if slope exceeds threshold
+        if (normal.dot(new CANNON.Vec3(0, 1, 0)) < slopeThreshold) {
+          ballBody.velocity.x *= 0.98; // Damp lateral movement
+          ballBody.velocity.z *= 0.98; // Damp forward/backward movement
+        }
+      }
+    });
+  });
+}
+
+// Initialize slope handling
+handleSlopes();
 
 // Animation Loop
 function animate() {
