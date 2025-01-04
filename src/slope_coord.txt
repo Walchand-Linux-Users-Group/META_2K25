@@ -35,3 +35,25 @@ w
 S
 a == d
 d == a
+
+
+spawn points:
+
+Ball Coordinates: X: 0.00, Y: 6.95, Z: 0.00
+Ball Coordinates: X: -20.81, Y: 6.95, Z: -0.07
+Ball Coordinates: X: -21.32, Y: 6.95, Z: -10.58
+Ball Coordinates: X: -42.31, Y: 9.71, Z: -10.50
+Ball Coordinates: X: -55.24, Y: 6.95, Z: -11.30
+Ball Coordinates: X: -63.95, Y: 6.95, Z: -6.64
+Ball Coordinates: X: -63.86, Y: 6.95, Z: 2.24
+Ball Coordinates: X: -63.67, Y: 6.95, Z: 12.65
+Ball Coordinates: X: -63.96, Y: 6.95, Z: 22.17
+Ball Coordinates: X: -63.52, Y: 8.75, Z: 38.78
+Ball Coordinates: X: -53.33, Y: 4.47, Z: 38.07
+Ball Coordinates: X: -42.20, Y: 5.76, Z: 34.64
+Ball Coordinates: X: -25.31, Y: 5.27, Z: 36.54
+
+
+
+End point:
+Ball Coordinates: X: -1.71, Y: 12.13, Z: 60.18

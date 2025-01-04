@@ -25,6 +25,9 @@ controls.enableDamping = true; // Adds smooth motion to mouse controls
 controls.dampingFactor = 0.1;
 controls.minDistance = 5; // Minimum zoom distance
 controls.maxDistance = 100; // Maximum zoom distance
+controls.enableRotate = true; // Enable camera rotation
+controls.enablePan = true; // Allow panning
+controls.enableZoom = true; // Enable zoom
 
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
@@ -71,11 +74,85 @@ scene.add(ambientLight);
 
 // Load track and debug slopes
 const loader = new GLTFLoader();
+const textureLoader = new THREE.TextureLoader();
+
+// Load the texture for the model (image stored in the public folder)
+const texture = textureLoader.load("/image.png"); // Path to your texture file in the public folder
+
 const config = {
   trackModelPath: "/models/main_track.glb",
   trackPositions: {},
   trackRotations: {},
 };
+
+// List of respawn points
+const respawnPoints = [
+  { x: 0.0, y: 6.95, z: 0.0 },
+  { x: -20.81, y: 6.95, z: -0.07 },
+  { x: -21.32, y: 6.95, z: -10.58 },
+  { x: -42.31, y: 9.71, z: -10.5 },
+  { x: -55.24, y: 6.95, z: -11.3 },
+  { x: -63.95, y: 6.95, z: -6.64 },
+  { x: -63.86, y: 6.95, z: 2.24 },
+  { x: -63.67, y: 6.95, z: 12.65 },
+  { x: -63.96, y: 6.95, z: 22.17 },
+  { x: -63.52, y: 8.75, z: 38.78 },
+  { x: -53.33, y: 4.47, z: 38.07 },
+  { x: -42.2, y: 5.76, z: 34.64 },
+  { x: -25.31, y: 5.27, z: 36.54 },
+];
+
+// Function to calculate the distance between two points
+function calculateDistance(p1, p2) {
+  return Math.sqrt(
+    Math.pow(p2.x - p1.x, 2) +
+      Math.pow(p2.y - p1.y, 2) +
+      Math.pow(p2.z - p1.z, 2)
+  );
+}
+
+// Function to find the nearest respawn point to the ball's current position
+function findNearestRespawnPoint(ballPosition) {
+  let closestPoint = respawnPoints[0];
+  let minDistance = calculateDistance(ballPosition, closestPoint);
+
+  // Loop through all respawn points to find the nearest one
+  for (let i = 1; i < respawnPoints.length; i++) {
+    const distance = calculateDistance(ballPosition, respawnPoints[i]);
+    if (distance < minDistance) {
+      closestPoint = respawnPoints[i];
+      minDistance = distance;
+    }
+  }
+  return closestPoint;
+}
+
+// Function to check if the ball has fallen off the map (e.g., y < -10)
+function checkBallFallOff() {
+  const ballPosition = ballBody.position;
+
+  // If the ball falls off the map (below a certain Y position)
+  if (ballPosition.y < -1) {
+    // Find the nearest respawn point
+    const nearestRespawn = findNearestRespawnPoint(ballPosition);
+
+    // Reset the ball's position to the nearest respawn point
+    ballBody.position.set(
+      nearestRespawn.x,
+      nearestRespawn.y + 2,
+      nearestRespawn.z
+    );
+    ballBody.velocity.set(0, 0, 0); // Reset velocity to zero
+    ballBody.angularVelocity.set(0, 0, 0); // Reset angular velocity to zero
+
+    // Clear keyState to avoid residual movement
+    keyState = {};
+
+    // Ensure the ball mesh also reflects the updated position
+    ballMesh.position.copy(ballBody.position);
+    ballMesh.quaternion.copy(ballBody.quaternion);
+  }
+}
 
 // Debugging Function: Add Normals Visualization
 function addNormals(mesh, color = 0xffffff) {
@@ -93,8 +170,10 @@ loader.load(config.trackModelPath || "/models/main_track.glb", (gltf) => {
 
   track.traverse((child) => {
     if (child.isMesh) {
-      // Set track material color to white
-      child.material = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White color
+      // Apply texture to the model's material
+      child.material = new THREE.MeshStandardMaterial({
+        map: texture, // Apply the loaded texture here
+      });
 
       const geometry = child.geometry.clone();
       geometry.applyMatrix4(child.matrixWorld);
@@ -130,7 +209,7 @@ loader.load(config.trackModelPath || "/models/main_track.glb", (gltf) => {
 });
 
 // WSAD Controls for Ball Movement
-const keyState = {};
+let keyState = {};
 window.addEventListener("keydown", (event) => {
   keyState[event.code] = true;
 });
@@ -152,13 +231,29 @@ function handleBallMovement() {
 function animate() {
   requestAnimationFrame(animate);
 
+  // Check if the ball has fallen off the map
+  checkBallFallOff();
+
   world.step(1 / 60);
   handleBallMovement();
 
+  // Update ball mesh with physics updates
   ballMesh.position.copy(ballBody.position);
   ballMesh.quaternion.copy(ballBody.quaternion);
 
-  controls.update(); // Update OrbitControls
+  // Camera follows the ball
+  const cameraYOffset = 17; // Fixed height for the camera
+  const cameraZOffset = -10; // Fixed distance behind the ball in Z-direction
+
+  // Update camera position to follow the ball
+  camera.position.x = ballBody.position.x;
+  camera.position.y = cameraYOffset; // Fixed height
+  camera.position.z = ballBody.position.z + cameraZOffset;
+
+  // Lock the camera's angle to look directly at the ball
+  camera.lookAt(ballBody.position.x, ballBody.position.y, ballBody.position.z);
+
+  // Render the scene
   renderer.render(scene, camera);
 }
 
