@@ -1,15 +1,10 @@
-
 // Import necessary libraries
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
-import CannonDebugger from "cannon-es-debugger";
 
-// Import config (sceneData.json provided by you)
-import config from "./sceneData.json";
-
-// Scene, Camera, and Renderer Setup
+// Three.js and Cannon.js setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -18,67 +13,109 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 const renderer = new THREE.WebGLRenderer();
+
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Physics World Setup
+// Initialize ball position and camera settings
+const ballStartPosition = new THREE.Vector3(0, 15, 0);
+camera.position.set(8, 17, -10); // Initial camera position (keeping Y fixed)
+camera.lookAt(ballStartPosition);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // Adds smooth motion to mouse controls
+controls.dampingFactor = 0.1;
+controls.minDistance = 5; // Minimum zoom distance
+controls.maxDistance = 100; // Maximum zoom distance
+
 const world = new CANNON.World();
 world.gravity.set(0, -9.82, 0);
+world.broadphase = new CANNON.NaiveBroadphase();
+world.solver.iterations = 10;
 
-// Cannon Debugger
-const cannonDebugger = new CannonDebugger(scene, world);
-
-// Lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambientLight);
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(10, 10, 10);
-scene.add(directionalLight);
-
-// Create Physics Materials
-const ballMaterial = new CANNON.Material("ballMaterial");
+// Track material
 const trackMaterial = new CANNON.Material("trackMaterial");
 
-// Define Contact Material between ball and track
-const contactMaterial = new CANNON.ContactMaterial(
-  ballMaterial,
+// Ball material
+const ballMaterial = new CANNON.Material("ballMaterial");
+const ballContactMaterial = new CANNON.ContactMaterial(
   trackMaterial,
+  ballMaterial,
   {
-    friction: config.friction || 0.8,
-    restitution: config.restitution || 0.1,
+    friction: 10,
+    restitution: 0,
   }
 );
-world.addContactMaterial(contactMaterial);
+world.addContactMaterial(ballContactMaterial);
 
-// Load Track Model and Generate Trimesh
+// Ball setup
+const ballGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+const ballMaterialThree = new THREE.MeshStandardMaterial({ color: 0x0077ff }); // White color
+const ballMesh = new THREE.Mesh(ballGeometry, ballMaterialThree);
+scene.add(ballMesh);
+
+const ballBody = new CANNON.Body({
+  mass: 20,
+  material: ballMaterial,
+  shape: new CANNON.Sphere(0.5),
+});
+ballBody.position.set(
+  ballStartPosition.x,
+  ballStartPosition.y,
+  ballStartPosition.z
+);
+world.addBody(ballBody);
+
+// Light setup
+const light = new THREE.PointLight(0xffffff, 1, 100);
+light.position.set(10, 10, 10);
+scene.add(light);
+
+// Adding a global light (ambient light)
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
+scene.add(ambientLight);
+
+// Load track and debug slopes
 const loader = new GLTFLoader();
+const config = {
+  trackModelPath: "../models/track.glb",
+  trackPositions: {},
+  trackRotations: {},
+};
+
+// Debugging Function: Add Normals Visualization
+function addNormals(mesh, color = 0xffffff) {
+  if (mesh.geometry.attributes.normal) {
+    const wireframe = new THREE.WireframeGeometry(mesh.geometry);
+    const lineMaterial = new THREE.LineBasicMaterial({ color: color });
+    const line = new THREE.LineSegments(wireframe, lineMaterial);
+    mesh.add(line);
+  }
+}
+
 loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
   const track = gltf.scene;
   scene.add(track);
 
-  // Process each mesh in the track
   track.traverse((child) => {
     if (child.isMesh) {
-      const geometry = child.geometry.clone();
+      // Set track material color to white
+      child.material = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White color
 
-      // Apply world transformations
+      const geometry = child.geometry.clone();
       geometry.applyMatrix4(child.matrixWorld);
 
-      // Extract vertices and indices
       const vertices = Array.from(geometry.attributes.position.array);
       const indices = Array.from(geometry.index.array);
 
-      // Create a Trimesh shape
       const shape = new CANNON.Trimesh(vertices, indices);
 
-      // Create a static body for the Trimesh
       const body = new CANNON.Body({
         mass: 0,
         material: trackMaterial,
       });
       body.addShape(shape);
 
-      // Set position and rotation from JSON config
       const position = config.trackPositions?.[child.name] || {
         x: 0,
         y: 0,
@@ -92,213 +129,54 @@ loader.load(config.trackModelPath || "../models/track.glb", (gltf) => {
       body.position.set(position.x, position.y, position.z);
       body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
 
-      // Add body to the physics world
       world.addBody(body);
-
-      // Add debugging wireframe
-      addWireframe(body);
+      addNormals(child);
     }
   });
 });
 
-// Function to Add Green Wireframe for Debugging
-function addWireframe(body) {
-  body.shapes.forEach((shape) => {
-    if (shape instanceof CANNON.Trimesh) {
-      const vertices = shape.vertices;
-      const geometry = new THREE.BufferGeometry();
-      geometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(new Float32Array(vertices), 3)
-      );
-
-      const edges = new THREE.EdgesGeometry(geometry);
-      const material = new THREE.LineBasicMaterial({ color: 0x00ff00 });
-      const wireframe = new THREE.LineSegments(edges, material);
-
-      wireframe.position.copy(body.position);
-      scene.add(wireframe);
-    }
-  });
-}
-
-// Ball Setup from Config
-const ballRadius = config.ballRadius || 0.5;
-const ballGeometry = new THREE.SphereGeometry(ballRadius, 32, 32);
-const ballMaterialMesh = new THREE.MeshStandardMaterial({
-  color: config.ballColor || 0xff0000,
-});
-const ballMesh = new THREE.Mesh(ballGeometry, ballMaterialMesh);
-scene.add(ballMesh);
-
-const ballShape = new CANNON.Sphere(ballRadius);
-const ballBody = new CANNON.Body({
-  mass: config.ballMass || 20,
-  material: ballMaterial,
-});
-ballBody.addShape(ballShape);
-ballBody.position.set(
-  config.ballStartPosition?.x || -63,
-  config.ballStartPosition?.y || 10,
-  config.ballStartPosition?.z || 23
-);
-world.addBody(ballBody);
-
-// Camera Position from Config
-camera.position.set(
-  config.cameraPosition?.x || 10,
-  config.cameraPosition?.y || 20,
-  config.cameraPosition?.z || 15
-);
-
-// Controls
-const controls = new OrbitControls(camera, renderer.domElement);
-
-// Keyboard Controls
-const keys = { w: false, a: false, s: false, d: false };
+// WSAD Controls for Ball Movement
+const keyState = {};
 window.addEventListener("keydown", (event) => {
-  if (event.key in keys) keys[event.key] = true;
+  keyState[event.code] = true;
 });
 window.addEventListener("keyup", (event) => {
-  if (event.key in keys) keys[event.key] = false;
+  keyState[event.code] = false;
 });
 
-function updateBallControls() {
-  const force = config.ballForce || 15; // Reduced force for smoother movement
-  const reducedForce = force * 0.5; // Half force for slopes
+// Function to handle ball movement
+function handleBallMovement() {
+  const speed = 0.1;
 
-  if (keys.w) {
-    ballBody.applyForce(
-      new CANNON.Vec3(
-        0,
-        0,
-        Math.abs(ballBody.velocity.y) > 0.5 ? -reducedForce : -force
-      ),
-      ballBody.position
-    );
-  }
-  if (keys.s) {
-    ballBody.applyForce(
-      new CANNON.Vec3(
-        0,
-        0,
-        Math.abs(ballBody.velocity.y) > 0.5 ? reducedForce : force
-      ),
-      ballBody.position
-    );
-  }
-  if (keys.a) {
-    ballBody.applyForce(
-      new CANNON.Vec3(
-        Math.abs(ballBody.velocity.x) > 0.5 ? -reducedForce : -force,
-        0,
-        0
-      ),
-      ballBody.position
-    );
-  }
-  if (keys.d) {
-    ballBody.applyForce(
-      new CANNON.Vec3(
-        Math.abs(ballBody.velocity.x) > 0.5 ? reducedForce : force,
-        0,
-        0
-      ),
-      ballBody.position
-    );
-  }
+  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
+  if (keyState["KeyW"]) ballBody.velocity.z += speed;
+  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
+  if (keyState["KeyA"]) ballBody.velocity.x += speed;
 }
 
-function handleSlopes() {
-  world.addEventListener("postStep", () => {
-    world.contacts.forEach((contact) => {
-      const ballInvolved = contact.bi === ballBody || contact.bj === ballBody;
-      const trackInvolved =
-        contact.bi.material === trackMaterial ||
-        contact.bj.material === trackMaterial;
+// Calculate initial relative position offset between camera and ball
+const initialCameraOffset = new THREE.Vector3().subVectors(
+  camera.position,
+  ballStartPosition
+);
 
-      if (ballInvolved && trackInvolved) {
-        const normal = contact.ni;
-        const slopeThreshold = Math.cos((35 * Math.PI) / 180); // Tolerate up to 35 degrees
-
-        if (normal.dot(new CANNON.Vec3(0, 1, 0)) < slopeThreshold) {
-          // Apply damping to lateral velocities
-          ballBody.velocity.x *= 0.9; // Damp X velocity
-          ballBody.velocity.z *= 0.9; // Damp Z velocity
-          ballBody.angularVelocity.x *= 0.8; // Damp angular X
-          ballBody.angularVelocity.z *= 0.8; // Damp angular Z
-        }
-      }
-    });
-  });
-}
-
-// Initialize slope handling
-handleSlopes();
-
-// Assuming you have a scene and camera set up
-
-// 1. Create a raycaster and mouse vector
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-
-// 2. Event listener for mouse click
-window.addEventListener("click", onMouseClick, false);
-
-function onMouseClick(event) {
-  // Normalize mouse position (from screen space to normalized device coordinates)
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  // 3. Set up the raycaster from the camera and mouse position
-  raycaster.setFromCamera(mouse, camera);
-
-  // Cast the ray and get all objects intersected
-  const intersects = getIntersects();
-
-  if (intersects.length > 0) {
-    // 4. Get the intersection point
-    const intersectedPoint = intersects[0].point;
-    console.log("Intersected Point:", intersectedPoint);
-
-    // Optionally, add a visual marker at the intersection
-    addIntersectionMarker(intersectedPoint);
-  }
-}
-
-function getIntersects() {
-  // Intersect the objects in the scene
-  const intersects = raycaster.intersectObjects(scene.children, true); // Check against all objects in the scene
-  return intersects;
-}
-
-// Optionally, to debug the interaction, add a visual helper like a point or sphere at the intersection
-function addIntersectionMarker(point) {
-  const geometry = new THREE.SphereGeometry(0.1, 10, 10);
-  const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-  const marker = new THREE.Mesh(geometry, material);
-  marker.position.copy(point);
-  scene.add(marker);
-}
-
-// Animation Loop
+// Animation loop
 function animate() {
   requestAnimationFrame(animate);
 
-  // Update Physics World
   world.step(1 / 60);
+  handleBallMovement();
 
-  // Update Ball Controls
-  updateBallControls();
-
-  // Sync Ball Position
   ballMesh.position.copy(ballBody.position);
   ballMesh.quaternion.copy(ballBody.quaternion);
 
-  // Update Cannon Debugger
-  cannonDebugger.update();
+  // Update camera position to follow the ball while preserving the initial offset
+  camera.position.copy(ballMesh.position).add(initialCameraOffset);
 
-  // Render Scene
+  // Make the camera always look at the ball
+  camera.lookAt(ballMesh.position);
+
+  controls.update(); // Update OrbitControls
   renderer.render(scene, camera);
 }
 

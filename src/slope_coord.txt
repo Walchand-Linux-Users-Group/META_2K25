@@ -29,3 +29,9 @@ Intersected Point: _Vector3 {x: -23.872315031490718, y: 7.780280070634106, z: 5
 Intersected Point: _Vector3 {x: -4.856763611972177, y: 11.629940509796143, z: 59.19721926770123}
 Intersected Point: _Vector3 {x: -4.881229400634769, y: 11.62150389751978, z: 61.96387020112472}
 
+controls:
+
+w 
+S
+a == d
+d == a

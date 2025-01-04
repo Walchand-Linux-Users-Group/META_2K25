@@ -17,7 +17,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-camera.position.set(0, 25, 10);
+camera.position.set(8, 17, -10);
 camera.lookAt(0, 0, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -142,10 +142,10 @@ window.addEventListener("keyup", (event) => {
 function handleBallMovement() {
   const speed = 0.1;
 
-  if (keyState["KeyW"]) ballBody.velocity.z -= speed;
-  if (keyState["KeyS"]) ballBody.velocity.z += speed;
-  if (keyState["KeyA"]) ballBody.velocity.x -= speed;
-  if (keyState["KeyD"]) ballBody.velocity.x += speed;
+  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
+  if (keyState["KeyW"]) ballBody.velocity.z += speed;
+  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
+  if (keyState["KeyA"]) ballBody.velocity.x += speed;
 }
 
 // Animation loop
