@@ -4,6 +4,22 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
 
+// Button to log ball coordinates
+const logCoordsButton = document.getElementById("logBallCoords");
+
+// Function to log the ball's current coordinates
+function logBallCoordinates() {
+  const ballPosition = ballBody.position;
+  console.log(
+    `Ball Coordinates: X: ${ballPosition.x.toFixed(
+      2
+    )}, Y: ${ballPosition.y.toFixed(2)}, Z: ${ballPosition.z.toFixed(2)}`
+  );
+}
+
+// Add an event listener to the button
+logCoordsButton.addEventListener("click", logBallCoordinates);
+
 // Three.js and Cannon.js setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -227,9 +243,53 @@ function handleBallMovement() {
   if (keyState["KeyA"]) ballBody.velocity.x += speed;
 }
 
+// Ball End Point Coordinates
+// const endPoint = new THREE.Vector3(0, 6.95, 0);
+const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
+
+// Flag to check if the game is finished
+let gameFinished = false;
+
+// Function to display "You Pass" Card
+function showPassCard() {
+  const card = document.createElement("div");
+  card.style.position = "absolute";
+  card.style.top = "50%";
+  card.style.left = "50%";
+  card.style.transform = "translate(-50%, -50%)";
+  card.style.backgroundColor = "#4CAF50";
+  card.style.color = "white";
+  card.style.fontSize = "24px";
+  card.style.padding = "20px";
+  card.style.borderRadius = "10px";
+  card.innerText = "You Pass!";
+  document.body.appendChild(card);
+}
+
+// Function to stop the simulation
+function stopSimulation() {
+  gameFinished = true;
+  // Stop the animation loop
+  cancelAnimationFrame(animationId); // animationId will be used to cancel the requestAnimationFrame loop
+}
+
 // Animation loop
+let animationId;
 function animate() {
-  requestAnimationFrame(animate);
+  if (gameFinished) return; // Stop the simulation if the game is finished
+
+  animationId = requestAnimationFrame(animate);
+
+  // Check if the ball has reached the end point
+  const ballPosition = ballBody.position;
+  if (
+    Math.abs(ballPosition.x - endPoint.x) < 1 &&
+    Math.abs(ballPosition.y - endPoint.y) < 1 &&
+    Math.abs(ballPosition.z - endPoint.z) < 1
+  ) {
+    stopSimulation(); // Stop the simulation
+    showPassCard(); // Show "You Pass" card
+  }
 
   // Check if the ball has fallen off the map
   checkBallFallOff();
@@ -244,13 +304,9 @@ function animate() {
   // Camera follows the ball
   const cameraYOffset = 17; // Fixed height for the camera
   const cameraZOffset = -10; // Fixed distance behind the ball in Z-direction
-
-  // Update camera position to follow the ball
   camera.position.x = ballBody.position.x;
-  camera.position.y = cameraYOffset; // Fixed height
+  camera.position.y = cameraYOffset;
   camera.position.z = ballBody.position.z + cameraZOffset;
-
-  // Lock the camera's angle to look directly at the ball
   camera.lookAt(ballBody.position.x, ballBody.position.y, ballBody.position.z);
 
   // Render the scene
