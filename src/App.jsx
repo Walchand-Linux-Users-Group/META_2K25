@@ -72,7 +72,7 @@ scene.add(ambientLight);
 // Load track and debug slopes
 const loader = new GLTFLoader();
 const config = {
-  trackModelPath: "../public/models/main_track.glb",
+  trackModelPath: "/models/main_track.glb",
   trackPositions: {},
   trackRotations: {},
 };
@@ -87,50 +87,47 @@ function addNormals(mesh, color = 0xffffff) {
   }
 }
 
-loader.load(
-  config.trackModelPath || "../public/models/main_track.glb",
-  (gltf) => {
-    const track = gltf.scene;
-    scene.add(track);
+loader.load(config.trackModelPath || "/models/main_track.glb", (gltf) => {
+  const track = gltf.scene;
+  scene.add(track);
 
-    track.traverse((child) => {
-      if (child.isMesh) {
-        // Set track material color to white
-        child.material = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White color
+  track.traverse((child) => {
+    if (child.isMesh) {
+      // Set track material color to white
+      child.material = new THREE.MeshStandardMaterial({ color: 0xffffff }); // White color
 
-        const geometry = child.geometry.clone();
-        geometry.applyMatrix4(child.matrixWorld);
+      const geometry = child.geometry.clone();
+      geometry.applyMatrix4(child.matrixWorld);
 
-        const vertices = Array.from(geometry.attributes.position.array);
-        const indices = Array.from(geometry.index.array);
+      const vertices = Array.from(geometry.attributes.position.array);
+      const indices = Array.from(geometry.index.array);
 
-        const shape = new CANNON.Trimesh(vertices, indices);
+      const shape = new CANNON.Trimesh(vertices, indices);
 
-        const body = new CANNON.Body({
-          mass: 0,
-          material: trackMaterial,
-        });
-        body.addShape(shape);
+      const body = new CANNON.Body({
+        mass: 0,
+        material: trackMaterial,
+      });
+      body.addShape(shape);
 
-        const position = config.trackPositions?.[child.name] || {
-          x: 0,
-          y: 0,
-          z: 0,
-        };
-        const rotation = config.trackRotations?.[child.name] || {
-          x: 0,
-          y: 0,
-          z: 0,
-        };
-        body.position.set(position.x, position.y, position.z);
-        body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
+      const position = config.trackPositions?.[child.name] || {
+        x: 0,
+        y: 0,
+        z: 0,
+      };
+      const rotation = config.trackRotations?.[child.name] || {
+        x: 0,
+        y: 0,
+        z: 0,
+      };
+      body.position.set(position.x, position.y, position.z);
+      body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
 
-        world.addBody(body);
-        addNormals(child);
-      }
-    });
-  }
-);
+      world.addBody(body);
+      addNormals(child);
+    }
+  });
+});
 
 // WSAD Controls for Ball Movement
 const keyState = {};
