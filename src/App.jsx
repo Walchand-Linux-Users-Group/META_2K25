@@ -80,7 +80,7 @@ ballBody.position.set(0, 15, 0);
 world.addBody(ballBody);
 
 // Light setup
-const light = new THREE.PointLight(0xffffff, 1, 100);
+const light = new THREE.DirectionalLight(0xffffff, 1, 100);
 light.position.set(10, 10, 10);
 scene.add(light);
 
@@ -93,10 +93,10 @@ const loader = new GLTFLoader();
 const textureLoader = new THREE.TextureLoader();
 
 // Load the texture for the model (image stored in the public folder)
-const texture = textureLoader.load("/image.png"); // Path to your texture file in the public folder
+const texture = textureLoader.load("/space.jpg"); // Path to your texture file in the public folder
 
 const config = {
-  trackModelPath: "/models/main_track.glb",
+  trackModelPath: "/models/untitled.glb",
   trackPositions: {},
   trackRotations: {},
 };
@@ -171,26 +171,61 @@ function checkBallFallOff() {
 }
 
 // Debugging Function: Add Normals Visualization
-function addNormals(mesh, color = 0xffffff) {
-  if (mesh.geometry.attributes.normal) {
-    const wireframe = new THREE.WireframeGeometry(mesh.geometry);
-    const lineMaterial = new THREE.LineBasicMaterial({ color: color });
-    const line = new THREE.LineSegments(wireframe, lineMaterial);
-    mesh.add(line);
+function addNormals(mesh) {
+  const vertices = mesh.geometry.attributes.position.array;
+  const normals = mesh.geometry.attributes.normal.array;
+  const lines = [];
+
+  for (let i = 0; i < vertices.length; i += 3) {
+    const start = new THREE.Vector3(
+      vertices[i],
+      vertices[i + 1],
+      vertices[i + 2]
+    );
+    const direction = new THREE.Vector3(
+      normals[i],
+      normals[i + 1],
+      normals[i + 2]
+    );
+
+    const end = new THREE.Vector3().addVectors(
+      start,
+      direction.clone().multiplyScalar(0.1)
+    ); // Scale normal length
+    lines.push(start, end);
   }
+
+  const lineGeometry = new THREE.BufferGeometry().setFromPoints(lines);
+
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: 0x000000, // Black or any color (doesn't matter if rendering is disabled)
+    visible: false, // Disable visibility entirely
+  });
+
+  const lineSegments = new THREE.LineSegments(lineGeometry, lineMaterial);
+
+  // Ensure it's not rendered
+  lineSegments.visible = false;
+
+  mesh.add(lineSegments);
 }
 
-loader.load(config.trackModelPath || "/models/main_track.glb", (gltf) => {
+loader.load(config.trackModelPath || "/models/untitled.glb", (gltf) => {
   const track = gltf.scene;
   scene.add(track);
 
   track.traverse((child) => {
     if (child.isMesh) {
-      // Apply texture to the model's material
-      child.material = new THREE.MeshStandardMaterial({
-        map: texture, // Apply the loaded texture here
-      });
+      // Ensure the original material and texture are preserved
+      if (child.material && child.material.map) {
+        // Retain the original texture
+        child.material.map.needsUpdate = true;
+      } else if (child.material) {
+        // Preserve original material properties
+        child.material.needsUpdate = true;
+      }
 
+      // Cannon.js collision shape creation
       const geometry = child.geometry.clone();
       geometry.applyMatrix4(child.matrixWorld);
 
@@ -219,9 +254,15 @@ loader.load(config.trackModelPath || "/models/main_track.glb", (gltf) => {
       body.quaternion.setFromEuler(rotation.x, rotation.y, rotation.z);
 
       world.addBody(body);
+
+      // Optionally add normals for better rendering
       addNormals(child);
     }
   });
+
+  console.log(
+    "Model loaded successfully with its original materials and textures!"
+  );
 });
 
 // WSAD Controls for Ball Movement
