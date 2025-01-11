@@ -265,8 +265,11 @@ loader.load(config.trackModelPath || "/models/untitled.glb", (gltf) => {
   );
 });
 
-// WSAD Controls for Ball Movement
+// WSAD Controls and Joystick for Ball Movement
 let keyState = {};
+let joystickPosition = { x: 0, y: 0 };
+
+// Listen for keydown and keyup events for WSAD controls
 window.addEventListener("keydown", (event) => {
   keyState[event.code] = true;
 });
@@ -274,28 +277,54 @@ window.addEventListener("keyup", (event) => {
   keyState[event.code] = false;
 });
 
-// Function to handle ball movement
+// Function to handle touch events for joystick (mobile)
+const handleTouchStart = (e) => {
+  const touch = e.touches[0];
+  joystickPosition = { x: touch.clientX, y: touch.clientY };
+};
+
+const handleTouchMove = (e) => {
+  const touch = e.touches[0];
+  const diffX = touch.clientX - joystickPosition.x;
+  const diffY = touch.clientY - joystickPosition.y;
+
+  const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+  const maxDistance = 40;
+
+  if (distance < maxDistance) {
+    joystickPosition = { x: diffX, y: diffY };
+  } else {
+    const angle = Math.atan2(diffY, diffX);
+    joystickPosition = {
+      x: Math.cos(angle) * maxDistance,
+      y: Math.sin(angle) * maxDistance,
+    };
+  }
+};
+
+const handleTouchEnd = () => {
+  joystickPosition = { x: 0, y: 0 };
+};
+
+// Attach touch event listeners for joystick
+window.addEventListener("touchstart", handleTouchStart);
+window.addEventListener("touchmove", handleTouchMove);
+window.addEventListener("touchend", handleTouchEnd);
+
+// Function to handle ball movement (WSAD + Joystick)
 function handleBallMovement() {
   const speed = 0.1;
 
+  // Handle WSAD keys for ball movement
   if (keyState["KeyS"]) ballBody.velocity.z -= speed;
   if (keyState["KeyW"]) ballBody.velocity.z += speed;
   if (keyState["KeyD"]) ballBody.velocity.x -= speed;
   if (keyState["KeyA"]) ballBody.velocity.x += speed;
 
-  // Mobile Joystick Controls
-  const gamepads = navigator.getGamepads();
-  if (gamepads[0]) {
-    // Check if a gamepad is connected
-    const gamepad = gamepads[0];
-
-    // Left Stick (x, y axis)
-    const xAxis = gamepad.axes[0]; // Left stick horizontal axis (left-right)
-    const yAxis = gamepad.axes[1]; // Left stick vertical axis (up-down)
-
-    // Map joystick movement to ball velocity
-    ballBody.velocity.x += xAxis * speed;
-    ballBody.velocity.z -= yAxis * speed;
+  // Handle joystick input (for mobile)
+  if (joystickPosition.x || joystickPosition.y) {
+    ballBody.velocity.x = joystickPosition.x * speed;
+    ballBody.velocity.z = -joystickPosition.y * speed; // Invert Y axis for typical joystick behavior
   }
 }
 
