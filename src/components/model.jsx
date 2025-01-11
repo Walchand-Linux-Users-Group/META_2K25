@@ -60,7 +60,7 @@ const ballContactMaterial = new CANNON.ContactMaterial(
   ballMaterial,
   {
     friction: 10,
-    restitution: 0,
+    restitution: 0.3,
   }
 );
 world.addContactMaterial(ballContactMaterial);
@@ -100,6 +100,75 @@ const config = {
   trackPositions: {},
   trackRotations: {},
 };
+
+// List of respawn points
+const respawnPoints = [
+  { x: 0.0, y: 6.95, z: 0.0 },
+  { x: -20.81, y: 6.95, z: -0.07 },
+  { x: -21.32, y: 6.95, z: -10.58 },
+  { x: -42.31, y: 9.71, z: -10.5 },
+  { x: -55.24, y: 6.95, z: -11.3 },
+  { x: -63.95, y: 6.95, z: -6.64 },
+  { x: -63.86, y: 6.95, z: 2.24 },
+  { x: -63.67, y: 6.95, z: 12.65 },
+  { x: -63.96, y: 6.95, z: 22.17 },
+  { x: -63.52, y: 8.75, z: 38.78 },
+  { x: -53.33, y: 4.47, z: 38.07 },
+  { x: -42.2, y: 5.76, z: 34.64 },
+  { x: -25.31, y: 5.27, z: 36.54 },
+];
+
+// Function to calculate the distance between two points
+function calculateDistance(p1, p2) {
+  return Math.sqrt(
+    Math.pow(p2.x - p1.x, 2) +
+      Math.pow(p2.y - p1.y, 2) +
+      Math.pow(p2.z - p1.z, 2)
+  );
+}
+
+// Function to find the nearest respawn point to the ball's current position
+function findNearestRespawnPoint(ballPosition) {
+  let closestPoint = respawnPoints[0];
+  let minDistance = calculateDistance(ballPosition, closestPoint);
+
+  // Loop through all respawn points to find the nearest one
+  for (let i = 1; i < respawnPoints.length; i++) {
+    const distance = calculateDistance(ballPosition, respawnPoints[i]);
+    if (distance < minDistance) {
+      closestPoint = respawnPoints[i];
+      minDistance = distance;
+    }
+  }
+  return closestPoint;
+}
+
+// Function to check if the ball has fallen off the map (e.g., y < -10)
+function checkBallFallOff() {
+  const ballPosition = ballBody.position;
+
+  // If the ball falls off the map (below a certain Y position)
+  if (ballPosition.y < -1) {
+    // Find the nearest respawn point
+    const nearestRespawn = findNearestRespawnPoint(ballPosition);
+
+    // Reset the ball's position to the nearest respawn point
+    ballBody.position.set(
+      nearestRespawn.x,
+      nearestRespawn.y + 2,
+      nearestRespawn.z
+    );
+    ballBody.velocity.set(0, 0, 0); // Reset velocity to zero
+    ballBody.angularVelocity.set(0, 0, 0); // Reset angular velocity to zero
+
+    // Clear keyState to avoid residual movement
+    keyState = {};
+
+    // Ensure the ball mesh also reflects the updated position
+    ballMesh.position.copy(ballBody.position);
+    ballMesh.quaternion.copy(ballBody.quaternion);
+  }
+}
 
 // Debugging Function: Add Normals Visualization
 function addNormals(mesh) {
@@ -213,12 +282,97 @@ function handleBallMovement() {
   if (keyState["KeyW"]) ballBody.velocity.z += speed;
   if (keyState["KeyD"]) ballBody.velocity.x -= speed;
   if (keyState["KeyA"]) ballBody.velocity.x += speed;
+
+  // Mobile Joystick Controls
+  const gamepads = navigator.getGamepads();
+  if (gamepads[0]) {
+    // Check if a gamepad is connected
+    const gamepad = gamepads[0];
+
+    // Left Stick (x, y axis)
+    const xAxis = gamepad.axes[0]; // Left stick horizontal axis (left-right)
+    const yAxis = gamepad.axes[1]; // Left stick vertical axis (up-down)
+
+    // Map joystick movement to ball velocity
+    ballBody.velocity.x += xAxis * speed;
+    ballBody.velocity.z -= yAxis * speed;
+  }
 }
+
+// Ball End Point Coordinates
+const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
+
+// Flag to check if the game is finished
+let gameFinished = false;
+
+// Function to display "You Pass" Card
+function showPassCard() {
+  const card = document.createElement("div");
+  card.style.position = "absolute";
+  card.style.top = "50%";
+  card.style.left = "50%";
+  card.style.transform = "translate(-50%, -50%)";
+  card.style.backgroundColor = "#4CAF50";
+  card.style.color = "white";
+  card.style.fontSize = "24px";
+  card.style.padding = "20px";
+  card.style.borderRadius = "10px";
+  card.innerText = "You Pass!";
+  document.body.appendChild(card);
+}
+
+// Function to stop the simulation
+function stopSimulation() {
+  gameFinished = true;
+  // Stop the animation loop
+  cancelAnimationFrame(animationId); // animationId will be used to cancel the requestAnimationFrame loop
+}
+
+// Button to pause the simulation
+const pauseButtonPositions = [
+  new THREE.Vector3(-41.42, 9.71, -10.54),
+  new THREE.Vector3(-63.64, 6.96, 7.03),
+  new THREE.Vector3(-43.07, 5.76, 35.21),
+  new THREE.Vector3(-25.03, 5.27, 36.64),
+];
+
+function isBallAtPauseCoordinates() {
+  const ballPosition = ballBody.position;
+
+  // Loop through each target position and check if the ball is near
+  return pauseButtonPositions.some(
+    (pos) =>
+      Math.abs(ballPosition.x - pos.x) < 1 &&
+      Math.abs(ballPosition.y - pos.y) < 1 &&
+      Math.abs(ballPosition.z - pos.z) < 1
+  );
+}
+
+let isPaused = false; // Track if the game is paused
+
+// Function to pause the game
+function pauseGame() {
+  isPaused = true; // Set the game state to paused
+  cancelAnimationFrame(animationId); // Stop the animation loop
+}
+
+// Function to resume the game
+function resumeGame() {
+  isPaused = false; // Set the game state to unpaused
+  animate(); // Restart the animation loop
+}
+document.getElementById("pauseButton").addEventListener("click", function () {
+  if (isPaused) {
+    resumeGame(); // If the game is paused, resume it
+  } else {
+    pauseGame(); // If the game is running, pause it
+  }
+});
 
 // Animation loop
 let animationId;
 function animate() {
-  if (gameFinished) return; // Stop the simulation if the game is finished
+  if (gameFinished || isPaused) return; // Stop the simulation if the game is finished
 
   animationId = requestAnimationFrame(animate);
 
@@ -254,6 +408,13 @@ function animate() {
   camera.position.y = cameraYOffset;
   camera.position.z = ballBody.position.z + cameraZOffset;
   camera.lookAt(ballBody.position.x, ballBody.position.y, ballBody.position.z);
+
+  const pauseButton = document.getElementById("pauseButton");
+  if (isBallAtPauseCoordinates()) {
+    pauseButton.style.display = "block"; // Show the button when the ball is at the target position
+  } else {
+    pauseButton.style.display = "none"; // Hide the button otherwise
+  }
 
   // Render the scene
   renderer.render(scene, camera);

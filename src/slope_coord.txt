@@ -57,3 +57,10 @@ Ball Coordinates: X: -25.31, Y: 5.27, Z: 36.54
 
 End point:
 Ball Coordinates: X: -1.71, Y: 12.13, Z: 60.18
+
+
+Card coord:
+Ball Coordinates: X: -41.42, Y: 9.71, Z: -10.54
+Ball Coordinates: X: -63.64, Y: 6.96, Z: 7.03
+Ball Coordinates: X: -43.07, Y: 5.76, Z: 35.21
+Ball Coordinates: X: -25.03, Y: 5.27, Z: 36.64
