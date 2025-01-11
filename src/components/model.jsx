@@ -266,9 +266,12 @@ loader.load(config.trackModelPath || "/models/untitled.glb", (gltf) => {
 });
 
 // WSAD Controls and Joystick for Ball Movement
-let keyState = {};
+let keyState = {}; // For PC controls
+let joystickActive = false; // Flag for touch input
+let joystickStart = { x: 0, y: 0 }; // Start position of the touch
+let joystickDirection = { x: 0, y: 0 }; // Direction of the joystick
 
-// Listen for keydown and keyup events for WSAD controls
+// WSAD Keyboard Controls
 window.addEventListener("keydown", (event) => {
   keyState[event.code] = true;
 });
@@ -276,84 +279,47 @@ window.addEventListener("keyup", (event) => {
   keyState[event.code] = false;
 });
 
-let joystickPosition = { x: 0, y: 0 }; // Stores current joystick position
-let touchStartPosition = { x: 0, y: 0 }; // Stores where the touch started
+// Touch Start: Record the starting touch position
+window.addEventListener("touchstart", (event) => {
+  const touch = event.touches[0];
+  joystickActive = true;
+  joystickStart.x = touch.clientX;
+  joystickStart.y = touch.clientY;
+});
 
-// Touch start - Record initial touch position
-const handleTouchStart = (e) => {
-  const touch = e.touches[0];
-  touchStartPosition = { x: touch.clientX, y: touch.clientY };
-};
-
-// Touch move - Calculate joystick position relative to touch start
-const handleTouchMove = (e) => {
-  const touch = e.touches[0];
-  const diffX = touch.clientX - touchStartPosition.x; // Difference in X
-  const diffY = touch.clientY - touchStartPosition.y; // Difference in Y
-
-  const maxDistance = 40; // Limit joystick movement to 40px
-  const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-
-  if (distance < maxDistance) {
-    // If within bounds, set joystick position directly
-    joystickPosition = { x: diffX, y: diffY };
-  } else {
-    // If beyond bounds, limit to max distance
-    const angle = Math.atan2(diffY, diffX);
-    joystickPosition = {
-      x: Math.cos(angle) * maxDistance,
-      y: Math.sin(angle) * maxDistance,
-    };
+// Touch Move: Calculate joystick direction
+window.addEventListener("touchmove", (event) => {
+  if (joystickActive) {
+    const touch = event.touches[0];
+    joystickDirection.x = (touch.clientX - joystickStart.x) / window.innerWidth; // Normalize to [-1, 1]
+    joystickDirection.y =
+      (joystickStart.y - touch.clientY) / window.innerHeight; // Normalize to [-1, 1]
   }
-};
+});
 
-// Touch end - Reset joystick to neutral
-const handleTouchEnd = () => {
-  joystickPosition = { x: 0, y: 0 };
-};
+// Touch End: Reset joystick
+window.addEventListener("touchend", () => {
+  joystickActive = false;
+  joystickDirection.x = 0;
+  joystickDirection.y = 0;
+});
 
-// Ball movement logic with camera alignment
+// Function to handle ball movement
 function handleBallMovement() {
   const speed = 0.1;
 
-  // Handle WSAD keys for ball movement
-  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
+  // PC Controls
   if (keyState["KeyW"]) ballBody.velocity.z += speed;
-  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
+  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
   if (keyState["KeyA"]) ballBody.velocity.x += speed;
+  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
 
-  // Handle joystick input (for mobile)
-  if (joystickPosition.x !== 0 || joystickPosition.y !== 0) {
-    // Transform joystick input based on camera orientation
-    const forwardVector = { x: -camera.position.x, z: -camera.position.z }; // Forward direction
-    const rightVector = { x: camera.position.z, z: -camera.position.x }; // Right direction
-
-    // Normalize vectors
-    const forwardLength = Math.sqrt(forwardVector.x ** 2 + forwardVector.z ** 2);
-    const rightLength = Math.sqrt(rightVector.x ** 2 + rightVector.z ** 2);
-    forwardVector.x /= forwardLength;
-    forwardVector.z /= forwardLength;
-    rightVector.x /= rightLength;
-    rightVector.z /= rightLength;
-
-    // Invert the Z-axis to fix movement direction
-    forwardVector.z = -forwardVector.z;
-
-    // Apply joystick input to ball movement
-    const scaledJoystickX = joystickPosition.x * 0.05; // Scale for smooth control
-    const scaledJoystickY = joystickPosition.y * 0.05;
-
-    ballBody.velocity.x =
-      scaledJoystickX * rightVector.x + scaledJoystickY * forwardVector.x;
-    ballBody.velocity.z =
-      scaledJoystickX * rightVector.z + scaledJoystickY * forwardVector.z;
+  // Mobile Touch Joystick Controls
+  if (joystickActive) {
+    ballBody.velocity.z += joystickDirection.y * speed; // Forward/backward
+    ballBody.velocity.x += joystickDirection.x * speed; // Left/right
   }
 }
-
-// Add event listeners for joystick controls
-window.addEventListener("touchstart", handleTouchStart);
-window.addEventListener("touchmove", handleTouchMove);
-window.addEventListener("touchend", handleTouchEnd);
 
 // Ball End Point Coordinates
 const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
