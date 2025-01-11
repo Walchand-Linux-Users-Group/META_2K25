@@ -267,7 +267,6 @@ loader.load(config.trackModelPath || "/models/untitled.glb", (gltf) => {
 
 // WSAD Controls and Joystick for Ball Movement
 let keyState = {};
-let joystickPosition = { x: 0, y: 0 };
 
 // Listen for keydown and keyup events for WSAD controls
 window.addEventListener("keydown", (event) => {
@@ -277,23 +276,29 @@ window.addEventListener("keyup", (event) => {
   keyState[event.code] = false;
 });
 
-// Function to handle touch events for joystick (mobile)
+let joystickPosition = { x: 0, y: 0 }; // Stores current joystick position
+let touchStartPosition = { x: 0, y: 0 }; // Stores where the touch started
+
+// Touch start - Record initial touch position
 const handleTouchStart = (e) => {
   const touch = e.touches[0];
-  joystickPosition = { x: touch.clientX, y: touch.clientY };
+  touchStartPosition = { x: touch.clientX, y: touch.clientY };
 };
 
+// Touch move - Calculate joystick position relative to touch start
 const handleTouchMove = (e) => {
   const touch = e.touches[0];
-  const diffX = touch.clientX - joystickPosition.x;
-  const diffY = touch.clientY - joystickPosition.y;
+  const diffX = touch.clientX - touchStartPosition.x; // Difference in X
+  const diffY = touch.clientY - touchStartPosition.y; // Difference in Y
 
+  const maxDistance = 40; // Limit joystick movement to 40px
   const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-  const maxDistance = 40;
 
   if (distance < maxDistance) {
+    // If within bounds, set joystick position directly
     joystickPosition = { x: diffX, y: diffY };
   } else {
+    // If beyond bounds, limit to max distance
     const angle = Math.atan2(diffY, diffX);
     joystickPosition = {
       x: Math.cos(angle) * maxDistance,
@@ -302,16 +307,12 @@ const handleTouchMove = (e) => {
   }
 };
 
+// Touch end - Reset joystick to neutral
 const handleTouchEnd = () => {
   joystickPosition = { x: 0, y: 0 };
 };
 
-// Attach touch event listeners for joystick
-window.addEventListener("touchstart", handleTouchStart);
-window.addEventListener("touchmove", handleTouchMove);
-window.addEventListener("touchend", handleTouchEnd);
-
-// Function to handle ball movement (WSAD + Joystick)
+// Ball movement logic with camera alignment
 function handleBallMovement() {
   const speed = 0.1;
 
@@ -322,11 +323,37 @@ function handleBallMovement() {
   if (keyState["KeyA"]) ballBody.velocity.x += speed;
 
   // Handle joystick input (for mobile)
-  if (joystickPosition.x || joystickPosition.y) {
-    ballBody.velocity.x = joystickPosition.x * speed;
-    ballBody.velocity.z = -joystickPosition.y * speed; // Invert Y axis for typical joystick behavior
+  if (joystickPosition.x !== 0 || joystickPosition.y !== 0) {
+    // Transform joystick input based on camera orientation
+    const forwardVector = { x: -camera.position.x, z: -camera.position.z }; // Forward direction
+    const rightVector = { x: camera.position.z, z: -camera.position.x }; // Right direction
+
+    // Normalize vectors
+    const forwardLength = Math.sqrt(forwardVector.x ** 2 + forwardVector.z ** 2);
+    const rightLength = Math.sqrt(rightVector.x ** 2 + rightVector.z ** 2);
+    forwardVector.x /= forwardLength;
+    forwardVector.z /= forwardLength;
+    rightVector.x /= rightLength;
+    rightVector.z /= rightLength;
+
+    // Invert the Z-axis to fix movement direction
+    forwardVector.z = -forwardVector.z;
+
+    // Apply joystick input to ball movement
+    const scaledJoystickX = joystickPosition.x * 0.05; // Scale for smooth control
+    const scaledJoystickY = joystickPosition.y * 0.05;
+
+    ballBody.velocity.x =
+      scaledJoystickX * rightVector.x + scaledJoystickY * forwardVector.x;
+    ballBody.velocity.z =
+      scaledJoystickX * rightVector.z + scaledJoystickY * forwardVector.z;
   }
 }
+
+// Add event listeners for joystick controls
+window.addEventListener("touchstart", handleTouchStart);
+window.addEventListener("touchmove", handleTouchMove);
+window.addEventListener("touchend", handleTouchEnd);
 
 // Ball End Point Coordinates
 const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
