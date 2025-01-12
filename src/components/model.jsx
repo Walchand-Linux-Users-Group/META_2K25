@@ -316,8 +316,8 @@ function handleBallMovement() {
 
   // Mobile Touch Joystick Controls
   if (joystickActive) {
-    ballBody.velocity.z += joystickDirection.y * speed; // Forward/backward
-    ballBody.velocity.x += joystickDirection.x * speed; // Left/right
+    ballBody.velocity.z += joystickDirection.y * 0.3; // Forward/backward
+    ballBody.velocity.x += -(joystickDirection.x * 0.3); // Left/right
   }
 }
 
