@@ -38,7 +38,7 @@ camera.lookAt(0, 0, 0);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; // Adds smooth motion to mouse controls
-controls.dampingFactor = 0.1;
+controls.dampingFactor = 1;
 controls.minDistance = 5; // Minimum zoom distance
 controls.maxDistance = 100; // Maximum zoom distance
 controls.enableRotate = true; // Enable camera rotation
@@ -59,7 +59,7 @@ const ballContactMaterial = new CANNON.ContactMaterial(
   trackMaterial,
   ballMaterial,
   {
-    friction: 10,
+    friction: 100,
     restitution: 0.3,
   }
 );
@@ -72,7 +72,7 @@ const ballMesh = new THREE.Mesh(ballGeometry, ballMaterialThree);
 scene.add(ballMesh);
 
 const ballBody = new CANNON.Body({
-  mass: 20,
+  mass: 2000,
   material: ballMaterial,
   shape: new CANNON.Sphere(0.5),
 });
@@ -278,7 +278,16 @@ window.addEventListener("keyup", (event) => {
 // Joystick Setup
 let joystickPosition = { x: 0, y: 0 };
 let isJoystickActive = false;
-
+let onGround = false;
+function isBallOnGround() {
+  return world.contacts.some((contact) => {
+    return (
+      (contact.bi === ballBody || contact.bj === ballBody) &&
+      (contact.bi.material === trackMaterial ||
+        contact.bj.material === trackMaterial)
+    );
+  });
+}
 function setupJoystick() {
   const joystick = document.createElement("div");
   joystick.style.position = "absolute";
@@ -343,7 +352,7 @@ function setupJoystick() {
 // Corrected Ball Movement Logic
 function handleBallMovement() {
   const speed = 0.1;
-
+  const damping = 0.95;
   // Calculate forward and right vectors
   const forwardVector = {
     x: Math.sin(
@@ -374,10 +383,33 @@ function handleBallMovement() {
   }
 
   // WSAD Controls
-  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
-  if (keyState["KeyW"]) ballBody.velocity.z += speed;
-  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
-  if (keyState["KeyA"]) ballBody.velocity.x += speed;
+  if (keyState["KeyS"]) {
+    ballBody.velocity.z -= speed;
+    ballBody.velocity.x += speed;
+  }
+  if (keyState["KeyW"]) {
+    ballBody.velocity.x -= speed;
+    ballBody.velocity.z += speed;
+  }
+  if (keyState["KeyD"]) {
+    ballBody.velocity.x -= speed;
+    ballBody.velocity.z -= speed;
+  }
+  if (keyState["KeyA"]) {
+    ballBody.velocity.x += speed;
+    ballBody.velocity.z += speed;
+  }
+  if (
+    !keyState["KeyW"] &&
+    !keyState["KeyA"] &&
+    !keyState["KeyS"] &&
+    !keyState["KeyD"] &&
+    !isJoystickActive &&
+    onGround
+  ) {
+    ballBody.velocity.x *= damping;
+    ballBody.velocity.z *= damping;
+  }
 }
 
 // Initialize Joystick
@@ -481,6 +513,7 @@ function animate() {
   // Handle ball movement
   handleBallMovement();
 
+  onGround = isBallOnGround();
   // Update ball mesh with physics updates
   ballMesh.position.copy(ballBody.position);
   ballMesh.quaternion.copy(ballBody.quaternion);
@@ -494,10 +527,13 @@ function animate() {
   camera.lookAt(ballBody.position.x, ballBody.position.y, ballBody.position.z);
 
   const pauseButton = document.getElementById("pauseButton");
+  const showCard = document.getElementById("skewed-card-container");
   if (isBallAtPauseCoordinates()) {
-    pauseButton.style.display = "block"; // Show the button when the ball is at the target position
+    pauseButton.style.display = "block";
+    showCard.style.display = "block"; // Show the button when the ball is at the target position
   } else {
-    pauseButton.style.display = "none"; // Hide the button otherwise
+    pauseButton.style.display = "none";
+    showCard.style.display = "none"; // Hide the button otherwise
   }
 
   // Render the scene

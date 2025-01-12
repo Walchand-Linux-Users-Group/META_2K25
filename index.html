@@ -1,20 +1,45 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <!-- Button to log ball coordinates -->
-<button id="logBallCoords" style="position: absolute; top: 20px; left: 20px; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">
-  Log Ball Coordinates
-</button>
-<button id="pauseButton" style="display: none; position: absolute; top: 100px; left: 20px; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">Pause</button>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <title>Vite + React Skewed Card</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="card.css">
+</head>
+<body>
+  <div id="root">
+  
+  <!-- Button to log ball coordinates -->
+  <button id="logBallCoords" style="position: absolute; top: 20px; left: 20px; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">
+    Log Ball Coordinates
+  </button>
+  
+  <!-- Pause button -->
+  <button id="pauseButton" style="display: none; position: absolute; top: 100px; left: 20px; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer;">
+    Pause
+  </button>
+  <div id="skewed-card-container" style="display: none;">
+    <div class="skewed-card">
+      <div class="date">
+        <div class="day">15</div>
+        <div class="month">FEB</div>
+        <div class="year">25</div>
+      </div>
+      <div class="content">
+        <h2>Session 1</h2>
+        <p>Learn about DevOps and stuff</p>
+      </div>
+      <div class="footer">
+        <div class="footer-card">
+          <span>2022</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
 </html>
