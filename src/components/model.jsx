@@ -267,9 +267,6 @@ loader.load(config.trackModelPath || "/models/untitled.glb", (gltf) => {
 
 // WSAD Controls and Joystick for Ball Movement
 let keyState = {}; // For PC controls
-let joystickActive = false; // Flag for touch input
-let joystickStart = { x: 0, y: 0 }; // Start position of the touch
-let joystickDirection = { x: 0, y: 0 }; // Direction of the joystick
 
 // WSAD Keyboard Controls
 window.addEventListener("keydown", (event) => {
@@ -278,48 +275,113 @@ window.addEventListener("keydown", (event) => {
 window.addEventListener("keyup", (event) => {
   keyState[event.code] = false;
 });
+// Joystick Setup
+let joystickPosition = { x: 0, y: 0 };
+let isJoystickActive = false;
 
-// Touch Start: Record the starting touch position
-window.addEventListener("touchstart", (event) => {
-  const touch = event.touches[0];
-  joystickActive = true;
-  joystickStart.x = touch.clientX;
-  joystickStart.y = touch.clientY;
-});
+function setupJoystick() {
+  const joystick = document.createElement("div");
+  joystick.style.position = "absolute";
+  joystick.style.bottom = "10%";
+  joystick.style.left = "10%";
+  joystick.style.width = "100px";
+  joystick.style.height = "100px";
+  joystick.style.border = "2px solid #aaa";
+  joystick.style.borderRadius = "50%";
+  joystick.style.background = "rgba(255, 255, 255, 0.5)";
+  joystick.style.zIndex = "1000";
+  joystick.style.touchAction = "none";
+  document.body.appendChild(joystick);
 
-// Touch Move: Calculate joystick direction
-window.addEventListener("touchmove", (event) => {
-  if (joystickActive) {
+  const handle = document.createElement("div");
+  handle.style.position = "absolute";
+  handle.style.width = "40px";
+  handle.style.height = "40px";
+  handle.style.background = "rgba(0, 0, 0, 0.7)";
+  handle.style.borderRadius = "50%";
+  handle.style.left = "50%";
+  handle.style.top = "50%";
+  handle.style.transform = "translate(-50%, -50%)";
+  joystick.appendChild(handle);
+
+  let initialTouch = null;
+
+  joystick.addEventListener("touchstart", (event) => {
+    isJoystickActive = true;
+    initialTouch = event.touches[0];
+  });
+
+  joystick.addEventListener("touchmove", (event) => {
+    if (!isJoystickActive) return;
+
     const touch = event.touches[0];
-    joystickDirection.x = (touch.clientX - joystickStart.x) / window.innerWidth; // Normalize to [-1, 1]
-    joystickDirection.y =
-      (joystickStart.y - touch.clientY) / window.innerHeight; // Normalize to [-1, 1]
-  }
-});
+    const deltaX = touch.clientX - initialTouch.clientX;
+    const deltaY = touch.clientY - initialTouch.clientY;
 
-// Touch End: Reset joystick
-window.addEventListener("touchend", () => {
-  joystickActive = false;
-  joystickDirection.x = 0;
-  joystickDirection.y = 0;
-});
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const maxDistance = 50; // Joystick range
+    const angle = Math.atan2(deltaY, deltaX);
 
-// Function to handle ball movement
+    const clampedDistance = Math.min(distance, maxDistance);
+    const x = clampedDistance * Math.cos(angle);
+    const y = clampedDistance * Math.sin(angle);
+
+    joystickPosition.x = x / maxDistance;
+    joystickPosition.y = y / maxDistance;
+
+    handle.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+  });
+
+  joystick.addEventListener("touchend", () => {
+    isJoystickActive = false;
+    joystickPosition.x = 0;
+    joystickPosition.y = 0;
+    handle.style.transform = "translate(-50%, -50%)";
+  });
+}
+
+// Corrected Ball Movement Logic
 function handleBallMovement() {
   const speed = 0.1;
 
-  // PC Controls
-  if (keyState["KeyW"]) ballBody.velocity.z += speed;
-  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
-  if (keyState["KeyA"]) ballBody.velocity.x += speed;
-  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
+  // Calculate forward and right vectors
+  const forwardVector = {
+    x: Math.sin(
+      Math.atan2(
+        ballBody.position.z - camera.position.z,
+        ballBody.position.x - camera.position.x
+      )
+    ),
+    z: Math.cos(
+      Math.atan2(
+        ballBody.position.z - camera.position.z,
+        ballBody.position.x - camera.position.x
+      )
+    ),
+  };
 
-  // Mobile Touch Joystick Controls
-  if (joystickActive) {
-    ballBody.velocity.z += joystickDirection.y * 0.3; // Forward/backward
-    ballBody.velocity.x += -(joystickDirection.x * 0.3); // Left/right
+  const rightVector = {
+    x: -forwardVector.z, // Perpendicular to forward
+    z: forwardVector.x,
+  };
+
+  // Joystick-based movement
+  if (isJoystickActive) {
+    ballBody.velocity.x += joystickPosition.y * forwardVector.x * speed; // Forward/Backward
+    ballBody.velocity.z += joystickPosition.y * forwardVector.z * speed;
+    ballBody.velocity.x += -(joystickPosition.x * rightVector.x * speed); // Left/Right
+    ballBody.velocity.z += -(joystickPosition.x * rightVector.z * speed);
   }
+
+  // WSAD Controls
+  if (keyState["KeyS"]) ballBody.velocity.z -= speed;
+  if (keyState["KeyW"]) ballBody.velocity.z += speed;
+  if (keyState["KeyD"]) ballBody.velocity.x -= speed;
+  if (keyState["KeyA"]) ballBody.velocity.x += speed;
 }
+
+// Initialize Joystick
+setupJoystick();
 
 // Ball End Point Coordinates
 const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
