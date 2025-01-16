@@ -1,10 +1,12 @@
 import React from "react";
-import Model from "./components/model";
+import WASDGuidelines from "./components/Guidelines";
+import BallSimulation from "./components/ballsimulation";
 
 const App = () => {
   return (
-    <div>
-      <Model />
+    <div style={{ width: "100%", height: "100vh", position: "relative" }}>
+      <WASDGuidelines />
+      <BallSimulation />
     </div>
   );
 };
