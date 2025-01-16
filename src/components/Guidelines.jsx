@@ -3,15 +3,52 @@ import React, { useEffect, useState } from "react";
 const WASDGuidelines = () => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // Hide the guidelines when any key is pressed
   useEffect(() => {
     const handleKeyPress = () => {
+      setIsVisible(false); // Hide guidelines when any key is pressed
+    };
+
+    const handleTouchStart = (event) => {
+      const touch = event.touches[0];
+      swipeData.startX = touch.clientX;
+      swipeData.startY = touch.clientY;
+    };
+
+    const handleTouchEnd = (event) => {
+      const touch = event.changedTouches[0];
+      swipeData.endX = touch.clientX;
+      swipeData.endY = touch.clientY;
+
+      // Check for swipe direction
+      const deltaX = swipeData.endX - swipeData.startX;
+      const deltaY = swipeData.endY - swipeData.startY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Horizontal swipe
+        if (deltaX > 0) console.log("Swipe Right");
+        else console.log("Swipe Left");
+      } else {
+        // Vertical swipe
+        if (deltaY > 0) console.log("Swipe Down");
+        else console.log("Swipe Up");
+      }
+
+      // Hide guidelines on swipe
       setIsVisible(false);
     };
 
+    const swipeData = { startX: 0, startY: 0, endX: 0, endY: 0 };
+
+    // Add event listeners
     window.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
+
+    // Cleanup
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
@@ -79,7 +116,8 @@ const WASDGuidelines = () => {
           </div>
         </div>
         <div style={styles.instructions}>
-          Use your arrow keys (or WASD keys) to control the ball
+          Use your arrow keys (or WASD keys) to control the ball. Swipe on your
+          phone to control it.
         </div>
       </div>
     </div>
