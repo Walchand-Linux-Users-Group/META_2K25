@@ -45,7 +45,7 @@ const BallSimulation = () => {
       trackMaterial,
       ballMaterial,
       {
-        friction: 1000,
+        friction: 0.1, // Adjusted friction
         restitution: 0.3,
       }
     );
@@ -63,7 +63,7 @@ const BallSimulation = () => {
     });
 
     const ballBody = new CANNON.Body({
-      mass: 12000,
+      mass: 3000,
       material: ballMaterial,
       shape: new CANNON.Sphere(0.5),
     });
@@ -272,8 +272,8 @@ const BallSimulation = () => {
     }
 
     function handleBallMovement() {
-      const speed = 0.07;
-      const damping = 0.0095;
+      const speed = 0.1;
+      const damping = 0.989;
 
       const forwardVector = {
         x: Math.sin(
@@ -300,6 +300,10 @@ const BallSimulation = () => {
         ballBody.velocity.z += joystickPosition.y * forwardVector.z * speed;
         ballBody.velocity.x += -(joystickPosition.x * rightVector.x * speed);
         ballBody.velocity.z += -(joystickPosition.x * rightVector.z * speed);
+      } else {
+        // Apply damping to simulate inertia
+        ballBody.velocity.x *= damping;
+        ballBody.velocity.z *= damping;
       }
 
       if (keyState["KeyS"]) {
@@ -317,16 +321,6 @@ const BallSimulation = () => {
       if (keyState["KeyA"]) {
         ballBody.velocity.x += speed;
         ballBody.velocity.z += speed;
-      }
-      if (
-        !keyState["KeyW"] &&
-        !keyState["KeyA"] &&
-        !keyState["KeyS"] &&
-        !keyState["KeyD"] &&
-        !isJoystickActive
-      ) {
-        ballBody.velocity.x *= damping;
-        ballBody.velocity.z *= damping;
       }
     }
 
