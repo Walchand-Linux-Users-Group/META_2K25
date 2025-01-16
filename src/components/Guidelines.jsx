@@ -65,7 +65,7 @@ const WASDGuidelines = () => {
       left: 0,
       width: "100%",
       height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.8)", // Dim background
+      backgroundColor: "rgba(0, 0, 0, 0.6)", // Dim background
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
@@ -73,11 +73,12 @@ const WASDGuidelines = () => {
     },
     container: {
       textAlign: "center",
-      color: "#fff",
+      color: "#ffffff",
     },
     wasdKeys: {
       display: "inline-block",
       marginBottom: "20px",
+      marginTop: "200px",
     },
     key: {
       display: "inline-flex",
@@ -86,11 +87,11 @@ const WASDGuidelines = () => {
       width: "50px",
       height: "50px",
       margin: "5px",
-      border: "2px solid white",
+      border: "3px solid white",
       borderRadius: "8px",
       fontSize: "20px",
       fontWeight: "bold",
-      backgroundColor: "#000",
+      // backgroundColor: "#fff",
     },
     horizontalKeys: {
       display: "flex",

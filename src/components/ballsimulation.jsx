@@ -211,31 +211,47 @@ const BallSimulation = () => {
     });
 
     function setupJoystick() {
+      // Detect if the user is on a mobile device
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
+
+      // Render the joystick only on mobile
+      if (!isMobile) {
+        return; // Exit if not on a mobile device
+      }
+
+      // Create joystick container
       const joystick = document.createElement("div");
       joystick.style.position = "absolute";
-      joystick.style.bottom = "10%";
-      joystick.style.left = "10%";
-      joystick.style.width = "100px";
-      joystick.style.height = "100px";
+      joystick.style.bottom = "25%"; // Adjust this to control vertical positioning
+      joystick.style.left = "50%";
+      joystick.style.width = "150px";
+      joystick.style.height = "150px";
       joystick.style.border = "2px solid #aaa";
       joystick.style.borderRadius = "50%";
       joystick.style.background = "rgba(255, 255, 255, 0.5)";
       joystick.style.zIndex = "1000";
-      joystick.style.touchAction = "none";
+      joystick.style.opacity = "0.3";
+      joystick.style.touchAction = "none"; // Prevents browser default touch behavior
+      joystick.style.transform = "translateX(-50%)"; // Center horizontally
       document.body.appendChild(joystick);
 
+      // Create joystick handle
       const handle = document.createElement("div");
       handle.style.position = "absolute";
-      handle.style.width = "40px";
-      handle.style.height = "40px";
+      handle.style.width = "50px";
+      handle.style.height = "50px";
+      handle.style.opacity = "0.4";
       handle.style.background = "rgba(0, 0, 0, 0.7)";
       handle.style.borderRadius = "50%";
       handle.style.left = "50%";
       handle.style.top = "50%";
-      handle.style.transform = "translate(-50%, -50%)";
+      handle.style.transform = "translate(-50%, -50%)"; // Center inside the joystick
       joystick.appendChild(handle);
 
       let initialTouch = null;
+      let isJoystickActive = false;
+      const joystickPosition = { x: 0, y: 0 };
 
       joystick.addEventListener("touchstart", (event) => {
         isJoystickActive = true;
@@ -270,6 +286,9 @@ const BallSimulation = () => {
         handle.style.transform = "translate(-50%, -50%)";
       });
     }
+
+    // Call the function to initialize the joystick
+    setupJoystick();
 
     function handleBallMovement() {
       const speed = 0.1;
