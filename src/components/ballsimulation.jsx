@@ -184,7 +184,7 @@ const BallSimulation = () => {
     function checkBallFallOff() {
       const ballPosition = ballBody.position;
 
-      if (ballPosition.y < 2) {
+      if (ballPosition.y < -1) {
         const nearestRespawn = findNearestRespawnPoint(ballPosition);
         ballBody.position.set(
           nearestRespawn.x,
@@ -211,16 +211,6 @@ const BallSimulation = () => {
     });
 
     function setupJoystick() {
-      // Detect if the user is on a mobile device
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
-
-      // Render the joystick only on mobile
-      if (!isMobile) {
-        return; // Exit if not on a mobile device
-      }
-
-      // Create joystick container
       const joystick = document.createElement("div");
       joystick.style.position = "absolute";
       joystick.style.bottom = "25%"; // Adjust this to control vertical positioning
@@ -250,8 +240,6 @@ const BallSimulation = () => {
       joystick.appendChild(handle);
 
       let initialTouch = null;
-      let isJoystickActive = false;
-      const joystickPosition = { x: 0, y: 0 };
 
       joystick.addEventListener("touchstart", (event) => {
         isJoystickActive = true;
@@ -287,12 +275,9 @@ const BallSimulation = () => {
       });
     }
 
-    // Call the function to initialize the joystick
-    setupJoystick();
-
     function handleBallMovement(deltaTime) {
       const baseSpeed = 7; // Base speed value
-      const damping = 0.989;
+      const damping = Math.pow(0.99, deltaTime * 60); // Scale damping with deltaTime
 
       // Normalize speed by deltaTime
       const speed = baseSpeed * deltaTime;
@@ -318,10 +303,16 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        ballBody.velocity.x += joystickPosition.y * forwardVector.x * speed;
-        ballBody.velocity.z += joystickPosition.y * forwardVector.z * speed;
-        ballBody.velocity.x += -(joystickPosition.x * rightVector.x * speed);
-        ballBody.velocity.z += -(joystickPosition.x * rightVector.z * speed);
+        const adjustedSpeed = speed * deltaTime; // Scale by deltaTime
+
+        ballBody.velocity.x +=
+          joystickPosition.y * forwardVector.x * adjustedSpeed;
+        ballBody.velocity.z +=
+          joystickPosition.y * forwardVector.z * adjustedSpeed;
+        ballBody.velocity.x +=
+          -joystickPosition.x * rightVector.x * adjustedSpeed;
+        ballBody.velocity.z +=
+          -joystickPosition.x * rightVector.z * adjustedSpeed;
       } else {
         // Apply damping to simulate inertia
         ballBody.velocity.x *= damping;
@@ -405,7 +396,6 @@ const BallSimulation = () => {
       lastTime = currentTime;
 
       handleBallMovement(deltaTime);
-
       if (ballMesh) {
         ballMesh.position.copy(ballBody.position);
         ballMesh.quaternion.copy(ballBody.quaternion);
