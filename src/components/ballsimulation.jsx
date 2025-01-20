@@ -312,7 +312,7 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed * deltaTime * 20; // Scale by deltaTime
+        const adjustedSpeed = speed * deltaTime * 30; // Scale by deltaTime
 
         ballBody.velocity.x +=
           joystickPosition.y * forwardVector.x * adjustedSpeed;
