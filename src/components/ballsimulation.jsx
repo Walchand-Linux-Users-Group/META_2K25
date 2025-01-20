@@ -184,7 +184,7 @@ const BallSimulation = () => {
     function checkBallFallOff() {
       const ballPosition = ballBody.position;
 
-      if (ballPosition.y < -1) {
+      if (ballPosition.y < 2) {
         const nearestRespawn = findNearestRespawnPoint(ballPosition);
         ballBody.position.set(
           nearestRespawn.x,
@@ -290,9 +290,12 @@ const BallSimulation = () => {
     // Call the function to initialize the joystick
     setupJoystick();
 
-    function handleBallMovement() {
-      const speed = 0.1;
+    function handleBallMovement(deltaTime) {
+      const baseSpeed = 7; // Base speed value
       const damping = 0.989;
+
+      // Normalize speed by deltaTime
+      const speed = baseSpeed * deltaTime;
 
       const forwardVector = {
         x: Math.sin(
@@ -325,6 +328,7 @@ const BallSimulation = () => {
         ballBody.velocity.z *= damping;
       }
 
+      // Key controls
       if (keyState["KeyS"]) {
         ballBody.velocity.z -= speed;
         ballBody.velocity.x += speed;
@@ -375,6 +379,8 @@ const BallSimulation = () => {
       );
     }
 
+    let lastTime = performance.now();
+
     function animate() {
       if (gameFinished || isPaused) return;
 
@@ -393,7 +399,13 @@ const BallSimulation = () => {
 
       checkBallFallOff();
       world.step(1 / 60);
-      handleBallMovement();
+
+      const currentTime = performance.now();
+      const deltaTime = (currentTime - lastTime) / 1000; // Convert ms to seconds
+      lastTime = currentTime;
+
+      handleBallMovement(deltaTime);
+
       if (ballMesh) {
         ballMesh.position.copy(ballBody.position);
         ballMesh.quaternion.copy(ballBody.quaternion);
