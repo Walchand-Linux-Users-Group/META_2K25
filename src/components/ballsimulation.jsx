@@ -8,9 +8,9 @@ const BallSimulation = () => {
   const mountRef = useRef(null);
   const [isPaused, setIsPaused] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
+  const [showPauseCard, setShowPauseCard] = useState(false);
 
   useEffect(() => {
-    // Initialize Three.js and Cannon.js setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       45,
@@ -45,7 +45,7 @@ const BallSimulation = () => {
       trackMaterial,
       ballMaterial,
       {
-        friction: 0.1, // Adjusted friction
+        friction: 0.1,
         restitution: 0.3,
       }
     );
@@ -55,10 +55,9 @@ const BallSimulation = () => {
     let ballMesh;
     let track;
 
-    // Load custom ball model
     loader.load("/models/ballbody.glb", (gltf) => {
       ballMesh = gltf.scene;
-      ballMesh.scale.set(0.5, 0.5, 0.5); // Adjust the scale if necessary
+      ballMesh.scale.set(0.5, 0.5, 0.5);
       scene.add(ballMesh);
     });
 
@@ -70,7 +69,6 @@ const BallSimulation = () => {
     ballBody.position.set(0, 15, 0);
     world.addBody(ballBody);
 
-    // Load custom track model
     loader.load("/models/untitled.glb", (gltf) => {
       track = gltf.scene;
       scene.add(track);
@@ -109,9 +107,21 @@ const BallSimulation = () => {
       );
     });
 
-    const light = new THREE.DirectionalLight(0xffffff, 1, 100);
-    light.position.set(10, 10, 10);
-    scene.add(light);
+    const light1 = new THREE.DirectionalLight(0xffffff, 1, 100);
+    light1.position.set(0, 10, 10);
+    scene.add(light1);
+
+    const light2 = new THREE.DirectionalLight(0xffffff, 1, 100);
+    light2.position.set(10, 10, 10);
+    scene.add(light2);
+
+    const light3 = new THREE.DirectionalLight(0xffffff, 1, 100);
+    light3.position.set(100, 10, 10);
+    scene.add(light3);
+
+    const light4 = new THREE.DirectionalLight(0xffffff, 1, 100);
+    light4.position.set(-39.38, 5.76, 40.06);
+    scene.add(light4);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
@@ -201,7 +211,6 @@ const BallSimulation = () => {
       }
     }
 
-    // Event Listeners for Keyboard Controls
     window.addEventListener("keydown", (event) => {
       keyState[event.code] = true;
     });
@@ -211,17 +220,15 @@ const BallSimulation = () => {
     });
 
     function setupJoystick() {
-      // Detect if the user is on a mobile device
       const userAgent = navigator.userAgent || navigator.vendor || window.opera;
       const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
 
-      // Render the joystick only on mobile
       if (!isMobile) {
-        return; // Exit if not on a mobile device
+        return;
       }
       const joystick = document.createElement("div");
       joystick.style.position = "absolute";
-      joystick.style.bottom = "15%"; // Adjust this to control vertical positioning
+      joystick.style.bottom = "15%";
       joystick.style.left = "50%";
       joystick.style.width = "150px";
       joystick.style.height = "150px";
@@ -230,11 +237,10 @@ const BallSimulation = () => {
       joystick.style.background = "rgba(255, 255, 255, 0.5)";
       joystick.style.zIndex = "1000";
       joystick.style.opacity = "0.3";
-      joystick.style.touchAction = "none"; // Prevents browser default touch behavior
-      joystick.style.transform = "translateX(-50%)"; // Center horizontally
+      joystick.style.touchAction = "none";
+      joystick.style.transform = "translateX(-50%)";
       document.body.appendChild(joystick);
 
-      // Create joystick handle
       const handle = document.createElement("div");
       handle.style.position = "absolute";
       handle.style.width = "50px";
@@ -244,7 +250,7 @@ const BallSimulation = () => {
       handle.style.borderRadius = "50%";
       handle.style.left = "50%";
       handle.style.top = "50%";
-      handle.style.transform = "translate(-50%, -50%)"; // Center inside the joystick
+      handle.style.transform = "translate(-50%, -50%)";
       joystick.appendChild(handle);
 
       let initialTouch = null;
@@ -284,10 +290,9 @@ const BallSimulation = () => {
     }
 
     function handleBallMovement(deltaTime) {
-      const baseSpeed = 7; // Base speed value
-      const damping = Math.pow(0.99, deltaTime * 60); // Scale damping with deltaTime
+      const baseSpeed = 7;
+      const damping = Math.pow(0.99, deltaTime * 60);
 
-      // Normalize speed by deltaTime
       const speed = baseSpeed * deltaTime;
 
       const forwardVector = {
@@ -311,7 +316,7 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed * deltaTime * 35; // Scale by deltaTime
+        const adjustedSpeed = speed * deltaTime * 35;
 
         ballBody.velocity.x +=
           joystickPosition.y * forwardVector.x * adjustedSpeed;
@@ -322,12 +327,10 @@ const BallSimulation = () => {
         ballBody.velocity.z +=
           -joystickPosition.x * rightVector.z * adjustedSpeed;
       } else {
-        // Apply damping to simulate inertia
         ballBody.velocity.x *= damping;
         ballBody.velocity.z *= damping;
       }
 
-      // Key controls
       if (keyState["KeyS"]) {
         ballBody.velocity.z -= speed;
         ballBody.velocity.x += speed;
@@ -368,14 +371,54 @@ const BallSimulation = () => {
       cancelAnimationFrame(animationId);
     }
 
-    function isBallAtPauseCoordinates() {
+    let isAttached = false; // Flag to track if the ball is attached
+
+    function magneticEffect() {
       const ballPosition = ballBody.position;
-      return pauseButtonPositions.some(
-        (pos) =>
-          Math.abs(ballPosition.x - pos.x) < 1 &&
-          Math.abs(ballPosition.y - pos.y) < 1 &&
-          Math.abs(ballPosition.z - pos.z) < 1
-      );
+
+      if (isAttached) return; // Skip applying magnetic effect if already attached
+
+      pauseButtonPositions.forEach((pos) => {
+        const distance = calculateDistance(ballPosition, pos);
+
+        if (distance < 3) {
+          const force = new CANNON.Vec3(
+            (pos.x - ballPosition.x) * 10,
+            (pos.y - ballPosition.y) * 10,
+            (pos.z - ballPosition.z) * 10
+          );
+          ballBody.applyForce(force, ballBody.position);
+
+          // Gradually move toward the position if close
+          if (distance < 0.8) {
+            isAttached = true; // Mark as attached
+
+            // Gradual movement logic
+            const interval = setInterval(() => {
+              ballBody.velocity.set(0, 0, 0); // Stop velocity for smooth control
+              ballBody.angularVelocity.set(0, 0, 0); // Stop angular velocity
+
+              const lerpFactor = 0.05; // Adjust for smoother or faster transitions
+              ballBody.position.x += (pos.x - ballPosition.x) * lerpFactor;
+              ballBody.position.y += (pos.y - ballPosition.y) * lerpFactor;
+              ballBody.position.z += (pos.z - ballPosition.z) * lerpFactor;
+
+              const currentDistance = calculateDistance(ballPosition, pos);
+
+              // Stop interpolation once very close to the target
+              if (currentDistance < 0.05) {
+                clearInterval(interval);
+                ballBody.position.set(pos.x, pos.y, pos.z); // Snap to exact position
+
+                // Automatically release after 3 seconds
+                setTimeout(() => {
+                  isAttached = false; // Release the ball
+                }, 1000); // Stuck duration: 3 seconds
+              }
+            }, 16); // 60 FPS update interval
+          }
+        }
+      });
     }
 
     let lastTime = performance.now();
@@ -397,10 +440,11 @@ const BallSimulation = () => {
       }
 
       checkBallFallOff();
+      magneticEffect();
       world.step(1 / 60);
 
       const currentTime = performance.now();
-      const deltaTime = (currentTime - lastTime) / 1000; // Convert ms to seconds
+      const deltaTime = (currentTime - lastTime) / 1000;
       lastTime = currentTime;
 
       handleBallMovement(deltaTime);
@@ -409,26 +453,21 @@ const BallSimulation = () => {
         ballMesh.quaternion.copy(ballBody.quaternion);
       }
 
+      if (ballMesh) {
+        ballMesh.position.copy(ballBody.position);
+        ballMesh.quaternion.copy(ballBody.quaternion);
+      }
+
       const cameraYOffset = 15;
       const cameraZOffset = -8;
       camera.position.x = ballBody.position.x + 6;
-      camera.position.y = cameraYOffset;
+      camera.position.y = cameraYOffset-2;
       camera.position.z = ballBody.position.z + cameraZOffset;
       camera.lookAt(
         ballBody.position.x,
         ballBody.position.y,
         ballBody.position.z
       );
-
-      const pauseButton = document.getElementById("pauseButton");
-      const showCard = document.getElementById("skewed-card-container");
-      if (isBallAtPauseCoordinates()) {
-        pauseButton.style.display = "block";
-        showCard.style.display = "block";
-      } else {
-        pauseButton.style.display = "none";
-        showCard.style.display = "none";
-      }
 
       renderer.render(scene, camera);
     }
@@ -451,19 +490,34 @@ const BallSimulation = () => {
   }, [isPaused, gameFinished]);
 
   const handlePauseButtonClick = () => {
-    setIsPaused(!isPaused);
     if (isPaused) {
       animate();
     }
+    setIsPaused(!isPaused);
   };
 
   return (
     <div ref={mountRef}>
       <button id="logBallCoords">Log Ball Coordinates</button>
-      <button id="pauseButton" onClick={handlePauseButtonClick}>
-        {isPaused ? "Resume" : "Pause"}
-      </button>
-      <div id="skewed-card-container" />
+      {showPauseCard && (
+        <div
+          id="pause-card"
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "#FFCC00",
+            color: "black",
+            fontSize: "24px",
+            padding: "20px",
+            borderRadius: "10px",
+            zIndex: 1000,
+          }}
+        >
+          Paused for 5 seconds
+        </div>
+      )}
     </div>
   );
 };
