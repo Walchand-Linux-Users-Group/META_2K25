@@ -211,6 +211,15 @@ const BallSimulation = () => {
     });
 
     function setupJoystick() {
+
+      // Detect if the user is on a mobile device
+      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+      const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
+
+      // Render the joystick only on mobile
+      if (!isMobile) {
+        return; // Exit if not on a mobile device
+      }
       const joystick = document.createElement("div");
       joystick.style.position = "absolute";
       joystick.style.bottom = "25%"; // Adjust this to control vertical positioning
