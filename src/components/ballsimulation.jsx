@@ -221,7 +221,7 @@ const BallSimulation = () => {
       }
       const joystick = document.createElement("div");
       joystick.style.position = "absolute";
-      joystick.style.bottom = "25%"; // Adjust this to control vertical positioning
+      joystick.style.bottom = "15%"; // Adjust this to control vertical positioning
       joystick.style.left = "50%";
       joystick.style.width = "150px";
       joystick.style.height = "150px";
@@ -311,7 +311,7 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed * deltaTime * 20; // Scale by deltaTime
+        const adjustedSpeed = speed * deltaTime * 35; // Scale by deltaTime
 
         ballBody.velocity.x +=
           joystickPosition.y * forwardVector.x * adjustedSpeed;
