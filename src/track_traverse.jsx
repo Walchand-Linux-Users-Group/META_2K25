@@ -476,4 +476,4 @@ const BallSimulation = () => {
   );
 };
 
-export default BallSimulation;
+// export default BallSimulation;

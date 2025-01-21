@@ -490,7 +490,7 @@ const BallSimulation = () => {
       const cameraYOffset = 15;
       const cameraZOffset = -8;
       camera.position.x = ballBody.position.x + 6;
-      camera.position.y = cameraYOffset-2;
+      camera.position.y = cameraYOffset - 2;
       camera.position.z = ballBody.position.z + cameraZOffset;
       camera.lookAt(
         ballBody.position.x,
