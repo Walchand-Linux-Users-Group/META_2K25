@@ -1,6 +1,6 @@
 import React from "react";
 import WASDGuidelines from "./components/Guidelines";
-import BallSimulation from "./components/ballSimulation";
+import BallSimulation from "./components/Ballsimulation.jsx";
 
 const App = () => {
   return (
