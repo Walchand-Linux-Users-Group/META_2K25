@@ -1,17 +1,21 @@
+// BackgroundEffects.js
 import React from "react";
-import { Stars } from "@react-three/drei";
+import { Stars, Sparkles } from "@react-three/drei";
 
-const EndlessStars = () => {
+const BackgroundEffects = () => {
   return (
-    <Stars
-      radius={100} // Radius of the inner sphere where the stars are visible
-      depth={50} // Depth of the outer sphere where stars start to fade
-      count={5000} // Number of stars
-      factor={4} // Size factor for the stars
-      saturation={0} // Saturation of the stars colors
-      fade // Fading effect for stars
-    />
+    <>
+      <Stars
+        radius={100}
+        depth={50}
+        count={5000}
+        factor={4}
+        saturation={0}
+        fade
+      />
+      <Sparkles size={25} scale={[4, 4, 4]} position={[0, 15, 0]} />
+    </>
   );
 };
 
-export default EndlessStars;
+export default BackgroundEffects;

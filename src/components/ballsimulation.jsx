@@ -9,6 +9,7 @@ const BallSimulation = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
   const [showPauseCard, setShowPauseCard] = useState(false);
+  const [isStuck, setIsStuck] = useState(false);
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -106,6 +107,25 @@ const BallSimulation = () => {
         "Track model loaded successfully with its original materials and textures!"
       );
     });
+
+    // Create starry background
+    const starGeometry = new THREE.BufferGeometry();
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff });
+
+    const starVertices = [];
+    for (let i = 0; i < 10000; i++) {
+      const x = (Math.random() - 0.5) * 2000;
+      const y = (Math.random() - 0.5) * 2000;
+      const z = (Math.random() - 0.5) * 2000;
+      starVertices.push(x, y, z);
+    }
+
+    starGeometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(starVertices, 3)
+    );
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
 
     const light1 = new THREE.DirectionalLight(0xffffff, 1, 100);
     light1.position.set(0, 10, 10);
@@ -213,6 +233,13 @@ const BallSimulation = () => {
 
     window.addEventListener("keydown", (event) => {
       keyState[event.code] = true;
+
+      // Allow exiting the stuck state using keypresses
+      if (isStuck) {
+        setIsStuck(false);
+        setShowPauseCard(false);
+        setIsPaused(false);
+      }
     });
 
     window.addEventListener("keyup", (event) => {
@@ -371,6 +398,13 @@ const BallSimulation = () => {
       cancelAnimationFrame(animationId);
     }
 
+    function isBallAtPauseCoordinates() {
+      const ballPosition = ballBody.position;
+      return pauseButtonPositions.some(
+        (pos) => calculateDistance(ballPosition, pos) < 3
+      );
+    }
+
     let isAttached = false; // Flag to track if the ball is attached
 
     function magneticEffect() {
@@ -453,11 +487,6 @@ const BallSimulation = () => {
         ballMesh.quaternion.copy(ballBody.quaternion);
       }
 
-      if (ballMesh) {
-        ballMesh.position.copy(ballBody.position);
-        ballMesh.quaternion.copy(ballBody.quaternion);
-      }
-
       const cameraYOffset = 15;
       const cameraZOffset = -8;
       camera.position.x = ballBody.position.x + 6;
@@ -473,12 +502,6 @@ const BallSimulation = () => {
     }
 
     animate();
-
-    window.addEventListener("resize", () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
 
     return () => {
       window.removeEventListener("resize", () => {
@@ -499,6 +522,9 @@ const BallSimulation = () => {
   return (
     <div ref={mountRef}>
       <button id="logBallCoords">Log Ball Coordinates</button>
+      <button id="pauseButton" onClick={handlePauseButtonClick}>
+        {isPaused ? "Resume" : "Pause"}
+      </button>
       {showPauseCard && (
         <div
           id="pause-card"
@@ -518,6 +544,7 @@ const BallSimulation = () => {
           Paused for 5 seconds
         </div>
       )}
+      <div id="skewed-card-container" />
     </div>
   );
 };
