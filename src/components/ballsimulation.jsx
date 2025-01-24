@@ -114,9 +114,9 @@ const BallSimulation = () => {
 
     const starVertices = [];
     for (let i = 0; i < 10000; i++) {
-      const x = (Math.random() - 0.5) * 2000;
-      const y = (Math.random() - 0.5) * 2000;
-      const z = (Math.random() - 0.5) * 2000;
+      const x = (Math.random() - 0.5) * 1000;
+      const y = (Math.random() - 0.5) * 1000;
+      const z = (Math.random() - 0.5) * 1000;
       starVertices.push(x, y, z);
     }
 
@@ -343,7 +343,7 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed * deltaTime * 35;
+        const adjustedSpeed = speed * deltaTime * 45;
 
         ballBody.velocity.x +=
           joystickPosition.y * forwardVector.x * adjustedSpeed;
@@ -432,7 +432,7 @@ const BallSimulation = () => {
               ballBody.velocity.set(0, 0, 0); // Stop velocity for smooth control
               ballBody.angularVelocity.set(0, 0, 0); // Stop angular velocity
 
-              const lerpFactor = 0.05; // Adjust for smoother or faster transitions
+              const lerpFactor = 0.08; // Adjust for smoother or faster transitions
               ballBody.position.x += (pos.x - ballPosition.x) * lerpFactor;
               ballBody.position.y += (pos.y - ballPosition.y) * lerpFactor;
               ballBody.position.z += (pos.z - ballPosition.z) * lerpFactor;
@@ -447,7 +447,7 @@ const BallSimulation = () => {
                 // Automatically release after 3 seconds
                 setTimeout(() => {
                   isAttached = false; // Release the ball
-                }, 1000); // Stuck duration: 3 seconds
+                }, 800); // Stuck duration: 1 seconds
               }
             }, 16); // 60 FPS update interval
           }
@@ -490,7 +490,7 @@ const BallSimulation = () => {
       const cameraYOffset = 15;
       const cameraZOffset = -8;
       camera.position.x = ballBody.position.x + 6;
-      camera.position.y = cameraYOffset - 2;
+      camera.position.y = cameraYOffset;
       camera.position.z = ballBody.position.z + cameraZOffset;
       camera.lookAt(
         ballBody.position.x,
