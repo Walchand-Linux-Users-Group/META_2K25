@@ -5,6 +5,8 @@ import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
 import RegisterPage from "./components/RegisterForm";
 import PageLoader from "./components/Loader";
+import MainPage from "./components/mainPage";
+// import MainPage from "./components/mainPage";
 
 const App = () => {
   return (
@@ -63,7 +65,7 @@ const AppContent = () => {
 
       {/* Routes */}
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<MainPage />} />
         <Route
           path="/ball-simulation"
           element={
