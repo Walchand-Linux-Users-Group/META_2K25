@@ -3,13 +3,29 @@ import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react
 import HomePage from "./components/Homepage";
 import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
-import RegisterPage from "./components/RegisterForm";
+import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
+import MainPage from "./components/mainPage";
+// import MainPage from "./components/mainPage";
 
 const App = () => {
   return (
     <Router>
       <AppContent />
+      <Routes>
+      <Route path="/" element={<MainPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route
+          path="/ball-simulation"
+          element={
+            <div>
+              <BallSimulation />
+              <WASDGuidelines />
+            </div>
+          }
+        />
+      </Routes>
+
     </Router>
   );
 };
@@ -38,17 +54,17 @@ const AppContent = () => {
 
   return (
     <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        position: "relative",
-        color: "white",
-      }}
-    >
-      {/* Show loader until isLoading is true */}
+    //   style={{
+    //     width: "100%",
+    //     height: "100vh",
+    //     position: "relative",
+    //     color: "white",
+    //   }}
+     >
+       {/* Show loader until isLoading is true */}
       {isLoading && <PageLoader />}
 
-      {/* Navigation Links */}
+      {/* Navigation Links
       <nav style={{ position: "absolute", top: 10, left: 10 }}>
         <Link to="/" style={{ margin: "0 10px" }}>
           Home
@@ -59,22 +75,9 @@ const AppContent = () => {
         <Link to="/register" style={{ margin: "0 10px" }}>
           Register
         </Link>
-      </nav>
+      </nav> */}
 
-      {/* Routes */}
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route
-          path="/ball-simulation"
-          element={
-            <div>
-              <BallSimulation />
-              <WASDGuidelines />
-            </div>
-          }
-        />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
+      
     </div>
   );
 };
