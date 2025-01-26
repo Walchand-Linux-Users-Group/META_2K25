@@ -189,7 +189,8 @@ const BallSimulation = () => {
       );
     }
 
-    logCoordsButton.addEventListener("click", logBallCoordinates);
+    //debugger to get ball coordinates
+    // logCoordsButton.addEventListener("click", logBallCoordinates);
 
     function calculateDistance(p1, p2) {
       return Math.sqrt(
@@ -520,7 +521,8 @@ const BallSimulation = () => {
 
   return (
     <div ref={mountRef}>
-      <button id="logBallCoords">Log Ball Coordinates</button>
+      {/* button to log coords */}
+      {/* <button id="logBallCoords">Log Ball Coordinates</button> */}
 
       {showPauseCard && <SessionCards selectedSessionIndex={idx - 1} />}
     </div>
