@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
+import SessionCards from "./SessionCard";
 
 const BallSimulation = () => {
   const mountRef = useRef(null);
@@ -10,6 +11,7 @@ const BallSimulation = () => {
   const [gameFinished, setGameFinished] = useState(false);
   const [showPauseCard, setShowPauseCard] = useState(false);
   const [isStuck, setIsStuck] = useState(false);
+  var idx = 1;
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -163,10 +165,10 @@ const BallSimulation = () => {
     ];
 
     const pauseButtonPositions = [
-      new THREE.Vector3(-41.42, 9.71, -10.54),
-      new THREE.Vector3(-63.64, 6.96, 7.03),
-      new THREE.Vector3(-43.07, 5.76, 35.21),
-      new THREE.Vector3(-25.03, 5.27, 36.64),
+      new THREE.Vector4(-41.42, 9.71, -10.54, 1),
+      new THREE.Vector4(-63.64, 6.96, 7.03, 2),
+      new THREE.Vector4(-43.07, 5.76, 35.21, 3),
+      new THREE.Vector4(-25.03, 5.27, 36.64, 4),
     ];
 
     const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
@@ -425,6 +427,9 @@ const BallSimulation = () => {
 
           // Gradually move toward the position if close
           if (distance < 0.8) {
+            idx = pos.w;
+            console.log(pos.w);
+            setShowPauseCard(true);
             isAttached = true; // Mark as attached
 
             // Gradual movement logic
@@ -446,7 +451,8 @@ const BallSimulation = () => {
 
                 // Automatically release after 3 seconds
                 setTimeout(() => {
-                  isAttached = false; // Release the ball
+                  isAttached = false;
+                  setShowPauseCard(false); // Release the ball
                 }, 800); // Stuck duration: 1 seconds
               }
             }, 16); // 60 FPS update interval
@@ -512,39 +518,11 @@ const BallSimulation = () => {
     };
   }, [isPaused, gameFinished]);
 
-  const handlePauseButtonClick = () => {
-    if (isPaused) {
-      animate();
-    }
-    setIsPaused(!isPaused);
-  };
-
   return (
     <div ref={mountRef}>
       <button id="logBallCoords">Log Ball Coordinates</button>
-      <button id="pauseButton" onClick={handlePauseButtonClick}>
-        {isPaused ? "Resume" : "Pause"}
-      </button>
-      {showPauseCard && (
-        <div
-          id="pause-card"
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "#FFCC00",
-            color: "black",
-            fontSize: "24px",
-            padding: "20px",
-            borderRadius: "10px",
-            zIndex: 1000,
-          }}
-        >
-          Paused for 5 seconds
-        </div>
-      )}
-      <div id="skewed-card-container" />
+
+      {showPauseCard && <SessionCards selectedSessionIndex={idx - 1} />}
     </div>
   );
 };
