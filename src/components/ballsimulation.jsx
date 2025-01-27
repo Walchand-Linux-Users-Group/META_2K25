@@ -21,9 +21,12 @@ const BallSimulation = () => {
       0.2,
       1000
     );
-    const renderer = new THREE.WebGLRenderer({antialias : true});
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true; // Enable shadows
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Optional: Choose the type of shadow map
     mountRef.current.appendChild(renderer.domElement);
+    renderer.shadowMapType = THREE.PCFSoftShadowMap;
 
     camera.position.set(16, 22, -26);
     camera.lookAt(0, 0, 0);
@@ -61,6 +64,12 @@ const BallSimulation = () => {
     loader.load("/models/ballbody.glb", (gltf) => {
       ballMesh = gltf.scene;
       ballMesh.scale.set(0.5, 0.5, 0.5);
+      ballMesh.traverse((child) => {
+        if (child.isMesh) {
+          child.castShadow = true; // Enable shadow casting
+          child.receiveShadow = true; // Enable shadow receiving
+        }
+      });
       scene.add(ballMesh);
     });
 
@@ -72,12 +81,13 @@ const BallSimulation = () => {
     ballBody.position.set(0, 15, 0);
     world.addBody(ballBody);
 
-    loader.load("/models/untitled.glb", (gltf) => {
+    loader.load("/models/t690.glb", (gltf) => {
       track = gltf.scene;
-      scene.add(track);
-
       track.traverse((child) => {
         if (child.isMesh) {
+          child.castShadow = true; // Enable shadow casting
+          child.receiveShadow = true; // Enable shadow receiving
+
           if (child.material && child.material.map) {
             child.material.map.needsUpdate = true;
           } else if (child.material) {
@@ -105,6 +115,8 @@ const BallSimulation = () => {
         }
       });
 
+      scene.add(track);
+
       console.log(
         "Track model loaded successfully with its original materials and textures!"
       );
@@ -129,21 +141,44 @@ const BallSimulation = () => {
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
-    const light1 = new THREE.DirectionalLight(0xffffff, 1, 100);
-    light1.position.set(0, 10, 10);
+    const light1 = new THREE.DirectionalLight(0xffffff, 2, 100);
+    light1.position.set(22, 20, 10);
+    light1.castShadow = true; // Enable shadows for this light
+    light1.shadow.camera.left = -100; // Extend left boundary
+    light1.shadow.camera.right = 100; // Extend right boundary
+    light1.shadow.camera.top = 100; // Extend top boundary
+    light1.shadow.camera.bottom = -100; // Extend bottom boundary
+    light1.shadow.mapSize.width = 4096; // Higher resolution (default is 512)
+    light1.shadow.mapSize.height = 4096;
+    light1.shadow.camera.near = 1; // Adjust near clipping plane
+    light1.shadow.camera.far = 510; // Adjust far clipping plane
     scene.add(light1);
+    // const shadowHelper = new THREE.CameraHelper(light1.shadow.camera);
+    // scene.add(shadowHelper);
 
     const light2 = new THREE.DirectionalLight(0xffffff, 1, 100);
-    light2.position.set(10, 10, 10);
+    light2.position.set(1, 140, 300);
+    light2.castShadow = true; // Enable shadows for this light
+    light2.castShadow = true; // Enable shadows for this light
+    light2.shadow.camera.left = -100; // Extend left boundary
+    light2.shadow.camera.right = 100; // Extend right boundary
+    light2.shadow.camera.top = 100; // Extend top boundary
+    light2.shadow.camera.bottom = -100; // Extend bottom boundary
+    light2.shadow.mapSize.width = 4096; // Higher resolution (default is 512)
+    light2.shadow.mapSize.height = 4096;
+    light2.shadow.camera.near = 100; // Adjust near clipping plane
+    light2.shadow.camera.far = 300;
     scene.add(light2);
+    // const shadowHelper = new THREE.CameraHelper(light2.shadow.camera);
+    // scene.add(shadowHelper);
 
     const light3 = new THREE.DirectionalLight(0xffffff, 1, 100);
-    light3.position.set(100, 10, 10);
-    scene.add(light3);
+    light3.position.set(50, 10, 38); // Enable shadows for this light
+    // scene.add(light3);
 
     const light4 = new THREE.DirectionalLight(0xffffff, 1, 100);
-    light4.position.set(-39.38, 5.76, 40.06);
-    scene.add(light4);
+    light4.position.set(-39.38, 5.76, 40.06); // Enable shadows for this light
+    // scene.add(light4);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
@@ -165,13 +200,19 @@ const BallSimulation = () => {
     ];
 
     const pauseButtonPositions = [
-      new THREE.Vector4(-41.42, 9.71, -10.54, 1),
-      new THREE.Vector4(-63.64, 6.96, 7.03, 2),
-      new THREE.Vector4(-43.07, 5.76, 35.21, 3),
-      new THREE.Vector4(-25.03, 5.27, 36.64, 4),
+      new THREE.Vector4(-41.93, 9.71, -10.36, 1),
+      new THREE.Vector4(-63.82, 6.94, 7.56, 2),
+      new THREE.Vector4(-43.49, 5.75, 34.59, 3),
+      new THREE.Vector4(-24.97, 5.26, 35.1, 4),
     ];
 
-    const endPoint = new THREE.Vector3(-1.71, 12.13, 60.18);
+    // new coords
+    //  -41.11, Y: 9.69, Z: -9.28
+    //  X: -20.88, Y: 6.94, Z: -2.94
+    // -3.39, Y: 6.94, Z: -7.50
+    //  X: -24.97, Y: 5.26, Z: 35.10
+
+    const endPoint = new THREE.Vector3(-1.56, 12.12, 60.29);
 
     let keyState = {};
     let joystickPosition = { x: 0, y: 0 };
@@ -190,7 +231,7 @@ const BallSimulation = () => {
     }
 
     //debugger to get ball coordinates
-    // logCoordsButton.addEventListener("click", logBallCoordinates);
+    logCoordsButton.addEventListener("click", logBallCoordinates);
 
     function calculateDistance(p1, p2) {
       return Math.sqrt(
@@ -454,7 +495,7 @@ const BallSimulation = () => {
                 setTimeout(() => {
                   isAttached = false;
                   setShowPauseCard(false); // Release the ball
-                }, 800); // Stuck duration: 1 seconds
+                }, 800); // Stuck duration: 1 second
               }
             }, 16); // 60 FPS update interval
           }
@@ -471,9 +512,9 @@ const BallSimulation = () => {
 
       const ballPosition = ballBody.position;
       if (
-        Math.abs(ballPosition.x - endPoint.x) < 1 &&
-        Math.abs(ballPosition.y - endPoint.y) < 1 &&
-        Math.abs(ballPosition.z - endPoint.z) < 1
+        Math.abs(ballPosition.x - endPoint.x) < 0.4 &&
+        Math.abs(ballPosition.y - endPoint.y) < 0.4 &&
+        Math.abs(ballPosition.z - endPoint.z) < 0.4
       ) {
         stopSimulation();
         showPassCard();
@@ -522,7 +563,7 @@ const BallSimulation = () => {
   return (
     <div ref={mountRef}>
       {/* button to log coords */}
-      {/* <button id="logBallCoords">Log Ball Coordinates</button> */}
+      {<button id="logBallCoords">Log Ball Coordinates</button>}
 
       {showPauseCard && <SessionCards selectedSessionIndex={idx - 1} />}
     </div>

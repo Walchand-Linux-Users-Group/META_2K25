@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../css/mainPage.css";
 import Particles from "react-tsparticles";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 export default function MainPage() {
   const [isHovered, setIsHovered] = useState(false);
@@ -158,7 +158,6 @@ export default function MainPage() {
         };
 
   const handleButtonClick = (val) => {
-  
     console.log("Btn clicked");
 
     if (shipRef.current) {
@@ -168,12 +167,13 @@ export default function MainPage() {
       shipRef.current.classList.add("gofast");
       console.log(shipRef.current.classList);
 
-      setTimeout(() => { val == 0 ? navigate('/ball-simulation') : navigate('/register') },900)
-
+      setTimeout(() => {
+        val == 0 ? navigate("/ball-simulation") : navigate("/register");
+      }, 900);
 
       setTimeout(() => {
         shipRef.current.classList.remove("gofast");
-        
+
         console.log("Animation removed");
       }, 1500);
     }
@@ -181,30 +181,29 @@ export default function MainPage() {
 
   return (
     <div
-      className="flex justify-center flex-col w-screen h-screen text-center bg-black text-white relative  overflow-hidden" // Prevent scrollbars by adding overflow-hidden
+      className="flex justify-center flex-col w-screen h-screen text-center bg-black text-white relative overflow-hidden"
       onMouseMove={handleMouseMove}
       style={{ userSelect: "none" }}
     >
-      {/* {stars.map((star) => (
-                    <div
-                        key={star.id}
-                        className="star z-0 text-gray-200"
-                        style={{
-                            left: `${star.left}vw`,
-                            top: `${star.top}vh`,
-                            width: `${star.size}px`,
-                            height: `${star.size}px`,
-                            animationDuration: `${star.duration}s`,
-                        }}
-                    />
-                ))} */}
+      {/* Background Animation */}
+      <div
+        className="bg-animation absolute inset-0 -z-1"
+        style={{ pointerEvents: "none" }}
+      >
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+        <div id="stars4"></div>
+      </div>
 
-<div className="absolute top-0 right-0 mr-5 mt-5 lg:mt-2">
-    <img src="wlug-purple-logo.png" alt="wlug logo" className="w-20" />
-  </div>
+      {/* Logo */}
+      <div className="absolute top-0 right-0 mr-5 mt-5 lg:mt-2">
+        <img src="wlug-purple-logo.png" alt="wlug logo" className="w-20" />
+      </div>
 
-      <div className="z-50 uppercase ">
-        <h1 className="font-lilita text-xl text-[#a360c0] lg:text-xl md:text-2xl  tracking-wide">
+      {/* Title Section */}
+      <div className="z-50 uppercase">
+        <h1 className="font-lilita text-xl text-[#a360c0] lg:text-xl md:text-2xl tracking-wide">
           Walchand Linux Users' Group
         </h1>
         <h3 className="font-lilita lg:text-lg text-[#a360c0] md:text-xl text-md mt-2 tracking-wide">
@@ -212,42 +211,36 @@ export default function MainPage() {
         </h3>
       </div>
 
+      {/* Main Event Title */}
       <div>
-        <h1 className="font-lilita z-50 uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#AD1DEB]  to-[#6E72FC] font-medium mt-10 lg:text-6xl md:text-7xl text-4xl tracking-widest">
+        <h1 className="font-lilita z-50 uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#AD1DEB] to-[#6E72FC] font-medium mt-10 lg:text-6xl md:text-7xl text-4xl tracking-widest">
           Metamorphosis <br />
           2k25
         </h1>
       </div>
 
-      <div className="flex flex-row mt-10 gap-4 justify-center items-center ">
-        <div className="">
-          <button
-            className="enter-btn text-gray-300 hover:bg-[#6E72FC]  uppercase text-center lg:text-xs md:text-xl text-xs tracking-wider border-[1px] p-3 px-8 font-medium rounded-full"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={() => {
-              handleButtonClick(0);
-            }}
-          >
-            Play Game
-          </button>
-        </div>
-
-        <div className="">
-          <button
-            className="enter-btn text-gray-300 hover:bg-[#AD1DEB] uppercase text-center lg:text-xs md:text-xl text-xs tracking-wider border-[1px] p-3 px-8 font-medium rounded-full"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={() => {
-              handleButtonClick(1);
-            }}
-          >
-            Register
-          </button>
-        </div>
+      {/* Buttons Section */}
+      <div className="flex flex-row mt-10 gap-4 justify-center items-center relative z-50">
+        <button
+          className="enter-btn text-gray-300 hover:bg-[#6E72FC] uppercase text-center lg:text-xs md:text-xl text-xs tracking-wider border-[1px] p-3 px-8 font-medium rounded-full"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={() => handleButtonClick(0)}
+        >
+          Play Game
+        </button>
+        <button
+          className="enter-btn text-gray-300 hover:bg-[#AD1DEB] uppercase text-center lg:text-xs md:text-xl text-xs tracking-wider border-[1px] p-3 px-8 font-medium rounded-full"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          onClick={() => handleButtonClick(1)}
+        >
+          Register
+        </button>
       </div>
 
-      <div className="flex justify-center items-center lg:mt-20 md:mt-30 mt-20 relative">
+      {/* Spaceship Section */}
+      <div className="flex justify-center items-center lg:mt-20 md:mt-30 mt-20 relative z-40">
         <div style={spaceShipStyle} ref={shipRef}>
           <img
             src="spaceship/Spaceship.png"
@@ -256,7 +249,7 @@ export default function MainPage() {
             height={imageSize.height}
             style={{ userSelect: "none", pointerEvents: "none" }}
           />
-
+          {/* Thrusters */}
           <img
             src="spaceship/thrustersRight.png"
             alt="Thruster Right"
@@ -270,7 +263,6 @@ export default function MainPage() {
             }}
             width={bigThrustersSize.width}
           />
-
           <img
             src="spaceship/thrustersLeft.png"
             alt="Thruster Left"
@@ -284,7 +276,6 @@ export default function MainPage() {
             }}
             width={bigThrustersSize.width}
           />
-
           <img
             src="spaceship/smallThrusterLeft.png"
             alt="Small Thruster Left"
@@ -298,7 +289,6 @@ export default function MainPage() {
             }}
             width={smallThrustersSize.width}
           />
-
           <img
             src="spaceship/smallThrusterRight.png"
             alt="Small Thruster Right"
@@ -312,7 +302,6 @@ export default function MainPage() {
             }}
             width={smallThrustersSize.width}
           />
-
           <img
             src="spaceship/redThruster.png"
             alt="red Thruster"

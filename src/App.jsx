@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
-import HomePage from "./components/Homepage";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from "react-router-dom";
 import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
 import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
-// import MainPage from "./components/mainPage";
 
 const App = () => {
   return (
     <Router>
       <AppContent />
       <Routes>
-      <Route path="/" element={<MainPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route
+        <Route path="/" element={<MainPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route
           path="/ball-simulation"
           element={
             <div>
@@ -25,7 +29,6 @@ const App = () => {
           }
         />
       </Routes>
-
     </Router>
   );
 };
@@ -33,7 +36,7 @@ const App = () => {
 const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
-  const navigate = useNavigate();  // This hook must be used inside the Router context
+  const navigate = useNavigate(); // This hook must be used inside the Router context
 
   useEffect(() => {
     // Simulate loading time, e.g., fetching data
@@ -60,8 +63,8 @@ const AppContent = () => {
     //     position: "relative",
     //     color: "white",
     //   }}
-     >
-       {/* Show loader until isLoading is true */}
+    >
+      {/* Show loader until isLoading is true */}
       {isLoading && <PageLoader />}
 
       {/* Navigation Links
@@ -76,8 +79,6 @@ const AppContent = () => {
           Register
         </Link>
       </nav> */}
-
-      
     </div>
   );
 };
