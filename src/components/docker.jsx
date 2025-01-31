@@ -7,7 +7,7 @@ import { loadFull } from "tsparticles";
 export default function Docker() {
   return (
     <>
-      <div className="pt-24 lg:h-screen h-auto bg-[#020519] ">
+      <div className="pt-24 lg:h-screen h-auto ">
 
       
 
