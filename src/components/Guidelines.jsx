@@ -117,7 +117,7 @@ const WASDGuidelines = () => {
           </div>
         </div>
         <div style={styles.instructions}>
-          Use your arrow keys (or WASD keys) to control the ball. Swipe on your
+          Use your arrow keys (or WASD keys) to control the ball. Use joystick on your
           phone to control it.
         </div>
       </div>

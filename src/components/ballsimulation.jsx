@@ -206,12 +206,8 @@ const BallSimulation = () => {
       new THREE.Vector4(-24.97, 5.26, 35.1, 4),
     ];
 
-    // new coords
-    //  -41.11, Y: 9.69, Z: -9.28
-    //  X: -20.88, Y: 6.94, Z: -2.94
-    // -3.39, Y: 6.94, Z: -7.50
-    //  X: -24.97, Y: 5.26, Z: 35.10
-
+    // Finishing point
+    // const endPoint = new THREE.Vector3(-6.08, 6.94, -0.06);
     const endPoint = new THREE.Vector3(-1.56, 12.12, 60.29);
 
     let keyState = {};
@@ -258,7 +254,7 @@ const BallSimulation = () => {
     function checkBallFallOff() {
       const ballPosition = ballBody.position;
 
-      if (ballPosition.y < -1) {
+      if (ballPosition.y < 2) {
         const nearestRespawn = findNearestRespawnPoint(ballPosition);
         ballBody.position.set(
           nearestRespawn.x,
@@ -442,13 +438,6 @@ const BallSimulation = () => {
       cancelAnimationFrame(animationId);
     }
 
-    function isBallAtPauseCoordinates() {
-      const ballPosition = ballBody.position;
-      return pauseButtonPositions.some(
-        (pos) => calculateDistance(ballPosition, pos) < 3
-      );
-    }
-
     let isAttached = false; // Flag to track if the ball is attached
 
     function magneticEffect() {
@@ -503,6 +492,109 @@ const BallSimulation = () => {
       });
     }
 
+    let hasReachedEndPoint = false; // Flag to ensure EndEff is called only once
+    let isLifting = false; // Flag to ensure liftBallUp is called only once
+
+    function EndEff(pos) {
+      if (hasReachedEndPoint) return;
+      hasReachedEndPoint = true; // Set flag to true
+
+      const ballPosition = ballBody.position;
+      const distance = calculateDistance(ballPosition, pos);
+
+      console.log("EndEff called. Distance to end point:", distance);
+
+      if (distance < 3) {
+        const force = new CANNON.Vec3(
+          (pos.x - ballPosition.x) * 10,
+          (pos.y - ballPosition.y) * 10,
+          (pos.z - ballPosition.z) * 10
+        );
+        ballBody.applyForce(force, ballBody.position);
+
+        if (distance < 0.8) {
+          console.log("Ball close to end point. Stopping ball.");
+          ballBody.velocity.set(0, 0, 0); // Stop velocity
+          ballBody.angularVelocity.set(0, 0, 0); // Stop spin
+          ballBody.mass = 0; // Disable physics effects
+
+          const lerpFactor = 0.08;
+          const interval = setInterval(() => {
+            ballBody.position.x += (pos.x - ballBody.position.x) * lerpFactor;
+            ballBody.position.y += (pos.y - ballBody.position.y) * lerpFactor;
+            ballBody.position.z += (pos.z - ballBody.position.z) * lerpFactor;
+
+            const currentDistance = calculateDistance(ballBody.position, pos);
+            console.log(
+              "Ball moving to end point. Current distance:",
+              currentDistance
+            );
+
+            if (currentDistance < 0.05) {
+              clearInterval(interval);
+              ballBody.position.set(pos.x, pos.y, pos.z);
+              console.log("Ball at end point. Preparing to lift.");
+              setTimeout(() => {
+                console.log("Calling liftBallUp after 1 second.");
+                world.gravity.set(0, 0, 0); // Disable gravity for smooth lifting
+                ballBody.velocity.set(0, 0, 0); // Ensure velocity is zero
+                ballBody.angularVelocity.set(0, 0, 0); // Ensure angular velocity is zero
+                liftBallUp();
+              }, 1000);
+            }
+          }, 16); // 60 FPS for smooth updates
+        }
+      }
+    }
+
+    function liftBallUp() {
+      if (isLifting) return;
+      isLifting = true; // Set flag to true
+
+      let targetYPosition = ballBody.position.y + 10; // Target height to lift the ball
+      let currentYPosition = ballBody.position.y;
+
+      console.log("LiftBallUp called. Initial yPosition:", currentYPosition);
+
+      const liftInterval = setInterval(() => {
+        console.log(
+          "Lifting interval running. Current yPosition:",
+          ballBody.position.y
+        );
+
+        if (currentYPosition >= targetYPosition) {
+          clearInterval(liftInterval);
+          console.log("Ball lifted. Navigating to next page.");
+          navigateToNextPage();
+          return;
+        }
+
+        // Lift the ball
+        const increment = 0.05; // Smaller increment for smooth lifting
+        currentYPosition += increment;
+        ballBody.position.set(
+          ballBody.position.x,
+          currentYPosition,
+          ballBody.position.z
+        );
+
+        // Ensure the ballMesh follows the ballBody
+        if (ballMesh) {
+          ballMesh.position.copy(ballBody.position);
+        }
+
+        // Update physics world
+        world.step(1 / 60); // Update physics world at 60 FPS
+
+        console.log("Ball lifting. Current yPosition:", currentYPosition);
+      }, 16); // 60 FPS for smooth updates
+    }
+
+    const navigateToNextPage = () => {
+      console.log("Navigating to next page...");
+      window.location.href = "/register"; // Update with your page URL
+    };
+
     let lastTime = performance.now();
 
     function animate() {
@@ -512,13 +604,14 @@ const BallSimulation = () => {
 
       const ballPosition = ballBody.position;
       if (
-        Math.abs(ballPosition.x - endPoint.x) < 0.4 &&
-        Math.abs(ballPosition.y - endPoint.y) < 0.4 &&
-        Math.abs(ballPosition.z - endPoint.z) < 0.4
+        Math.abs(ballPosition.x - endPoint.x) < 1 &&
+        Math.abs(ballPosition.y - endPoint.y) < 1 &&
+        Math.abs(ballPosition.z - endPoint.z) < 1
       ) {
-        stopSimulation();
-        showPassCard();
-        return;
+        if (!hasReachedEndPoint) {
+          console.log("Reached end point!");
+          EndEff(endPoint);
+        }
       }
 
       checkBallFallOff();
@@ -549,6 +642,7 @@ const BallSimulation = () => {
       renderer.render(scene, camera);
     }
 
+    // Start the animation loop
     animate();
 
     return () => {

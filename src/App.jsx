@@ -14,6 +14,9 @@ import MainPage from "./components/mainPage";
 
 const App = () => {
   return (
+    // <div>
+    //   <BallSimulation />
+    // </div>
     <Router>
       <AppContent />
       <Routes>
