@@ -18,9 +18,9 @@ const item = {
 }
 
 const images = [
-  "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80",
-  "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80",
-  "https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2762&q=80",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738435018/IMG_7684_11zon_qb8eul.png",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738434932/20240310_155302_11zon_y54klt.png",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738434897/IMG_7830_11zon_kxwsip.jpg",
 ]
 
 function Carousel() {
