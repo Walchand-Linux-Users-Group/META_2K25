@@ -13,17 +13,11 @@ import MainPage from "./components/mainPage";
 import "./App.css"; // Import the CSS file
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 const App = () => {
   return (
     <Router>
       <Routes>
-
-
         <Route path="/" element={<MainPage />} />
-
-        <Route path="/" element={<AppContent />} />
-
 
         <Route path="/" element={<AppContent />} />
 
