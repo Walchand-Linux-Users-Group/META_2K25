@@ -15,8 +15,8 @@
 }
 
 
-.card{
-    --color : #0abfba;
+.docker-card{
+    --color : #0abfba !important;
     --border-size:1rem;
     --bg-color : #252525;
     position: relative;
@@ -33,12 +33,12 @@
     box-shadow: rgba(2, 99, 126, 0.5) 0px 10px 20px -8px;
 }
 
-.card::before,.card::after{
+.docker-card::before,.docker-card::after{
     content: "";
     position: absolute;
 }
 
-.card::before{
+.docker-card::before{
     width: 200%;
     height: 200%;
     background-image: conic-gradient(var(--color) 0deg,
@@ -52,7 +52,7 @@
     animation: border  8s linear infinite;
 }
 
-.card:hover::before{
+.docker-card:hover::before{
     animation-play-state: paused;
 }
 
@@ -63,7 +63,7 @@
 }
 
 
-.card::after{
+.docker-card::after{
     --inset: 0.25rem;
     background-color: #111;
     inset: var(--inset);
@@ -74,7 +74,7 @@
 }
 
 
-.card:hover::after{
+.docker-card:hover::after{
     background-color: var(--bg-color);
 }
 
@@ -85,11 +85,11 @@
     color: var(--color);
 } */
 
-.card:hover .logo{
+.docker-card:hover .logo{
     -webkit-text-stroke-width: 0;
 }
 
-.card .title{
+.docker-card .title{
     text-align: center;
     font-size: 1.5rem;
     line-height: 1.875rem;
@@ -97,7 +97,7 @@
     color : var(--color);
 }
 
-.card .detail {
+.docker-card .detail {
     line-height: 1.5rem;
     text-align: center;
     opacity: 0.75;
@@ -155,7 +155,7 @@
     perspective: 1000px;
 }
 
-.card{
+.docker-card{
     padding-top:80px;
     transform-style: preserve-3d;
     /* background-image: url("vibrant-night-sky-with-stars-nebula-galaxy_146671-19208.jpg"); */
@@ -174,7 +174,7 @@
     
 }
 
-.card:hover{
+.docker-card:hover{
     background-position: 80% 20%;
     transform: rotate3d(0.5,1,0,15deg);
    
@@ -213,7 +213,7 @@
 
 }
 
-.card-title{
+.docker-card-title{
     color: white;
      font-size: 25px;
      font-weight: 900;
@@ -222,11 +222,11 @@
      transform: translate3d(0px,0px,20px);
 }
 
-.card-title:hover{
+.docker-card-title:hover{
     transform: translate3d(0px,0px,50px);
 }
 
-.card-content{
+.docker-card-content{
     padding-top: 15px;
     font-size: 12px;
     color: rgb(185,185,185);
@@ -234,7 +234,7 @@
     transform: translate3d(0px,0px,20px);
 }
 
-.card-content:hover{
+.docker-card-content:hover{
     transform: translate3d(0px,0px,50px);
 }
 
@@ -284,7 +284,7 @@
     color: rgb(255, 255, 255);
 }
 
-.card1{
+.docker-card1{
     filter: hue-rotate(150deg);
 } */
 

@@ -1,5 +1,5 @@
 import React from "react";
-// import "../css/kubernetes.css";
+import "../css/kubernetes.css";
 import { SiKubernetes } from "react-icons/si";
 import KubernetesModel from "./kubernetesModel";
 
@@ -8,7 +8,7 @@ export default function Kubernetes() {
     <>
       {/* <ParticleBackground /> */}
 
-      <div className="relative md:mt-20 mt-32 min-h-screen flex flex-col items-center text-white">
+      <div className="relative  min-h-screen flex flex-col justify-center items-center text-white">
         {/* Title */}
         <h1 className="font-lilita fhd:text-[5rem] z-10 pt-10 uppercase text-4xl md:text-5xl tracking-wider text-center">
           Kubernetes

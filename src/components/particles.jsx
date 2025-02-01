@@ -85,5 +85,6 @@ export default function ParticleBackground() {
         };
     }, []);  // The empty array ensures this effect runs only once
 
-    return <div className='absolute z-0 w-100vh' ref={canvasRef}></div>;  // Attach the ref to the div
+    return <div className='fixed top-0 left-0 w-full h-full z-0 pointer-events-none' ref={canvasRef}></div>;
+// Attach the ref to the div
 }

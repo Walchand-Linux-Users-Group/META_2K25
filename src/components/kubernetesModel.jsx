@@ -30,19 +30,25 @@ const KubernetesModel = () => {
     const updateCamera = () => {
       const width = window.innerWidth;
     
-      // Adjust camera position based on screen size
-      if (width > 1910) {
-        camera.position.set(0, 10, 50); // FHD and Higher
-      } else if (width > 1024) {
-        camera.position.set(0, 10, 45); // Desktop
-      } else if (width > 900) {
-        camera.position.set(0, 10, 30); // Tablet
-      } else if (width > 784) {
-        camera.position.set(0, 10, 40); // Small tablet
-      } else {
-        camera.position.set(0, 10, 20); // Mobile
-      }
+      // // Adjust camera position based on screen size
+      // if (width > 1910) {
+      //   camera.position.set(0, 10, 50); // FHD and Higher
+      //   modelRef.current.scale.set(2, 2, 2);
+      // } else if (width > 1024) {
+      //   camera.position.set(0, 10, 45); // Desktop
+      //   modelRef.current.scale.set(1.8, 1.8, 1.8);
+      // } else if (width > 900) {
+      //   camera.position.set(0, 10, 30); // Tablet
+      //   modelRef.current.scale.set(1.5, 1.5, 1.5);
+      // } else if (width > 784) {
+      //   camera.position.set(0, 10, 30); // Small tablet
+      //   modelRef.current.scale.set(1.3, 1.3, 1.3);
+      // } else {
+      //   camera.position.set(0, 10, 20); // Mobile
+      //   modelRef.current.scale.set(1, 1, 1);
+      // }
     
+      
       camera.updateProjectionMatrix();
     };
 
