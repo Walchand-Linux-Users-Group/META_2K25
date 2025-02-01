@@ -18,11 +18,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-<<<<<<< HEAD
-        <Route path="/" element={<MainPage />} />
-=======
         <Route path="/" element={<AppContent />} />
->>>>>>> c06061e4bc49163b03fc6ae2c2bada926f298a8e
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/ball-simulation"
