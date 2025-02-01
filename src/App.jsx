@@ -16,8 +16,10 @@ import "./App.css"; // Import the CSS file
 const App = () => {
   return (
     <Router>
+      {/* <AppContent/> */}
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        
+        {/* <Route path="/" element={<MainPage />} /> */}
 
         <Route path="/" element={<AppContent />} />
 

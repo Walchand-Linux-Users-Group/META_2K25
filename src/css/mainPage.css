@@ -122,7 +122,8 @@ body, html {
 
 
 .gofast{
-    animation: go 1s ease-out !important;
+    position: absolute;
+    animation: go 1.1s ease-out !important;
 }
 
 /* Generate random stars for multiple layers */
