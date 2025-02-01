@@ -12,6 +12,9 @@ body, html {
     margin: 0;
 }
 
+.rmPlane{
+    display: none;
+}
 
 @keyframes flicker-synchronized {
     0% { opacity: 0.9; }
