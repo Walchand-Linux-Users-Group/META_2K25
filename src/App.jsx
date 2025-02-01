@@ -3,7 +3,6 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   useNavigate,
 } from "react-router-dom";
 import BallSimulation from "./components/ballsimulation";
@@ -11,12 +10,10 @@ import WASDGuidelines from "./components/Guidelines";
 import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
+import "./App.css"; // Import the CSS file
 
 const App = () => {
   return (
-    // <div>
-    //   <BallSimulation />
-    // </div>
     <Router>
       {/* <AppContent /> */}
       <Routes>
@@ -38,52 +35,58 @@ const App = () => {
 
 const AppContent = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const navigate = useNavigate(); // This hook must be used inside the Router context
 
   useEffect(() => {
     // Simulate loading time, e.g., fetching data
     const timer = setTimeout(() => {
-      setIsLoading(false); // Set loading to false after 10 seconds
-    }, 10000);
+      setIsLoading(false); // Set loading to false after 1 second
+    }, 1000);
 
     return () => clearTimeout(timer); // Cleanup the timer on unmount
   }, []);
 
-  // To make sure we only navigate on the first load
   useEffect(() => {
-    if (isFirstLoad) {
-      navigate("/"); // Redirect to homepage on initial load
-      setIsFirstLoad(false); // After the first load, stop redirecting
+    if (!isLoading) {
+      // Delay the navigation slightly to show the transition
+      const timer = setTimeout(() => {
+        navigate("/main"); // Redirect to main page after loading
+      }, 1000);
+
+      return () => clearTimeout(timer); // Cleanup the timer on unmount
     }
-  }, [navigate, isFirstLoad]);
+  }, [isLoading, navigate]);
 
-  return (
-    <div
-    //   style={{
-    //     width: "100%",
-    //     height: "100vh",
-    //     position: "relative",
-    //     color: "white",
-    //   }}
-    >
-      {/* Show loader until isLoading is true */}
-      {isLoading && <PageLoader />}
-
-      {/* Navigation Links
-      <nav style={{ position: "absolute", top: 10, left: 10 }}>
-        <Link to="/" style={{ margin: "0 10px" }}>
-          Home
-        </Link>
-        <Link to="/ball-simulation" style={{ margin: "0 10px" }}>
-          Ball Simulation & WASD
-        </Link>
-        <Link to="/register" style={{ margin: "0 10px" }}>
-          Register
-        </Link>
-      </nav> */}
+  return isLoading ? (
+    <div className="fade-in show">
+      <PageLoader />
     </div>
+  ) : (
+    <Routes>
+      <Route path="/main" element={<MainPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route
+        path="/ball-simulation"
+        element={
+          <div>
+            <BallSimulationWrapper />
+            <WASDGuidelines />
+          </div>
+        }
+      />
+    </Routes>
   );
+};
+
+// Wrapper component to handle navigation for BallSimulation
+const BallSimulationWrapper = () => {
+  const navigate = useNavigate();
+
+  const navigateToNextPage = () => {
+    navigate("/register");
+  };
+
+  return <BallSimulation navigateToNextPage={navigateToNextPage} />;
 };
 
 export default App;
