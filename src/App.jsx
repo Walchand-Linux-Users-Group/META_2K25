@@ -11,19 +11,24 @@ import RegisterPage from "./components/register";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
 import "./App.css"; // Import the CSS file
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const App = () => {
   return (
     <Router>
-      {/* <AppContent /> */}
       <Routes>
+<<<<<<< HEAD
         <Route path="/" element={<MainPage />} />
+=======
+        <Route path="/" element={<AppContent />} />
+>>>>>>> c06061e4bc49163b03fc6ae2c2bada926f298a8e
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/ball-simulation"
           element={
             <div>
-              <BallSimulation />
+              <BallSimulationWrapper />
               <WASDGuidelines />
             </div>
           }
@@ -50,31 +55,23 @@ const AppContent = () => {
     if (!isLoading) {
       // Delay the navigation slightly to show the transition
       const timer = setTimeout(() => {
-        navigate("/main"); // Redirect to main page after loading
+        // navigate("/main"); // Redirect to main page after loading
       }, 1000);
 
       return () => clearTimeout(timer); // Cleanup the timer on unmount
     }
   }, [isLoading, navigate]);
 
-  return isLoading ? (
-    <div className="fade-in show">
-      <PageLoader />
+  return (
+    <div>
+      {isLoading ? (
+        <div className="fade-in show">
+          <PageLoader />
+        </div>
+      ) : (
+        <MainPage />
+      )}
     </div>
-  ) : (
-    <Routes>
-      <Route path="/main" element={<MainPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-      <Route
-        path="/ball-simulation"
-        element={
-          <div>
-            <BallSimulationWrapper />
-            <WASDGuidelines />
-          </div>
-        }
-      />
-    </Routes>
   );
 };
 
