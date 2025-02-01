@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
-import RegisterPage from "./components/registerPage";
+import RegisterPage from "./components/register";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
 import "./App.css"; // Import the CSS file
@@ -17,7 +17,7 @@ const App = () => {
     <Router>
       {/* <AppContent /> */}
       <Routes>
-        <Route path="/" element={<RegisterPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/ball-simulation"

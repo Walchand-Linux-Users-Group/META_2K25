@@ -223,23 +223,27 @@ export default function MainPage() {
       </div>
 
       {/* Buttons Section */}
-      <div className="flex flex-row mt-10 gap-4 justify-center items-center relative z-50">
-        <button
-          className="enter-btn text-gray-300 hover:bg-[#6E72FC] uppercase text-center lg:text-xs md:text-xl text-xs tracking-wider border-[1px] p-3 px-8 font-medium rounded-full"
+      <div className="flex relative flex-row mt-10 gap-4 justify-center items-center z-50">
+          
+        <div
+          className="hero-btn"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => handleButtonClick(0)}
         >
+          <span></span><span></span><span></span><span></span>
           Play Game
-        </button>
-        <button
-          className="enter-btn text-gray-300 hover:bg-[#AD1DEB] uppercase text-center lg:text-xs md:text-xl text-xs tracking-wider border-[1px] p-3 px-8 font-medium rounded-full"
+        </div>
+        <span></span><span></span><span></span><span></span>
+        <div
+          className="hero-btn"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           onClick={() => handleButtonClick(1)}
         >
+          <span></span><span></span><span></span><span></span>
           Register
-        </button>
+        </div>
       </div>
 
       {/* Spaceship Section */}
