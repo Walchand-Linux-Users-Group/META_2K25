@@ -207,8 +207,8 @@ const BallSimulation = () => {
     ];
 
     // Finishing point
-    const endPoint = new THREE.Vector3(-6.08, 6.94, -0.06);
-    // const endPoint = new THREE.Vector3(-1.56, 12.12, 60.29);
+    // const endPoint = new THREE.Vector3(-6.08, 6.94, -0.06);
+    const endPoint = new THREE.Vector3(-1.56, 12.12, 60.29);
 
     let keyState = {};
     let joystickPosition = { x: 0, y: 0 };
