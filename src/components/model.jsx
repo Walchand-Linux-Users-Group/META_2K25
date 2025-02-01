@@ -551,4 +551,4 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-export default Model;
+export default Modelo;
