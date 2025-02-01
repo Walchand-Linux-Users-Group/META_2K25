@@ -52,7 +52,7 @@ const KubernetesModel = () => {
     // Load 3D Model
     const loader = new GLTFLoader();
     loader.load(
-      "./models/kubernetes/Kubes3d.glb",
+      "./models/kubernetes/kube.glb",
       (gltf) => {
         const model = gltf.scene;
         model.scale.set(2, 2, 2);
