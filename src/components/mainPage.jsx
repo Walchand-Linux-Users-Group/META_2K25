@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import "../css/mainPage.css";
 import Particles from "react-tsparticles";
 import { useNavigate } from "react-router-dom";
+import ThreeDScene  from "./starfield";
 
 export default function MainPage() {
   const [isHovered, setIsHovered] = useState(false);
@@ -185,8 +186,10 @@ export default function MainPage() {
       onMouseMove={handleMouseMove}
       style={{ userSelect: "none" }}
     >
+      <ThreeDScene style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: -1 }} /> {/* Add the 3D space game as a background */}
+
       {/* Background Animation */}
-      <div
+      {/* <div
         className="bg-animation absolute inset-0 -z-1"
         style={{ pointerEvents: "none" }}
       >
@@ -194,7 +197,7 @@ export default function MainPage() {
         <div id="stars2"></div>
         <div id="stars3"></div>
         <div id="stars4"></div>
-      </div>
+      </div> */}
 
       {/* Logo */}
       <div className="absolute top-0 right-0 mr-5 mt-5 lg:mt-2">
@@ -202,7 +205,7 @@ export default function MainPage() {
       </div>
 
       {/* Title Section */}
-      <div className="z-50 uppercase">
+      <div className="z-50 uppercase relative">
         <h1 className="font-lilita text-xl text-[#a360c0] lg:text-xl md:text-2xl tracking-wide">
           Walchand Linux Users' Group
         </h1>
@@ -213,7 +216,7 @@ export default function MainPage() {
 
       {/* Main Event Title */}
       <div>
-        <h1 className="font-lilita z-50 uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#AD1DEB] to-[#6E72FC] font-medium mt-10 lg:text-6xl md:text-7xl text-4xl tracking-widest">
+        <h1 className="font-lilita relative z-50 uppercase text-transparent bg-clip-text bg-gradient-to-r from-[#AD1DEB] to-[#6E72FC] font-medium mt-10 lg:text-6xl md:text-7xl text-4xl tracking-widest">
           Metamorphosis <br />
           2k25
         </h1>
