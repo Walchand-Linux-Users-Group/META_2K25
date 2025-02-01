@@ -18,15 +18,15 @@ const App = () => {
   return (
     <Router>
       <Routes>
-<<<<<<< HEAD
+
 
         <Route path="/" element={<MainPage />} />
 
         <Route path="/" element={<AppContent />} />
 
-=======
+
         <Route path="/" element={<AppContent />} />
->>>>>>> c55f0ed3bfe610c75a9b9151f141903931b74525
+
         <Route path="/register" element={<RegisterPage />} />
 
         <Route

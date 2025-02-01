@@ -19,7 +19,7 @@ import  Footer  from "./Footer";
             <>
             <div className="bg-[#000] ">
 
-              <ParticleBackground/>
+              {/* <ParticleBackground/> */}
 
                 
                 <Docker className=""/>
