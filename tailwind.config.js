@@ -9,7 +9,7 @@ export default {
   	extend: {
   		fontFamily: {
   			lilita: [
-  				'Lilita One"',
+  				'Lilita One',
   				'cursive'
   			]
   		},

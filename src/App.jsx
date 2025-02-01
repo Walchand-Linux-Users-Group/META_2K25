@@ -18,9 +18,9 @@ const App = () => {
     //   <BallSimulation />
     // </div>
     <Router>
-      <AppContent />
+      {/* <AppContent /> */}
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/" element={<RegisterPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/ball-simulation"
