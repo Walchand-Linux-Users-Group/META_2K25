@@ -5,6 +5,8 @@ import React, { useState, useEffect, useRef } from "react";
 import Kubernetes from "./kubernetes";
 import "../css/register.css"
 import ParticleBackground from "./particles";
+import Register from "./register";
+import { InfoSection } from "./info-section";
 
 
 
@@ -16,14 +18,12 @@ import ParticleBackground from "./particles";
             <>
             <div className="bg-[#000] ">
 
-              <ParticleBackground/>
+              {/* <ParticleBackground/> */}
 
                 
                 <Docker className=""/>
                 <Kubernetes className=""/>
-
-                
-            
+                <Register/>
 
             </div>
             

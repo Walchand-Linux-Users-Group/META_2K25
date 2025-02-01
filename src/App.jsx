@@ -11,6 +11,8 @@ import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
 import "./App.css"; // Import the CSS file
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const App = () => {
   return (
