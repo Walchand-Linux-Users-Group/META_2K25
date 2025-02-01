@@ -91,18 +91,26 @@ function Carousel() {
 
 export function InfoSection() {
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8">
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 z-10">
       <motion.div variants={item} className="space-y-4">
-        <h1 className="font-lilita uppercase text-4xl bg-clip-text text-center text-transparent bg-gradient-to-r from-purple-500 to-indigo-500">
+        <h1 className="font-lilita uppercase  text-4xl bg-clip-text text-center text-transparent bg-gradient-to-r from-[#0abfba] to-[#4879e2]">
           Walchand linux users' group
         </h1>
+       
       </motion.div>
 
      
 
-      <motion.div variants={item} className="pt-8 border-t border-purple-500/20 hidden lg:block">
+      <motion.div variants={item} className="pt-8 border-t border-[#4879e2] ">
+      <motion.div variants={item} className="space-y-4">
+        <h1 className="font-lilita uppercase text-4xl pb-5 bg-clip-text text-center text-transparent bg-[#4879e2]">
+          About us
+        </h1>
+       
+      </motion.div>
         <Carousel />
       </motion.div>
+
     </motion.div>
   )
 }

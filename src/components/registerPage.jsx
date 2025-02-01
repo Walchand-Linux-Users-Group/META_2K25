@@ -18,7 +18,7 @@ import { InfoSection } from "./info-section";
             <>
             <div className="bg-[#000] ">
 
-              {/* <ParticleBackground/> */}
+              <ParticleBackground/>
 
                 
                 <Docker className=""/>
