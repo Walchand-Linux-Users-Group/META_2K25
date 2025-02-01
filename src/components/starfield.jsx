@@ -19,22 +19,15 @@ const ThreeDScene = () => {
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
-    mountRef.current.appendChild(renderer.domElement);
+    if (mountRef.current) {
+      mountRef.current.appendChild(renderer.domElement);
+    }
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     const pointLight = new THREE.PointLight(0x00ffff, 1, 100);
     pointLight.position.set(10, 10, 10);
     scene.add(ambientLight, pointLight);
-
-    // Load 3D Text
-    const loader = new GLTFLoader();
-    loader.load("/MetaText.glb", (gltf) => {
-      const textMesh = gltf.scene;
-      textMesh.position.set(0, 0, 0);
-      textMesh.scale.set(1, 1, 1);
-      scene.add(textMesh);
-    });
 
     // Create a circular texture
     const createCircleTexture = () => {
@@ -62,9 +55,10 @@ const ThreeDScene = () => {
     starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
     const starMaterial = new THREE.PointsMaterial({ 
       color: 0xffffff, 
-      size: 0.2, 
+      size: 0.15, 
       map: circleTexture, 
-      transparent: true 
+      transparent: true,
+      opacity: 65
     });
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
@@ -89,7 +83,9 @@ const ThreeDScene = () => {
 
     // Cleanup
     return () => {
-      mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current) {
+        mountRef.current.removeChild(renderer.domElement);
+      }
     };
   }, []);
 
