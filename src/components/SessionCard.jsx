@@ -1,65 +1,53 @@
-// SessionCard.js
 import React from "react";
 
 const sessions = [
   {
     title: "Session 1",
     description: "Description for session 1",
-    imageUrl: "path/to/image1.jpg",
+    date: "15 feb"
   },
   {
     title: "Session 2",
     description: "Description for session 2",
-    imageUrl: "path/to/image2.jpg",
+    date: "15feb"
   },
   {
     title: "Session 3",
     description: "Description for session 3",
-    imageUrl: "path/to/image3.jpg",
+    date: ""
   },
   {
     title: "Session 4",
     description: "Description for session 4",
-    imageUrl: "path/to/image4.jpg",
+    date: ""
   },
 ];
 
-const SessionCard = ({ session }) => {
+const PromotionalCard = ({ title, description, date }) => {
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: "70%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "#FFF",
-        color: "black",
-        fontSize: "18px",
-        padding: "20px",
-        borderRadius: "10px",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-        zIndex: 1000,
-        width: "300px",
-        textAlign: "center",
-      }}
-    >
-      <img
-        src={session.imageUrl}
-        alt={session.title}
-        style={{ width: "100%", borderRadius: "10px" }}
-      />
-      <h2>{session.title}</h2>
-      <p>{session.description}</p>
+    <div className="relative w-full md:h-screen h-auto flex flex-col md:items-center md:justify-center">
+      <div className="md:fixed md:top-[calc(33%-6rem)] relative top-0 z-10 flex flex-col items-center">
+        <div className="bg-white bg-opacity-20 backdrop-blur-md p-7 rounded-xl shadow-2xl text-center transform rotate-3 skew-x-6 border border-white border-opacity-30 md:scale-100 scale-75">
+          <div className="text-teal-300 text-xl font-semibold mb-4">{title}</div>
+          <p className="text-gray-300 text-lg">{description}</p>
+        </div>
+        <div className="bg-white bg-opacity-20 backdrop-blur-md p-6 rounded-xl shadow-2xl text-center transform -rotate-3 -skew-x-6 md:mt-8 border border-white border-opacity-30 md:scale-100 scale-75">
+          <div className="text-green-400 text-3xl font-bold">{date}</div>
+        </div>
+      </div>
     </div>
   );
 };
 
-const SessionCards = () => {
+const SessionCards = ({ index }) => {
+  const session = sessions[index] || {};
   return (
     <div>
-      {sessions.map((session, index) => (
-        <SessionCard key={index} session={session} />
-      ))}
+      <PromotionalCard
+        title={session.title}
+        description={session.description}
+        date={session.date}
+      />
     </div>
   );
 };
