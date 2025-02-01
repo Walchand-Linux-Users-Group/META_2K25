@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
     import ThreeDModel from "./docker";
 import Kubernetes from "./kubernetes";
 import "../css/register.css"
-// import ParticleBackground from "./particles";
+import ParticleBackground from "./particles";
 
 
 
@@ -16,7 +16,7 @@ import "../css/register.css"
             <>
             <div className="bg-[#000] ">
 
-              {/* <ParticleBackground/> */}
+              <ParticleBackground/>
 
                 
                 <Docker className=""/>
