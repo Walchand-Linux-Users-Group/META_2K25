@@ -16,8 +16,8 @@ export default function Docker() {
         </h1>
 
         <div className="flex justify-center  flex-col items-center md:flex-row  md:justify-center md:items-center fhd:gap-14 lg:gap-10 md:gap-0 fhd:px-32 lg:px-10 xl:px-20 md:px-10">
-          <div className="flex order-2 flex-col md:flex-row md:order-1 justify-center px-10 w-full md:w-5/6 fhd:mt-16 md:mt-10 fhd:gap-16 lg:gap-5 md:gap-0 gap-28">
-          <div className="card w-full md:p-6 lg:p-8 bg-[#0abfba] rounded-lg border border-[#0abfba] shadow-[#50A8E1] shadow-xl fhd:min-h-[500px] lg:min-h-[400px] md:min-h-[auto] min-h-[300px]
+          <div className="flex order-2 flex-col md:flex-row md:order-1 justify-center px-10 w-full md:w-5/6 fhd:mt-16 md:mt-10 fhd:gap-16 lg:gap-5 md:gap-5 gap-28">
+          <div className="docker-card w-full md:p-6 lg:p-8 bg-[#0abfba] rounded-lg border border-[#0abfba] shadow-[#50A8E1] shadow-xl fhd:min-h-[500px] lg:min-h-[400px] md:min-h-[auto] min-h-[300px]
  overflow-hidden">
 
               <FaDocker className=" text-[#0abfba] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
@@ -29,7 +29,7 @@ export default function Docker() {
               </p>
             </div>
 
-            <div className="card w-full md:p-6 lg:p-8 bg-[#0abfba] rounded-lg border border-[#0abfba] shadow-[#50A8E1] shadow-xlfhd:min-h-[500px] lg:min-h-[400px] md:min-h-[auto] min-h-[300px]
+            <div className="docker-card w-full md:p-6 lg:p-8 bg-[#0abfba] rounded-lg border border-[#0abfba] shadow-[#50A8E1] shadow-xlfhd:min-h-[500px] lg:min-h-[400px] md:min-h-[auto] min-h-[300px]
  overflow-hidden">
 
             <FaDocker className=" text-[#0abfba] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />

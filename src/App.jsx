@@ -7,19 +7,22 @@ import {
 } from "react-router-dom";
 import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
-import RegisterPage from "./components/register";
+import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
 import "./App.css"; // Import the CSS file
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
-
 const App = () => {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<MainPage />} />
+
         <Route path="/" element={<AppContent />} />
+
         <Route path="/register" element={<RegisterPage />} />
+
         <Route
           path="/ball-simulation"
           element={
