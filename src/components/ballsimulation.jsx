@@ -458,7 +458,6 @@ const BallSimulation = () => {
 
           // Gradually move toward the position if close
           if (distance < 0.8) {
-            idx = pos.w;
             console.log(pos.w);
             setShowPauseCard(true);
             isAttached = true; // Mark as attached
@@ -659,7 +658,7 @@ const BallSimulation = () => {
       {/* button to log coords */}
       {<button id="logBallCoords">Log Ball Coordinates</button>}
 
-      {showPauseCard && <SessionCards selectedSessionIndex={idx - 1} />}
+      {showPauseCard && <SessionCards index={idx - 1} />}
     </div>
   );
 };
