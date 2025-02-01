@@ -15,7 +15,20 @@ import "./App.css"; // Import the CSS file
 const App = () => {
   return (
     <Router>
-      <AppContent />
+      {/* <AppContent /> */}
+      <Routes>
+        <Route path="/" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route
+          path="/ball-simulation"
+          element={
+            <div>
+              <BallSimulation />
+              <WASDGuidelines />
+            </div>
+          }
+        />
+      </Routes>
     </Router>
   );
 };

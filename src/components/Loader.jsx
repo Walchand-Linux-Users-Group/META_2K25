@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Loader.css"; // Assuming you have the same CSS file
+import ThreeDScene from "./starfield";
 
 const PageLoader = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -26,7 +27,7 @@ const PageLoader = () => {
             </div>
             <img src="/Meta.png" alt="Loading" width="120px" height="120px" />
           </div>
-          <div class="bg-animation">
+          <div className="bg-animation">
             <div id="stars"></div>
             <div id="stars2"></div>
             <div id="stars3"></div>
