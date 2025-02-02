@@ -2,25 +2,25 @@ import React from "react";
 
 const sessions = [
   {
-    title: "Session 1",
+    title: "Let's Docker It!",
     description:
-      "This session covers virtualization vs. physical servers, why modern apps prefer containers over VMs, and a hands-on introduction to Docker with its core components and commands.",
+      "This session covers virtualization vs. physical servers, why modern apps prefer containers over VMs and a hands-on introduction to Docker with its core components and commands.",
     date: "15 FEB 2025",
   },
   {
-    title: "Session 2",
+    title: "DockerVerse",
     description:
-      "This session covers Docker Volumes for data persistence, Docker Networking for container communication, and Docker Compose for managing multi-container apps with a single YAML file.",
+      "This session covers Docker Volumes for data persistence, Docker Networking for container communication and Docker Compose for managing multi-container apps with a single YAML file.",
     date: "15 FEB 2025",
   },
   {
-    title: "Session 3",
+    title: "Sailing to K8s",
     description:
-      "Managing a few containers is easy, but scaling requires Kubernetes. This session covers its architecture, key components, and how it complements Docker, making it essential for large-scale applications.",
+      "Managing a few containers is easy, but scaling requires Kubernetes. This session covers its architecture, key components and how it complements Docker, making it essential for large-scale applications.",
     date: "16 FEB 2025",
   },
   {
-    title: "Session 4",
+    title: "Pod Power",
     description:
       "Take your Kubernetes skills further with Pods, Services, and Deployments to automate and scale applications. Apply your knowledge with real-world projects and test your expertise in wargames.",
     date: "16 FEB 2025",

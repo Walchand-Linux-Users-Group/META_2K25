@@ -115,33 +115,32 @@ export default function MainPage() {
   }, [targetOffset])
 
   const handleButtonClick = (val) => {
-    if (shipRef.current) {
-
+    if (!shipRef.current) return
+  
     soundRef.current.play()
-
-       setTimeout(() => {
-
+  
+    setTimeout(() => {
+      if (!shipRef.current) return
       shipRef.current.style.animation = "none"
       void shipRef.current.offsetWidth
       shipRef.current.classList.add("gofast")
-
-      },2000)
-
-      setTimeout(() => {
-        val === 0 ? navigate("/ball-simulation") : navigate("/register")
-      }, 3500)
-
-      setTimeout(() => {
-        shipRef.current.classList.add("rmPlane")
-       
-      }, 3000)  
-
-      setTimeout(() => {
-
-        shipRef.current.classList.remove("gofast")
-      }, 5000)
-    }
+    }, 2000)
+  
+    setTimeout(() => {
+      val === 0 ? navigate("/ball-simulation") : navigate("/register")
+    }, 3500)
+  
+    setTimeout(() => {
+      if (!shipRef.current) return
+      shipRef.current.classList.add("rmPlane")
+    }, 3000)
+  
+    setTimeout(() => {
+      if (!shipRef.current) return
+      shipRef.current.classList.remove("gofast")
+    }, 5000)
   }
+  
 
   const handleButtonHover = () => {
     setIsHovered(true)
