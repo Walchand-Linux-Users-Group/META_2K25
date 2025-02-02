@@ -33,7 +33,7 @@ const App = () => {
         <Route
           path="/ball-simulation"
           element={
-            <div>
+            <div className="ball-simulation-container position-fixed">
               <BallSimulation />
               <WASDGuidelines />
               {/* <JoystickComponent /> */}

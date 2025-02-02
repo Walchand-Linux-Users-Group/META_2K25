@@ -390,6 +390,20 @@ const BallSimulation = () => {
       window.addEventListener("pushstate", handleNavigation);
       window.addEventListener("replacestate", handleNavigation);
 
+      // Override the default history methods to trigger the event listeners
+      const originalPushState = history.pushState;
+      history.pushState = function () {
+        originalPushState.apply(this, arguments);
+        window.dispatchEvent(new Event("pushstate"));
+        window.dispatchEvent(new Event("replacestate"));
+      };
+
+      const originalReplaceState = history.replaceState;
+      history.replaceState = function () {
+        originalReplaceState.apply(this, arguments);
+        window.dispatchEvent(new Event("replacestate"));
+      };
+
       // Cleanup function to remove the event listener
       return () => {
         window.removeEventListener("popstate", handleNavigation);
