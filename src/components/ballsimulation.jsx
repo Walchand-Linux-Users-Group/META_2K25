@@ -433,11 +433,6 @@ const BallSimulation = () => {
       document.body.appendChild(card);
     }
 
-    function stopSimulation() {
-      setGameFinished(true);
-      cancelAnimationFrame(animationId);
-    }
-
     let isAttached = false; // Flag to track if the ball is attached
 
     function magneticEffect() {
@@ -590,6 +585,7 @@ const BallSimulation = () => {
     }
 
     const navigateToNextPage = () => {
+      isJoystickActive = false
       console.log("Navigating to next page...");
       window.location.href = "/register"; // Update with your page URL
     };

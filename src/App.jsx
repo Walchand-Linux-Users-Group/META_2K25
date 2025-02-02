@@ -11,6 +11,7 @@ import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
 import "./App.css"; // Import the CSS file
+import BallRegbutton from "./components/ballpageRegbutton";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
@@ -27,6 +28,9 @@ const App = () => {
           path="/ball-simulation"
           element={
             <div>
+              <div className="absolute top-0 right-0 p-4 z-10">
+                <BallRegbutton/>
+              </div>
               <BallSimulationWrapper />
               <WASDGuidelines />
             </div>
