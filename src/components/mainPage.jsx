@@ -125,14 +125,14 @@ export default function MainPage() {
       void shipRef.current.offsetWidth
       shipRef.current.classList.add("gofast")
 
-      }, 2000)
+      },2000)
 
       setTimeout(() => {
         val === 0 ? navigate("/ball-simulation") : navigate("/register")
       }, 3500)
 
       setTimeout(() => {
-        // shipRef.current.classList.add("rmPlane")
+        shipRef.current.classList.add("rmPlane")
        
       }, 3000)  
 
@@ -216,13 +216,13 @@ export default function MainPage() {
   </div>
 
   {/* Main Event Title */}
-  <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-7xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6">
+  <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6">
     metamorphosis <br />
     2<span className="title">k</span>25
   </h1>
 
-  {/* Buttons Section */}
-  <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 lg:mt-5 mt-8 text-white/80 lg:h-1/6 justify-center items-center">
+  
+  <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 lg:mt-0 mt-8 text-white/80 lg:h-1/6 justify-center items-center">
     <button
       className="font-lilita custom-button text-xs md:text-lg bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-2 rounded-2xl md:w-40 w-32"
       onMouseEnter={handleButtonHover}

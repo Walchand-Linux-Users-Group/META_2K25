@@ -11,7 +11,7 @@ export default function Docker() {
 
       <div className="relative min-h-screen flex flex-col items-center text-white">
         {/* Title */}
-        <h1 className="font-lilita fhd:text-[5rem] z-10 pt-10 uppercase text-4xl md:text-5xl tracking-wider text-center">
+        <h1 className="title fhd:text-[5rem] z-10 pt-0  text-5xl text-[#0abfba] md:text-6xl tracking-wider text-center">
           Docker
         </h1>
 
@@ -22,10 +22,11 @@ export default function Docker() {
 
               <FaDocker className=" text-[#0abfba] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
               <h2 className="text-xl fhd:text-3xl lg:text-lg md:text-sm  md:mt-0 text-center font-bold mt-3">
-                Session 1 <br /> Dock into Basics
+                Session 1 <br /> Let's Dock It
               </h2>
-              <p className="fhd:text-lg text-sm lg:text-xs md:text-[10px] text-justify mt-5">
-              Still thinking of installing an entire operating system to run an application? Stop! Get ready to unlock the potential of Docker and revolutionize your development workflow! This session will provide you with the foundational knowledge you need to thrive in the world of containers. From mastering the art of Docker installation and setup to seamlessly managing Docker images and leveraging powerful registries, you'll emerge confident to tackle any containerization challenge head-on. In this session, we’ll dock into the basics of Docker!
+              <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5">
+              DevOps is transforming software development, making delivery faster and more efficient! This session covers virtualization vs physical servers and why modern apps prefer containers over VMs.
+You’ll dive into Docker, exploring its core components and mastering essential commands with hands-on experience! 
               </p>
             </div>
 
@@ -35,10 +36,12 @@ export default function Docker() {
             <FaDocker className=" text-[#0abfba] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
 
               <h2 className="text-xl fhd:text-3xl lg:text-lg md:text-sm text-center font-bold mt-3">
-                Session 2 <br /> Containers' Harmony
+                Session 2 <br /> Dockerverse
               </h2>
-              <p className="fhd:text-lg text-sm lg:text-xs md:text-[10px] text-justify mt-5 ">
-              Still thinking of installing an entire operating system to run an application? Stop! Get ready to unlock the potential of Docker and revolutionize your development workflow! This session will provide you with the foundational knowledge you need to thrive in the world of containers. From mastering the art of Docker installation and setup to seamlessly managing Docker images and leveraging powerful registries, you'll emerge confident to tackle any containerization challenge head-on. In this session, we’ll dock into the basics of Docker!
+              <p className="fhd:text-lg text-sm lg:text-sm md:text-[10px] text-justify mt-5 ">
+              Now that you know Docker, let’s dive into data management and networking! Learn how Docker Volumes keep data persistent and how containers communicate using Docker Networking.
+Finally, master Docker Compose, a game-changer for managing multi-container apps with a single YAML file!   
+
               </p>
             </div>
           </div>
