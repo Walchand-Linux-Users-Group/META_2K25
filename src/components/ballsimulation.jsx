@@ -323,10 +323,12 @@ const BallSimulation = () => {
 
       let initialTouch = null;
 
-      joystick.addEventListener("touchstart", (event) => {
-        isJoystickActive = true;
-        initialTouch = event.touches[0];
-      });
+      if (window.location.pathname === "/ball-simulation") {
+        joystick.addEventListener("touchstart", (event) => {
+          isJoystickActive = true;
+          initialTouch = event.touches[0];
+        });
+      }
 
       joystick.addEventListener("touchmove", (event) => {
         if (!isJoystickActive) return;
@@ -463,13 +465,13 @@ const BallSimulation = () => {
           if (distance < 0.8) {
             console.log(pos.w);
             setShowPauseCard(true);
-            if(pos.w === 1){
+            if (pos.w === 1) {
               setIdx(1);
-            } else if(pos.w === 2){
+            } else if (pos.w === 2) {
               setIdx(2);
-            } else if(pos.w === 3){
+            } else if (pos.w === 3) {
               setIdx(3);
-            } else if(pos.w === 4){
+            } else if (pos.w === 4) {
               setIdx(4);
             }
             isAttached = true; // Mark as attached
@@ -602,7 +604,7 @@ const BallSimulation = () => {
     }
 
     const navigateToNextPage = () => {
-      isJoystickActive = false
+      isJoystickActive = false;
       console.log("Navigating to next page...");
       window.location.href = "/register"; // Update with your page URL
     };

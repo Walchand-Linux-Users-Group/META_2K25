@@ -128,7 +128,7 @@ export default function MainPage() {
       }, 2000)
 
       setTimeout(() => {
-        // val === 0 ? navigate("/ball-simulation") : navigate("/register")
+        val === 0 ? navigate("/ball-simulation") : navigate("/register")
       }, 3500)
 
       setTimeout(() => {
