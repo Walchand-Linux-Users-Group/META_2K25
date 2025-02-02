@@ -221,7 +221,7 @@ export default function MainPage() {
     2<span className="title">k</span>25
   </h1>
 
-  {/* Buttons Section */}
+  
   <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 lg:mt-0 mt-8 text-white/80 lg:h-1/6 justify-center items-center">
     <button
       className="font-lilita custom-button text-xs md:text-lg bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-2 rounded-2xl md:w-40 w-32"
