@@ -585,7 +585,7 @@ const BallSimulation = () => {
     }
 
     const navigateToNextPage = () => {
-      isJoystickActive = false
+      isJoystickActive = false;
       console.log("Navigating to next page...");
       window.location.href = "/register"; // Update with your page URL
     };
