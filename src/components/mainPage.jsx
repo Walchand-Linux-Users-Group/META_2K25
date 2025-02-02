@@ -125,14 +125,14 @@ export default function MainPage() {
       void shipRef.current.offsetWidth
       shipRef.current.classList.add("gofast")
 
-      }, 2000)
+      },2000)
 
       setTimeout(() => {
         val === 0 ? navigate("/ball-simulation") : navigate("/register")
       }, 3500)
 
       setTimeout(() => {
-        // shipRef.current.classList.add("rmPlane")
+        shipRef.current.classList.add("rmPlane")
        
       }, 3000)  
 

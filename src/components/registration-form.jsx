@@ -13,6 +13,7 @@ import { z } from "zod";
 import QRCode from "react-qr-code";
 import Swal from "sweetalert2";
 import { CustomNumberInput } from "@/components/ui/custom-number-input";
+import '../css/infoSec.css'
 
 const userSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -58,6 +59,7 @@ export default function RegistrationForm() {
         const count = Number(value);
         setFormState((prev) => ({
             ...prev,
+            totalAmount:(count==1)?349:(count*299), 
             numOfParticipants: count,
             participants: Array(count)
                 .fill({})
@@ -73,6 +75,7 @@ export default function RegistrationForm() {
                         }
                 ),
         }));
+        console.log(formState)
     };
 
     const validateStep = () => {
@@ -224,11 +227,11 @@ export default function RegistrationForm() {
     return (
         <div className="w-full max-w-2xl  rounded-lg">
             <div className="relative">
-                <div className="absolute  inset-0 bg-gradient-to-r from-[#0abfba] to-[#4879e2] blur-3xl  -z-10" />
-                <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] flex flex-col justify-center bg-background/80 backdrop-blur-xl rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
-                    <div className="uppercase text-4xl font-bold text-center py-10 md:p-5">
+                <div className="absolute" />
+                <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
+                    <div className="title text-4xl font-bold text-center py-10 md:p-5">
                         {" "}
-                        <h1>Registration</h1>
+                        <h1 className="title">Registration</h1> 
                     </div>
                     <div className="mb-6">
                         <Progress
@@ -457,9 +460,12 @@ export default function RegistrationForm() {
                                 <div className="flex justify-center mb-4">
                                     <QRCode value={paymentQRCode} size={200} />
                                 </div>
-                                <p className="text-center text-white mb-4">
+                                <p className="text-center text-white mb-2">
                                     Scan the QR code to make the payment
                                 </p>
+                                <p className="text-center text-white mb-4 font-semibold"> ₹ {
+                                    formState.totalAmount
+                                }</p>
                                 <div className="space-y-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="transactionId">

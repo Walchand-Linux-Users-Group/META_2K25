@@ -1,10 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
 const ParticleBackground = ({ speed = 0.1, starSize = 0.15 }) => {
   const mountRef = useRef(null);
+  const [starCount, setStarCount] = useState(window.innerWidth < 768 ? 2000 : 5000); // Adjust for mobile
 
   useEffect(() => {
+    // Detect mobile and adjust star count
+    const handleResize = () => {
+      setStarCount(window.innerWidth < 768 ? 2000 : 5000);
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
     // Scene Setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -24,14 +33,14 @@ const ParticleBackground = ({ speed = 0.1, starSize = 0.15 }) => {
 
     // Create a circular texture
     const createCircleTexture = () => {
-      const size = 16;
-      const canvas = document.createElement('canvas');
+      const size = 32;
+      const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
-      const context = canvas.getContext('2d');
+      const context = canvas.getContext("2d");
       context.beginPath();
       context.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
-      context.fillStyle = 'white';
+      context.fillStyle = "white";
       context.fill();
       return new THREE.CanvasTexture(canvas);
     };
@@ -40,67 +49,27 @@ const ParticleBackground = ({ speed = 0.1, starSize = 0.15 }) => {
 
     // Starfield
     const starGeometry = new THREE.BufferGeometry();
-    const starCount = 2000;
     const starPositions = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount * 3; i++) {
       starPositions[i] = (Math.random() - 0.5) * 100;
     }
     starGeometry.setAttribute("position", new THREE.BufferAttribute(starPositions, 3));
 
-    // Star Material with Purplish Color
+    // Star Material
     const starMaterial = new THREE.PointsMaterial({
-      color: new THREE.Color(0x8D5FF4), // Purplish color
+      color: new THREE.Color(0x0abfba),
       size: starSize,
       map: circleTexture,
       transparent: true,
-      opacity: 0.7
+      opacity: 0.7,
     });
 
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
-    // Particles
-    const particles = [];
-    const numParticles = 400;
-
-    for (let i = 0; i < numParticles; i++) {
-      const geometry = new THREE.CircleGeometry(0.5, 32);
-      const yPos = Math.random() * 600 - 300;
-      const color = yPos > 0 ? 0x87CEEB : 0x00008B;
-
-      const material = new THREE.MeshStandardMaterial({ color: color, opacity: 0.7, transparent: true });
-      const particle = new THREE.Mesh(geometry, material);
-
-      particle.position.set(
-        Math.random() * 600 - 300,
-        yPos,
-        Math.random() * 600 - 300
-      );
-
-      particle.scale.set(Math.random() * 2 + 0.5, Math.random() * 2 + 0.5, 1);
-
-      particle.velocity = new THREE.Vector3(
-        Math.random() * 0.3 - 0.15,
-        Math.random() * 0.3 - 0.15,
-        Math.random() * 0.3 - 0.15
-      );
-
-      particles.push(particle);
-      scene.add(particle);
-    }
-
     // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-
-      // Update particles' positions
-      particles.forEach(particle => {
-        particle.position.add(particle.velocity);
-
-        if (particle.position.x > 300 || particle.position.x < -300) particle.velocity.x *= -1;
-        if (particle.position.y > 300 || particle.position.y < -300) particle.velocity.y *= -1;
-        if (particle.position.z > 300 || particle.position.z < -300) particle.velocity.z *= -1;
-      });
 
       // Starfield Animation
       const positions = stars.geometry.attributes.position.array;
@@ -132,22 +101,23 @@ const ParticleBackground = ({ speed = 0.1, starSize = 0.15 }) => {
     // Cleanup
     return () => {
       window.removeEventListener("resize", resizeListener);
+      window.removeEventListener("resize", handleResize);
       if (mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [speed, starSize]);
+  }, [speed, starSize, starCount]);
 
   return (
-    <div 
-      ref={mountRef} 
-      style={{ 
-        position: 'fixed', 
-        top: 0, 
-        left: 0, 
-        width: '100%', 
-        height: '100%', 
-        zIndex: 0 
+    <div
+      ref={mountRef}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 0,
       }}
     />
   );

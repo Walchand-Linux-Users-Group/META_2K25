@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-
+import '../css/infoSec.css'
 const container = {
   hidden: { opacity: 0 },
   show: {
@@ -93,18 +93,16 @@ export function InfoSection() {
   return (
     <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 z-10 p-2 md:p-6 ">
       <motion.div variants={item} className="space-y-4">
-        <h1 className="font-lilita uppercase  text-4xl bg-clip-text text-center text-transparent bg-gradient-to-r from-[#0abfba] to-[#4879e2]">
+        <h1 className="title  text-4xl bg-clip-text text-center text-transparent bg-gradient-to-r from-[#0abfba] to-[#4879e2]">
           Walchand linux users' group
         </h1>
        
       </motion.div>
 
-     
-
       <motion.div variants={item} className="pt-8 border-t border-[#4879e2] ">
       <motion.div variants={item} className="space-y-4">
-        <h1 className="font-lilita uppercase text-4xl pb-5 bg-clip-text text-center text-transparent bg-[#4879e2]">
-          About us
+        <h1 className="title text-4xl pb-5 bg-clip-text text-center text-transparent bg-[#4879e2]">
+         memories
         </h1>
        
       </motion.div>

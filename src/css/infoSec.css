@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'Blackpast';
+    src: url('/fonts/Blackpast.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  title{
+    font-family: 'Blackpast';
+}

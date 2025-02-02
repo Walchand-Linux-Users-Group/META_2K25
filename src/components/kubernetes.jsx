@@ -10,7 +10,7 @@ export default function Kubernetes() {
 
       <div className="relative  min-h-screen flex flex-col justify-center items-center text-white">
         {/* Title */}
-        <h1 className="font-lilita fhd:text-[5rem] z-10 pt-10 uppercase text-4xl md:text-5xl tracking-wider text-center">
+        <h1 className="title fhd:text-[5rem] z-10 pt-10 text-[#4879e2] text-4xl md:text-6xl tracking-wider text-center">
           Kubernetes
         </h1>
 
