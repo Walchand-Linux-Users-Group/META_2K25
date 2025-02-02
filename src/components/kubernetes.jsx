@@ -26,7 +26,7 @@ export default function Kubernetes() {
                 Session 1 <br /> Selling to k8s
               </h2>
               </div>
-              <p className="fhd:text-lg text-sm lg:text-xs md:text-[10px] text-justify mt-5">
+              <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5">
               Running a few containers is simple, but scaling to hundreds? That’s where Kubernetes shines!  It auto-scales, load balances and self-heals containers, making it the go-to for managing large-scale applications.
 In this session, we’ll break down Kubernetes architecture, explore its key components and compare Docker vs Kubernetes to see how they complement each other. By the end, you’ll know why Kubernetes powers the cloud!
               </p>
@@ -43,7 +43,7 @@ In this session, we’ll break down Kubernetes architecture, explore its key com
                 Session 2 <br /> Pod Power
               </h2>
                 <div className="h-5"></div></div>
-              <p className="fhd:text-lg text-sm lg:text-xs md:text-[10px] text-justify mt-5 ">
+              <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5 ">
               Level up your Kubernetes skills! 🚀 Learn Pods, Services, Deployments and more to automate and scale applications seamlessly.
 Go beyond theory with real-world projects, deploying and managing cloud-native apps like a pro.
 For the grand finale—dive into epic wargames! 🔥 Test your skills, compete and push your Docker & K8s expertise to the limit! 🎯
