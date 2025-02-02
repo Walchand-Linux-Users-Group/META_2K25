@@ -216,10 +216,16 @@ export default function MainPage() {
   </div>
 
   {/* Main Event Title */}
-  <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6">
+  {/* <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6">
+    metamorphosis <br/> 2k25
+  </h1> */}
+
+  <h1 className="title text-transparent  bg-clip-text  bg-gradient-to-r from-[#d590f3] to-[#8a8eec]
+] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6 ">
     metamorphosis <br />
-    2<span className="title">k</span>25
+    <span className="bg-clip-text  bg-gradient-to-r from-[#d590f3] to-[#8a8eec]">2<span className="title ">k</span>25</span>
   </h1>
+
 
   
   <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 lg:mt-0 mt-8 text-white/80 lg:h-1/6 justify-center items-center">
