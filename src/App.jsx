@@ -7,7 +7,7 @@ import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
 import "./App.css";
 import BallRegbutton from "./components/ballpageRegbutton";
-import JoystickComponent from "./components/Joystick";
+// import JoystickComponent from "./components/Joystick";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ const App = () => {
             <div>
               <BallSimulation />
               <WASDGuidelines />
-              <JoystickComponent />
+              {/* <JoystickComponent /> */}
               <div className="fullscreen-overlay">
                 <BallRegbutton />
               </div>
