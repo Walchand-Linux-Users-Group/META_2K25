@@ -16,6 +16,7 @@ import BallRegbutton from "./components/ballpageRegbutton";
 
 const App = () => {
   return (
+    
     <Router>
       <Routes>
         <Route path="/" element={<AppContent />} />
