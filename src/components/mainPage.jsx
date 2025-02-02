@@ -129,12 +129,12 @@ export default function MainPage() {
 
       setTimeout(() => {
         val === 0 ? navigate("/ball-simulation") : navigate("/register")
-      }, 4000)
+      }, 3500)
 
       setTimeout(() => {
         shipRef.current.classList.add("rmPlane")
        
-      }, 3000)
+      }, 3000)  
 
       setTimeout(() => {
 
@@ -169,11 +169,16 @@ export default function MainPage() {
     MozUserSelect: "none",
     MsUserSelect: "none",
     pointerEvents: "none",
+    // Ensure it stays within the viewport on mobile
+    top: "10%",
+    left: "0%",
+    transformOrigin: "center center", // Ensures the spaceship doesn't get distorted when rotating
   }
+  
 
   return (
     <div
-      className="flex flex-col justify-center  w-screen h-screen text-center bg-black text-white relative overflow-hidden"
+      className="flex flex-col justify-evenly  w-screen h-screen text-center bg-transparent text-white relative overflow-hidden"
       onMouseMove={handleMouseMove}
       style={{ userSelect: "none" }}
     >
@@ -186,8 +191,12 @@ export default function MainPage() {
         <img src="wlug-purple-logo.png" alt="wlug logo" className="w-20" />
       </div>
 
+      <div className="h-48 md:hidden">
+
+      </div>
+
       {/* Upper Content */}
-      <div className="flex-1 flex flex-col justify-center items-center z-10 pt-10">
+      <div className="flex-1 flex-col justify-center items-center z-10 pt-10">
         {/* Title Section */}
         <div className="uppercase mb-4">
           <h1 className="font-lilita text-xl text-[#a360c0] lg:text-2xl md:text-2xl tracking-wide">
@@ -232,7 +241,7 @@ export default function MainPage() {
       </div>
 
       {/* Spaceship Section */}
-      <div className="flex-1 flex justify-center items-center relative z-20">
+      <div className="flex-1  flex  justify-center md:items-center items-start relative z-20">
         <div ref={shipRef} style={spaceShipStyle}>
           <img
             src="spaceship/Spaceship.png"

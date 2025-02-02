@@ -91,7 +91,7 @@ function Carousel() {
 
 export function InfoSection() {
   return (
-    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 z-10">
+    <motion.div variants={container} initial="hidden" animate="show" className="space-y-8 z-10 p-2 md:p-6 ">
       <motion.div variants={item} className="space-y-4">
         <h1 className="font-lilita uppercase  text-4xl bg-clip-text text-center text-transparent bg-gradient-to-r from-[#0abfba] to-[#4879e2]">
           Walchand linux users' group
