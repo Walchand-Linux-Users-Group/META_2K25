@@ -70,7 +70,6 @@ const AppContent = () => {
       ) : (
         <div>
           <MainPage />
-          <BallRegbutton />
         </div>
       )}
     </div>
@@ -89,4 +88,3 @@ const BallSimulationWrapper = () => {
 };
 
 export default App;
-  
