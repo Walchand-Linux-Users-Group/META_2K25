@@ -3,7 +3,7 @@ body {
   font-family: 'Roboto', sans-serif;
 }
 body, .button:after {
-  background: #2c3e50;
+  background: #000000;
 }
 .ctn {
   display: block;
@@ -43,7 +43,7 @@ footer a, footer a:after {
   text-decoration: none;
   padding: .5em;
   margin: .5em;
-  font-size: 2em;
+  font-size: 1.2em;
   font-weight: bold;
   transition: all .5s;
   -webkit-background-clip: text;
@@ -95,4 +95,12 @@ footer a, footer a:after {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+}
+
+/* Top right button positioning */
+.top-right-button {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  z-index: 1001; /* Ensure it's above other elements */
 }

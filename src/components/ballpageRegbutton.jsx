@@ -1,12 +1,19 @@
-import React from "react";
-import "./ballpageRegbutton.css";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './ballpageRegbutton.css';
 
 const BallRegbutton = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/register');
+  };
+
   return (
-    <div className="ctn">
-      <a href="https://google.com" className="button b-pink">
+    <div className="ctn top-right-button">
+      <button onClick={handleClick} className="button b-pink">
         Register
-      </a>
+      </button>
     </div>
   );
 };

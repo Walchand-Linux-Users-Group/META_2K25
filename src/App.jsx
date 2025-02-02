@@ -26,7 +26,7 @@ const App = () => {
             <div>
               <BallSimulationWrapper />
               <WASDGuidelines />
-              <div className="fullscreen-overlay">
+              <div className="fullscreen-overlay ">
                 <BallRegbutton />
               </div>
             </div>
