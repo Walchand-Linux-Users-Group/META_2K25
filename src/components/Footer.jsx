@@ -4,13 +4,6 @@ import { FaDocker } from "react-icons/fa";
 import "../css/infoSec.css"
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { FaXTwitter } from "react-icons/fa6";
-import {
-  Facebook,
-  Twitter,
-  Linkedin,
-  Instagram,
-  Github,
-} from "lucide-react";
 
 import { LiaDiscord } from "react-icons/lia";
 
