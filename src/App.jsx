@@ -3,30 +3,43 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  useNavigate,
 } from "react-router-dom";
 import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
 import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
-import "./App.css"; // Import the CSS file
+import "./App.css"; 
 import BallRegbutton from "./components/ballpageRegbutton";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a loading delay
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000); // Adjust the delay as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <PageLoader />;
+  }
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<AppContent />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/ball-simulation"
           element={
             <div>
-              <BallSimulationWrapper />
+              <BallSimulation />
               <WASDGuidelines />
-              <div className="fullscreen-overlay ">
+              <div className="fullscreen-overlay">
                 <BallRegbutton />
               </div>
             </div>
@@ -35,56 +48,6 @@ const App = () => {
       </Routes>
     </Router>
   );
-};
-
-const AppContent = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate(); // This hook must be used inside the Router context
-
-  useEffect(() => {
-    // Simulate loading time, e.g., fetching data
-    const timer = setTimeout(() => {
-      setIsLoading(false); // Set loading to false after 1 second
-    }, 1000);
-
-    return () => clearTimeout(timer); // Cleanup the timer on unmount
-  }, []);
-
-  useEffect(() => {
-    if (!isLoading) {
-      // Delay the navigation slightly to show the transition
-      const timer = setTimeout(() => {
-        // navigate("/main"); // Redirect to main page after loading
-      }, 1000);
-
-      return () => clearTimeout(timer); // Cleanup the timer on unmount
-    }
-  }, [isLoading, navigate]);
-
-  return (
-    <div>
-      {isLoading ? (
-        <div className="fade-in show">
-          <PageLoader />
-        </div>
-      ) : (
-        <div>
-          <MainPage />
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Wrapper component to handle navigation for BallSimulation
-const BallSimulationWrapper = () => {
-  const navigate = useNavigate();
-
-  const navigateToNextPage = () => {
-    navigate("/register");
-  };
-
-  return <BallSimulation navigateToNextPage={navigateToNextPage} />;
 };
 
 export default App;

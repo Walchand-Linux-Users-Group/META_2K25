@@ -47,7 +47,7 @@ const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {
 
     // Starfield
     const starGeometry = new THREE.BufferGeometry();
-    const starCount = 2000;
+    const starCount = 5000;
     const starPositions = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount * 3; i++) {
       starPositions[i] = (Math.random() - 0.5) * 100;

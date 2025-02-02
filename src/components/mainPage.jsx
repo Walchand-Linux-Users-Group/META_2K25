@@ -146,7 +146,7 @@ export default function MainPage() {
   const handleButtonHover = () => {
     setIsHovered(true)
     if (shipRef.current) {
-      // shipRef.current.classList.add("bounceFast")
+      shipRef.current.classList.add("bounceFast")
     }
     
     setStarSpeed(0.4) // Increase star speed on hover
