@@ -8,12 +8,10 @@ export default {
   ],
   theme: {
   	extend: {
-  		fontFamily: {
-  			lilita: [
-  				'Lilita One',
-  				'cursive'
-  			]
-  		},
+		fontFamily: {
+			blackpast: ['Blackpast', 'sans-serif'], // Match the @font-face name
+			lilita: ['Lilita One', 'cursive'],
+		  },
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
