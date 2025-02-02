@@ -4,25 +4,25 @@ const sessions = [
   {
     title: "Session 1",
     description:
-      "DevOps is transforming software development, making delivery faster and more efficient! This session covers virtualization vs physical servers and why modern apps prefer containers over VMs. You'll dive into Docker, exploring its core components and mastering essential commands with hands-on experience! 🚀",
+      "This session covers virtualization vs. physical servers, why modern apps prefer containers over VMs, and a hands-on introduction to Docker with its core components and commands.",
     date: "15 FEB 2025",
   },
   {
     title: "Session 2",
     description:
-      "Now that you know Docker, let's dive into data management and networking! Learn how Docker Volumes keep data persistent and how containers communicate using Docker Networking. Finally, master Docker Compose, a game-changer for managing multi-container apps with a single YAML file! 🚀",
+      "This session covers Docker Volumes for data persistence, Docker Networking for container communication, and Docker Compose for managing multi-container apps with a single YAML file.",
     date: "15 FEB 2025",
   },
   {
     title: "Session 3",
     description:
-      "Running a few containers is simple, but scaling to hundreds? That's where Kubernetes shines! 🚀 It auto-scales, load balances and self-heals containers, making it the go-to for managing large-scale applications. In this session, we'll break down Kubernetes architecture, explore its key components and compare Docker vs Kubernetes to see how they complement each other. By the end, you'll know why Kubernetes powers the cloud! 🌍",
+      "Managing a few containers is easy, but scaling requires Kubernetes. This session covers its architecture, key components, and how it complements Docker, making it essential for large-scale applications.",
     date: "16 FEB 2025",
   },
   {
     title: "Session 4",
     description:
-      "Level up your Kubernetes skills! 🚀 Learn Pods, Services, Deployments and more to automate and scale applications seamlessly. Go beyond theory with real-world projects, deploying and managing cloud-native apps like a pro. For the grand finale—dive into epic wargames! 🔥 Test your skills, compete and push your Docker & K8s expertise to the limit! 🎯",
+      "Take your Kubernetes skills further with Pods, Services, and Deployments to automate and scale applications. Apply your knowledge with real-world projects and test your expertise in wargames.",
     date: "16 FEB 2025",
   },
 ];
