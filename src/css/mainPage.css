@@ -7,9 +7,24 @@
     }
 }
 
+
+
+@font-face {
+    font-family: 'Blackpast';
+    src: url('/fonts/Blackpast.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+  }
+  
+
 body, html {
     height: 100%;
     margin: 0;
+    font-family: 'Blackpast',Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.title{
+    font-family: 'Blackpast',Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .rmPlane{
@@ -120,11 +135,60 @@ body, html {
     }
 }
 
+@media (max-width: 768px) { 
+
+@keyframes go {
+    0% {
+        transform: translateY(0px) scale(100%);
+        opacity: 1;
+    }
+    10% {
+        transform: translateY(-5px) scale(95%);
+    }
+    30% {
+        transform: translateY(-10px) scale(85%);
+    }
+    40% {
+        transform: translateY(-15px) scale(80%);
+    }
+    50% {
+        transform: translateY(-20px) scale(75%);
+        opacity: 0.7;
+    }
+    60% {
+        transform: translateY(-25px) scale(70%);
+    }
+    70% {
+        transform: translateY(-30px) scale(65%);
+    }
+    80% {
+        transform: translateY(-35px) scale(60%);
+    }
+    90% {
+        transform: translateY(-40px) scale(55%);
+    }
+    100% {
+        transform: translateY(-45px) scale(50%);
+        opacity: 0.5;
+    }
+}
+
+.gofast {
+    position: fixed;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+    animation: go 1.1s ease-out forwards !important;
+  }
+
+}
 
 .gofast{
     position: absolute;
     animation: go 1.1s ease-out !important;
 }
+
+
 
 /* Generate random stars for multiple layers */
 @keyframes animStar {

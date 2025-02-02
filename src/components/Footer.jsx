@@ -15,7 +15,7 @@ import { LiaDiscord } from "react-icons/lia";
 export default function Footer() {
   return (
     <>
-      <div className="w-full h-20"></div>
+      {/* <div className="w-full h-20"></div> */}
 
       <div className="flex flex-wrap md:flex-nowrap justify-between items-center bg-[#111]/90 border border-[#4879e2] text-white mx-5 mb-10 rounded-lg backdrop-blur-sm p-5">
         <div className="flex flex-col md:flex-row w-full gap-5 md:gap-0 justify-between items-center md:px-10">

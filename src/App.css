@@ -6,3 +6,11 @@
   .fade-in.show {
     opacity: 1;
   }
+
+  @font-face {
+    font-family: 'Blackpast';
+    src: url('/fonts/Blackpast%20DEMO.ttf') format('truetype'); 
+    font-weight: normal;
+    font-style: normal;
+  }
+  
