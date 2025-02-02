@@ -93,7 +93,7 @@ const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {
     };
   }, [speed]);
 
-  return <div ref={mountRef} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}></div>;
+  return <div ref={mountRef} className="bg-black" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}></div>;
 };
 
 export default ThreeDScene;

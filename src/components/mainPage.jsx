@@ -145,11 +145,19 @@ export default function MainPage() {
 
   const handleButtonHover = () => {
     setIsHovered(true)
+    if (shipRef.current) {
+      // shipRef.current.classList.add("bounceFast")
+    }
+    
     setStarSpeed(0.4) // Increase star speed on hover
   }
 
   const handleButtonLeave = () => {
     setIsHovered(false)
+    if (shipRef.current) {
+      void shipRef.current.offsetWidth
+      shipRef.current.classList.remove("bounceFast")
+    }
     setStarSpeed(0.1) // Reset to normal speed when not hovered
   }
 
@@ -178,7 +186,7 @@ export default function MainPage() {
 
   return (
     <div
-      className="flex flex-col justify-evenly md:justify-center overflow-y-hidden bg-[#0a0a0a]  w-screen md:h-screen h-screen text-center bg-transparent text-white relative overflow-hidden"
+      className="flex flex-col justify-evenly md:justify-center overflow-y-hidden bg-black w-screen md:h-screen h-screen text-center bg-transparent text-white relative overflow-hidden"
       onMouseMove={handleMouseMove}
       style={{ userSelect: "none" }} 
     >
@@ -214,7 +222,7 @@ export default function MainPage() {
   </h1>
 
   {/* Buttons Section */}
-  <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 mt-8 text-white/80 justify-center items-center">
+  <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 lg:mt-5 mt-8 text-white/80 lg:h-1/6 justify-center items-center">
     <button
       className="font-lilita custom-button text-xs md:text-lg bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-2 rounded-2xl md:w-40 w-32"
       onMouseEnter={handleButtonHover}

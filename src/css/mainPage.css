@@ -7,6 +7,46 @@
     }
 }
 
+@keyframes bounceFast {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    10% {
+        transform: translateY(2px);
+    }
+    20% {
+        transform: translateY(-2px);
+    }
+    30% {
+        transform: translateY(2px);
+    }
+    40% {
+        transform: translateY(-2px);
+    }
+    50% {
+        transform: translateY(2px);
+    }
+    60% {
+        transform: translateY(-2px);
+    }
+    70% {
+        transform: translateY(2px);
+    }
+    80% {
+        transform: translateY(-2px);
+    }
+    90% {
+        transform: translateY(2px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+
+.bounceFast{
+    animation: bounceFast 1.0s infinite ease-in-out;
+}
 
 
 @font-face {
