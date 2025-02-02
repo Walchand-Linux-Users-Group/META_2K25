@@ -4,7 +4,6 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
 import SessionCards from "./SessionCard";
-import { set } from "zod";
 
 const BallSimulation = () => {
   const mountRef = useRef(null);
@@ -294,43 +293,59 @@ const BallSimulation = () => {
       if (!isMobile) {
         return;
       }
-      const joystick = document.createElement("div");
-      joystick.style.position = "absolute";
-      joystick.style.bottom = "15%";
-      joystick.style.left = "50%";
-      joystick.style.width = "150px";
-      joystick.style.height = "150px";
-      joystick.style.border = "2px solid #aaa";
-      joystick.style.borderRadius = "50%";
-      joystick.style.background = "rgba(255, 255, 255, 0.5)";
-      joystick.style.zIndex = "1000";
-      joystick.style.opacity = "0.3";
-      joystick.style.touchAction = "none";
-      joystick.style.transform = "translateX(-50%)";
-      document.body.appendChild(joystick);
 
-      const handle = document.createElement("div");
-      handle.style.position = "absolute";
-      handle.style.width = "50px";
-      handle.style.height = "50px";
-      handle.style.opacity = "0.4";
-      handle.style.background = "rgba(0, 0, 0, 0.7)";
-      handle.style.borderRadius = "50%";
-      handle.style.left = "50%";
-      handle.style.top = "50%";
-      handle.style.transform = "translate(-50%, -50%)";
-      joystick.appendChild(handle);
-
+      let joystick;
+      let handle;
       let initialTouch = null;
 
-      if (window.location.pathname === "/ball-simulation") {
-        joystick.addEventListener("touchstart", (event) => {
-          isJoystickActive = true;
-          initialTouch = event.touches[0];
-        });
-      }
+      const addJoystick = () => {
+        joystick = document.createElement("div");
+        joystick.style.position = "absolute";
+        joystick.style.bottom = "15%";
+        joystick.style.left = "50%";
+        joystick.style.width = "150px";
+        joystick.style.height = "150px";
+        joystick.style.border = "2px solid #aaa";
+        joystick.style.borderRadius = "50%";
+        joystick.style.background = "rgba(255, 255, 255, 0.5)";
+        joystick.style.zIndex = "1000";
+        joystick.style.opacity = "0.3";
+        joystick.style.touchAction = "none";
+        joystick.style.transform = "translateX(-50%)";
+        document.body.appendChild(joystick);
 
-      joystick.addEventListener("touchmove", (event) => {
+        handle = document.createElement("div");
+        handle.style.position = "absolute";
+        handle.style.width = "50px";
+        handle.style.height = "50px";
+        handle.style.opacity = "0.4";
+        handle.style.background = "rgba(0, 0, 0, 0.7)";
+        handle.style.borderRadius = "50%";
+        handle.style.left = "50%";
+        handle.style.top = "50%";
+        handle.style.transform = "translate(-50%, -50%)";
+        joystick.appendChild(handle);
+
+        joystick.addEventListener("touchstart", handleTouchStart);
+        joystick.addEventListener("touchmove", handleTouchMove);
+        joystick.addEventListener("touchend", handleTouchEnd);
+      };
+
+      const removeJoystick = () => {
+        if (joystick) {
+          joystick.removeEventListener("touchstart", handleTouchStart);
+          joystick.removeEventListener("touchmove", handleTouchMove);
+          joystick.removeEventListener("touchend", handleTouchEnd);
+          document.body.removeChild(joystick);
+        }
+      };
+
+      const handleTouchStart = (event) => {
+        isJoystickActive = true;
+        initialTouch = event.touches[0];
+      };
+
+      const handleTouchMove = (event) => {
         if (!isJoystickActive) return;
 
         const touch = event.touches[0];
@@ -349,15 +364,46 @@ const BallSimulation = () => {
         joystickPosition.y = y / maxDistance;
 
         handle.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
-      });
+      };
 
-      joystick.addEventListener("touchend", () => {
+      const handleTouchEnd = () => {
         isJoystickActive = false;
         joystickPosition.x = 0;
         joystickPosition.y = 0;
         handle.style.transform = "translate(-50%, -50%)";
-      });
+      };
+
+      // Check if the current page is /ball-simulation and add the joystick
+      if (window.location.pathname === "/ball-simulation") {
+        addJoystick();
+      }
+
+      // Listen for navigation events to remove the joystick if navigating away
+      const handleNavigation = () => {
+        if (window.location.pathname !== "/ball-simulation") {
+          removeJoystick();
+        }
+      };
+
+      // Add event listeners for navigation
+      window.addEventListener("popstate", handleNavigation);
+      window.addEventListener("pushstate", handleNavigation);
+      window.addEventListener("replacestate", handleNavigation);
+
+      // Cleanup function to remove the event listener
+      return () => {
+        window.removeEventListener("popstate", handleNavigation);
+        window.removeEventListener("pushstate", handleNavigation);
+        window.removeEventListener("replacestate", handleNavigation);
+        removeJoystick();
+      };
     }
+
+    // Call setupJoystick to initialize the joystick
+    const cleanupJoystick = setupJoystick();
+
+    // Optional: Call cleanupJoystick() when your component or page unmounts to ensure cleanup
+    window.addEventListener("beforeunload", cleanupJoystick);
 
     function handleBallMovement(deltaTime) {
       const baseSpeed = 7;
@@ -420,21 +466,6 @@ const BallSimulation = () => {
     }
 
     setupJoystick();
-
-    function showPassCard() {
-      const card = document.createElement("div");
-      card.style.position = "absolute";
-      card.style.top = "50%";
-      card.style.left = "50%";
-      card.style.transform = "translate(-50%, -50%)";
-      card.style.backgroundColor = "#4CAF50";
-      card.style.color = "white";
-      card.style.fontSize = "24px";
-      card.style.padding = "20px";
-      card.style.borderRadius = "10px";
-      card.innerText = "You Pass!";
-      document.body.appendChild(card);
-    }
 
     let isAttached = false; // Flag to track if the ball is attached
 

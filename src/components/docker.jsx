@@ -10,7 +10,7 @@ export default function Docker() {
       {/* <ParticleBackground /> */}
 
       <div className="relative min-h-screen flex flex-col items-center text-white">
-        {/* Title */}
+        
         <h1 className="title fhd:text-[5rem] z-10 pt-0  text-5xl text-[#0abfba] md:text-6xl tracking-wider text-center">
           Docker
         </h1>
