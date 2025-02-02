@@ -287,77 +287,79 @@ const BallSimulation = () => {
       keyState[event.code] = false;
     });
 
-    function setupJoystick() {
-      const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-      const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
+    // function setupJoystick() {
+    //   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    //   const isMobile = /android|iPad|iPhone|iPod/i.test(userAgent);
 
-      if (!isMobile) {
-        return;
-      }
-      const joystick = document.createElement("div");
-      joystick.style.position = "absolute";
-      joystick.style.bottom = "15%";
-      joystick.style.left = "50%";
-      joystick.style.width = "150px";
-      joystick.style.height = "150px";
-      joystick.style.border = "2px solid #aaa";
-      joystick.style.borderRadius = "50%";
-      joystick.style.background = "rgba(255, 255, 255, 0.5)";
-      joystick.style.zIndex = "1000";
-      joystick.style.opacity = "0.3";
-      joystick.style.touchAction = "none";
-      joystick.style.transform = "translateX(-50%)";
-      document.body.appendChild(joystick);
+    //   if (!isMobile) {
+    //     return;
+    //   }
+    //   const joystick = document.createElement("div");
+    //   joystick.style.position = "absolute";
+    //   joystick.style.bottom = "15%";
+    //   joystick.style.left = "50%";
+    //   joystick.style.width = "150px";
+    //   joystick.style.height = "150px";
+    //   joystick.style.border = "2px solid #aaa";
+    //   joystick.style.borderRadius = "50%";
+    //   joystick.style.background = "rgba(255, 255, 255, 0.5)";
+    //   joystick.style.zIndex = "1000";
+    //   joystick.style.opacity = "0.3";
+    //   joystick.style.touchAction = "none";
+    //   joystick.style.transform = "translateX(-50%)";
+    //   document.body.appendChild(joystick);
 
-      const handle = document.createElement("div");
-      handle.style.position = "absolute";
-      handle.style.width = "50px";
-      handle.style.height = "50px";
-      handle.style.opacity = "0.4";
-      handle.style.background = "rgba(0, 0, 0, 0.7)";
-      handle.style.borderRadius = "50%";
-      handle.style.left = "50%";
-      handle.style.top = "50%";
-      handle.style.transform = "translate(-50%, -50%)";
-      joystick.appendChild(handle);
+    //   const handle = document.createElement("div");
+    //   handle.style.position = "absolute";
+    //   handle.style.width = "50px";
+    //   handle.style.height = "50px";
+    //   handle.style.opacity = "0.4";
+    //   handle.style.background = "rgba(0, 0, 0, 0.7)";
+    //   handle.style.borderRadius = "50%";
+    //   handle.style.left = "50%";
+    //   handle.style.top = "50%";
+    //   handle.style.transform = "translate(-50%, -50%)";
+    //   joystick.appendChild(handle);
 
-      let initialTouch = null;
+    //   let initialTouch = null;
 
-      if (window.location.pathname === "/ball-simulation") {
-        joystick.addEventListener("touchstart", (event) => {
-          isJoystickActive = true;
-          initialTouch = event.touches[0];
-        });
-      }
+    //   if (window.location.pathname === "/ball-simulation") {
+    //     joystick.addEventListener("touchstart", (event) => {
+    //       isJoystickActive = true;
+    //       initialTouch = event.touches[0];
+    //     });
+    //   } else {
+    //     isJoystickActive = false;
+    //   }
 
-      joystick.addEventListener("touchmove", (event) => {
-        if (!isJoystickActive) return;
+    //   joystick.addEventListener("touchmove", (event) => {
+    //     if (!isJoystickActive) return;
 
-        const touch = event.touches[0];
-        const deltaX = touch.clientX - initialTouch.clientX;
-        const deltaY = touch.clientY - initialTouch.clientY;
+    //     const touch = event.touches[0];
+    //     const deltaX = touch.clientX - initialTouch.clientX;
+    //     const deltaY = touch.clientY - initialTouch.clientY;
 
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const maxDistance = 50;
-        const angle = Math.atan2(deltaY, deltaX);
+    //     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    //     const maxDistance = 50;
+    //     const angle = Math.atan2(deltaY, deltaX);
 
-        const clampedDistance = Math.min(distance, maxDistance);
-        const x = clampedDistance * Math.cos(angle);
-        const y = clampedDistance * Math.sin(angle);
+    //     const clampedDistance = Math.min(distance, maxDistance);
+    //     const x = clampedDistance * Math.cos(angle);
+    //     const y = clampedDistance * Math.sin(angle);
 
-        joystickPosition.x = x / maxDistance;
-        joystickPosition.y = y / maxDistance;
+    //     joystickPosition.x = x / maxDistance;
+    //     joystickPosition.y = y / maxDistance;
 
-        handle.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
-      });
+    //     handle.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+    //   });
 
-      joystick.addEventListener("touchend", () => {
-        isJoystickActive = false;
-        joystickPosition.x = 0;
-        joystickPosition.y = 0;
-        handle.style.transform = "translate(-50%, -50%)";
-      });
-    }
+    //   joystick.addEventListener("touchend", () => {
+    //     isJoystickActive = false;
+    //     joystickPosition.x = 0;
+    //     joystickPosition.y = 0;
+    //     handle.style.transform = "translate(-50%, -50%)";
+    //   });
+    // }
 
     function handleBallMovement(deltaTime) {
       const baseSpeed = 7;
@@ -419,7 +421,7 @@ const BallSimulation = () => {
       }
     }
 
-    setupJoystick();
+    // setupJoystick();
 
     function showPassCard() {
       const card = document.createElement("div");
