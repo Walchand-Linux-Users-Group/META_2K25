@@ -5,19 +5,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, ChevronRight, Github, Instagram, Linkedin, Loader2, Twitter } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { z } from "zod";
 import QRCode from "react-qr-code";
 import Swal from "sweetalert2";
+import { CustomNumberInput } from "@/components/ui/custom-number-input";
 
 const userSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -231,9 +226,15 @@ export default function RegistrationForm() {
             <div className="relative">
                 <div className="absolute  inset-0 bg-gradient-to-r from-[#0abfba] to-[#4879e2] blur-3xl  -z-10" />
                 <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] flex flex-col justify-center bg-background/80 backdrop-blur-xl rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
-                   <div className="uppercase text-4xl font-bold text-center py-10 md:p-5"> <h1 >Registration</h1></div>
+                    <div className="uppercase text-4xl font-bold text-center py-10 md:p-5">
+                        {" "}
+                        <h1>Registration</h1>
+                    </div>
                     <div className="mb-6">
-                        <Progress value={progress} className="h-1 bg-[#4879e2]" />
+                        <Progress
+                            value={progress}
+                            className="h-1"
+                        />
                     </div>
 
                     <AnimatePresence mode="wait">
@@ -258,28 +259,14 @@ export default function RegistrationForm() {
                                     <Label htmlFor="participants">
                                         Number of Participants
                                     </Label>
-                                    <Select
-                                        value={formState.numOfParticipants.toString()}
-                                        onValueChange={handleParticipantChange}
-                                    >
-                                        <SelectTrigger className="bg-background/50 border-[#4879e2]">
-                                            <SelectValue placeholder="Select participants" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {[1, 2, 3, 4, 5].map((num) => (
-                                                <SelectItem
-                                                    key={num}
-                                                    value={num.toString()}
-                                                    className=""
-                                                >
-                                                    {num}{" "}
-                                                    {num === 1
-                                                        ? "Participant"
-                                                        : "Participants"}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <CustomNumberInput
+                                        value={formState.numOfParticipants}
+                                        onChange={(value) =>
+                                            handleParticipantChange(value)
+                                        }
+                                        min={1}
+                                        max={3}
+                                    />
                                 </div>
                             </motion.div>
                         ) : formState.currentStep <=
@@ -341,7 +328,7 @@ export default function RegistrationForm() {
                                             className="bg-background/50 border-[#4879e2]"
                                         />
                                         {errors[field.field] && (
-                                            <p className="text-red-500">
+                                            <p className="text-red-500 text-xs">
                                                 {errors[field.field]}
                                             </p>
                                         )}
@@ -351,7 +338,7 @@ export default function RegistrationForm() {
                                     <Label htmlFor="yearOfStudy">
                                         Year of Study
                                     </Label>
-                                    <Select
+                                    <RadioGroup
                                         value={formState.participants[
                                             formState.currentStep - 1
                                         ].yearOfStudy.toString()}
@@ -362,23 +349,26 @@ export default function RegistrationForm() {
                                                 Number(value)
                                             )
                                         }
+                                        className="flex space-x-4"
                                     >
-                                        <SelectTrigger className="bg-background/50 border-[#4879e2]">
-                                            <SelectValue placeholder="Select year" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {[1, 2, 3, 4].map((year) => (
-                                                <SelectItem
-                                                    key={year}
+                                        {[1, 2, 3, 4].map((year) => (
+                                            <div
+                                                key={year}
+                                                className="flex items-center space-x-2"
+                                            >
+                                                <RadioGroupItem
                                                     value={year.toString()}
-                                                >
+                                                    id={`year-${year}`}
+                                                    className="border-[#4879e2]"
+                                                />
+                                                <Label htmlFor={`year-${year}`}>
                                                     {year}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                                </Label>
+                                            </div>
+                                        ))}
+                                    </RadioGroup>
                                     {errors.yearOfStudy && (
-                                        <p className="text-red-500">
+                                        <p className="text-red-500 text-xs">
                                             {errors.yearOfStudy}
                                         </p>
                                     )}
@@ -490,7 +480,7 @@ export default function RegistrationForm() {
                                             className="bg-background/50 border-[#4879e2]"
                                         />
                                         {errors.transactionId && (
-                                            <p className="text-red-500">
+                                            <p className="text-red-500 text-xs">
                                                 {errors.transactionId}
                                             </p>
                                         )}
@@ -512,7 +502,7 @@ export default function RegistrationForm() {
                                             className="bg-background/50 border-[#4879e2]"
                                         />
                                         {errors.transactionImage && (
-                                            <p className="text-red-500">
+                                            <p className="text-red-500 text-xs">
                                                 {errors.transactionImage}
                                             </p>
                                         )}
@@ -522,7 +512,7 @@ export default function RegistrationForm() {
                         )}
                     </AnimatePresence>
 
-                    <div className="flex justify-between mt-16">
+                    <div className="flex justify-between mt-12">
                         {!isFirstStep && (
                             <Button
                                 onClick={prevStep}
@@ -559,7 +549,6 @@ export default function RegistrationForm() {
                     </div>
                 </div>
             </div>
-            
         </div>
     );
 }
