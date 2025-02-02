@@ -128,7 +128,7 @@ export default function MainPage() {
       }, 2000)
 
       setTimeout(() => {
-        // val === 0 ? navigate("/ball-simulation") : navigate("/register")
+        val === 0 ? navigate("/ball-simulation") : navigate("/register")
       }, 3500)
 
       setTimeout(() => {
@@ -178,7 +178,7 @@ export default function MainPage() {
 
   return (
     <div
-      className="flex flex-col justify-evenly overflow-y-hidden bg-[#050505]  w-screen md:h-screen h-screen text-center bg-transparent text-white relative overflow-hidden"
+      className="flex flex-col justify-evenly md:justify-center overflow-y-hidden bg-[#0a0a0a]  w-screen md:h-screen h-screen text-center bg-transparent text-white relative overflow-hidden"
       onMouseMove={handleMouseMove}
       style={{ userSelect: "none" }} 
     >
@@ -187,8 +187,8 @@ export default function MainPage() {
       <ThreeDScene speed={starSpeed} starSize={starSize} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }} />
 
       {/* Logo */}
-      <div className="absolute top-0 right-0 mr-5 mt-5 lg:mt-2">
-        <img src="wlug-purple-logo.png" alt="wlug logo" className="w-20" />
+      <div className="absolute top-0 right-0 mr-5 mt-5 lg:mt-0">
+        <img src="wlug-purple-logo.png" alt="wlug logo" className="md:w-28 w-20" />
       </div>
 
       {/* <div className="h-48 md:hidden">
@@ -196,49 +196,44 @@ export default function MainPage() {
       </div> */}
 
       {/* Upper Content */}
-      <div className="md:flex-1 bg-transparent flex-col justify-center items-center z-10 pt-10">
-        {/* Title Section */}
-        <div className=" mb-4">
-          <h1 className="text-xl  title text-[#a360c0] lg:text-2xl md:text-2xl tracking-wide">
-            Walchand Linux Users' Group
-          </h1>
-          <h3 className=" lg:text-lg title text-[#a360c0] md:text-xl text-md mt-2 tracking-wide">presents</h3>
-        </div>
+<div className="md:flex-1 bg-transparent flex flex-col justify-center items-center z-10 pt-10 md:h-full">
+  {/* Title Section */}
+  <div className="mb-4 text-center">
+    <h1 className="text-sm title text-[#d696f1] lg:text-2xl md:text-2xl  tracking-wide">
+      Walchand Linux Users' Group
+    </h1>
+    <h3 className="lg:text-lg title text-[#d696f1] md:text-xl text-xs mt-2 tracking-wide">
+      presents
+    </h3>
+  </div>
 
-        {/* Main Event Title */}
-        <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#AD1DEB] to-[#6E72FC] font-bold lg:text-6xl md:text-5xl text-4xl tracking-widest mb-6">
-          metamorphosis <br />
-          2<span className="title">k</span>25
-        </h1>
+  {/* Main Event Title */}
+  <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-7xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6">
+    metamorphosis <br />
+    2<span className="title">k</span>25
+  </h1>
 
-        {/* Buttons Section */}
-        <div className="flex flex-row md:gap-10 gap-5 mt-5 text-white/85 justify-center items-center">
-          <button
-            className="font-lilita custom-button bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-3 rounded-2xl w-40"
-            onMouseEnter={handleButtonHover}
-            onMouseLeave={handleButtonLeave}
-            onClick={() => handleButtonClick(0)}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            Play Game
-          </button>
-          <button
-            className="font-lilita custom-button bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-3 rounded-2xl w-40"
-            onMouseEnter={handleButtonHover}
-            onMouseLeave={handleButtonLeave}
-            onClick={() => handleButtonClick(1)}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            Register Now
-          </button>
-        </div>
-      </div>
+  {/* Buttons Section */}
+  <div className="flex flex-row md:gap-10 gap-5 md:-mt-5 mt-8 text-white/80 justify-center items-center">
+    <button
+      className="font-lilita custom-button text-xs md:text-lg bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-2 rounded-2xl md:w-40 w-32"
+      onMouseEnter={handleButtonHover}
+      onMouseLeave={handleButtonLeave}
+      onClick={() => handleButtonClick(0)}
+    >
+      Play Game
+    </button>
+    <button
+      className="font-lilita custom-button text-xs md:text-lg bg-black/0.5 backdrop-blur-sm title border-purple-500 border-[1px] p-2 rounded-2xl md:w-40 w-32"
+      onMouseEnter={handleButtonHover}
+      onMouseLeave={handleButtonLeave}
+      onClick={() => handleButtonClick(1)}
+    >
+      Register Now
+    </button>
+  </div>
+</div>
+
 
       {/* Spaceship Section */}
       <div className="md:flex-1  flex h-1/4 justify-center md:items-center items-start relative z-20">

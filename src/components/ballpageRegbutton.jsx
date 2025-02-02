@@ -1,34 +1,21 @@
-import React from "react";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './ballpageRegbutton.css';
 
 const BallRegbutton = () => {
-  const handleButtonClick = (val) => {
-    setTimeout(() => {
-      navigate("/register");
-    }, 2000);
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/register');
   };
 
-  const handleButtonHover = () => {
-    setIsHovered(true);
-    setStarSpeed(0.4); // Increase star speed on hover
-  };
-
-  const handleButtonLeave = () => {
-    setIsHovered(false);
-    setStarSpeed(0.1); // Reset to normal speed when not hovered
-  };
-
-  <button
-    className="font-lilita custom-button uppercase border-purple-500 border-[1px] p-3 rounded-2xl w-40"
-    onMouseEnter={handleButtonHover}
-    onMouseLeave={handleButtonLeave}
-    onClick={() => handleButtonClick(1)}
-  >
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    Register Now
-  </button>;
+  return (
+    <div className="ctn top-right-button">
+      <button onClick={handleClick} className="button b-pink">
+        Register
+      </button>
+    </div>
+  );
 };
 
 export default BallRegbutton;

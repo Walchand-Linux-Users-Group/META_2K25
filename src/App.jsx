@@ -17,24 +17,18 @@ import BallRegbutton from "./components/ballpageRegbutton";
 const App = () => {
   return (
     <Router>
-      {/* <AppContent/> */}
       <Routes>
-        
-        {/* <Route path="/" element={<MainPage />} /> */}
-
         <Route path="/" element={<AppContent />} />
-
         <Route path="/register" element={<RegisterPage />} />
-
         <Route
           path="/ball-simulation"
           element={
             <div>
-              <div className="absolute top-0 right-0 p-4 z-10">
-                <BallRegbutton/>
-              </div>
               <BallSimulationWrapper />
               <WASDGuidelines />
+              <div className="fullscreen-overlay ">
+                <BallRegbutton />
+              </div>
             </div>
           }
         />
@@ -74,7 +68,9 @@ const AppContent = () => {
           <PageLoader />
         </div>
       ) : (
-        <MainPage />
+        <div>
+          <MainPage />
+        </div>
       )}
     </div>
   );

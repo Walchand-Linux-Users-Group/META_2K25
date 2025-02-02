@@ -4,6 +4,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import * as CANNON from "cannon-es";
 import SessionCards from "./SessionCard";
+import { set } from "zod";
 
 const BallSimulation = () => {
   const mountRef = useRef(null);
@@ -11,7 +12,7 @@ const BallSimulation = () => {
   const [gameFinished, setGameFinished] = useState(false);
   const [showPauseCard, setShowPauseCard] = useState(false);
   const [isStuck, setIsStuck] = useState(false);
-  var idx = 1;
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     const scene = new THREE.Scene();
@@ -322,10 +323,12 @@ const BallSimulation = () => {
 
       let initialTouch = null;
 
-      joystick.addEventListener("touchstart", (event) => {
-        isJoystickActive = true;
-        initialTouch = event.touches[0];
-      });
+      if (window.location.pathname === "/ball-simulation") {
+        joystick.addEventListener("touchstart", (event) => {
+          isJoystickActive = true;
+          initialTouch = event.touches[0];
+        });
+      }
 
       joystick.addEventListener("touchmove", (event) => {
         if (!isJoystickActive) return;
@@ -451,10 +454,26 @@ const BallSimulation = () => {
           );
           ballBody.applyForce(force, ballBody.position);
 
+          // const pauseButtonPositions = [
+          //   new THREE.Vector4(-41.93, 9.71, -10.36, 1),
+          //   new THREE.Vector4(-63.82, 6.94, 7.56, 2),
+          //   new THREE.Vector4(-43.49, 5.75, 34.59, 3),
+          //   new THREE.Vector4(-24.97, 5.26, 35.1, 4),
+          // ];
+
           // Gradually move toward the position if close
           if (distance < 0.8) {
             console.log(pos.w);
             setShowPauseCard(true);
+            if (pos.w === 1) {
+              setIdx(1);
+            } else if (pos.w === 2) {
+              setIdx(2);
+            } else if (pos.w === 3) {
+              setIdx(3);
+            } else if (pos.w === 4) {
+              setIdx(4);
+            }
             isAttached = true; // Mark as attached
 
             // Gradual movement logic
@@ -585,7 +604,7 @@ const BallSimulation = () => {
     }
 
     const navigateToNextPage = () => {
-      isJoystickActive = false
+      isJoystickActive = false;
       console.log("Navigating to next page...");
       window.location.href = "/register"; // Update with your page URL
     };
