@@ -78,7 +78,7 @@ const WASDGuidelines = () => {
     wasdKeys: {
       display: "inline-block",
       marginBottom: "20px",
-      marginTop: "200px",
+      marginTop: "130px",
     },
     key: {
       display: "inline-flex",
@@ -96,10 +96,12 @@ const WASDGuidelines = () => {
     horizontalKeys: {
       display: "flex",
       justifyContent: "center",
-      marginTop: "5px",
+      marginTop: "0px",
+      bottom: "30px",
     },
     instructions: {
-      fontSize: "18px",
+      fontSize: "14px",
+      bottom: "30px",
     },
   };
 
@@ -117,8 +119,8 @@ const WASDGuidelines = () => {
           </div>
         </div>
         <div style={styles.instructions}>
-          Use your arrow keys (or WASD keys) to control the ball. Use joystick on your
-          phone to control it.
+          Use your WASD keys to control the ball or use joystick on your phone
+          to control it.
         </div>
       </div>
     </div>

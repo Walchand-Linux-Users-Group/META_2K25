@@ -447,7 +447,7 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed + 0.08;
+        const adjustedSpeed = speed + 0.03;
 
         const forwardForce = joystickPosition.y * adjustedSpeed;
         const rightForce = -joystickPosition.x * adjustedSpeed;
@@ -485,8 +485,8 @@ const BallSimulation = () => {
         ballBody.velocity.z += rightForce * rightVector.z;
       } else {
         // If joystick is released, apply stronger damping to stop movement faster
-        ballBody.velocity.x *= stopDamping;
-        ballBody.velocity.z *= stopDamping;
+        ballBody.velocity.x *= damping;
+        ballBody.velocity.z *= damping;
       }
 
       // Keep keyboard movement unchanged
