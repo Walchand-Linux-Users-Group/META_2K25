@@ -60,11 +60,11 @@
 body, html {
     height: 100%;
     margin: 0;
-    font-family: 'Blackpast',Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Blackpast', 'Lilita One', Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .title{
-    font-family: 'Blackpast',Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Blackpast', 'Lilita One', Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .rmPlane{
