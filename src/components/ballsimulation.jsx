@@ -511,12 +511,14 @@ const BallSimulation = () => {
 
     setupJoystick();
 
-    let isAttached = false; // Flag to track if the ball is attached
+    let isAttached = false;
+    let isBallInPauseZone = false; // Track if ball is inside
+    let activePausePosition = null; // Store active pause position
 
     function magneticEffect() {
       const ballPosition = ballBody.position;
 
-      if (isAttached) return; // Skip applying magnetic effect if already attached
+      if (isAttached) return; // Exit to allow normal ball physics
 
       pauseButtonPositions.forEach((pos) => {
         const distance = calculateDistance(ballPosition, pos);
@@ -529,55 +531,62 @@ const BallSimulation = () => {
           );
           ballBody.applyForce(force, ballBody.position);
 
-          // const pauseButtonPositions = [
-          //   new THREE.Vector4(-41.93, 9.71, -10.36, 1),
-          //   new THREE.Vector4(-63.82, 6.94, 7.56, 2),
-          //   new THREE.Vector4(-43.49, 5.75, 34.59, 3),
-          //   new THREE.Vector4(-24.97, 5.26, 35.1, 4),
-          // ];
-
-          // Gradually move toward the position if close
-          if (distance < 0.8) {
+          if (distance < 0.8 && !isBallInPauseZone) {
             console.log(pos.w);
             setShowPauseCard(true);
-            if (pos.w === 1) {
-              setIdx(1);
-            } else if (pos.w === 2) {
-              setIdx(2);
-            } else if (pos.w === 3) {
-              setIdx(3);
-            } else if (pos.w === 4) {
-              setIdx(4);
-            }
-            isAttached = true; // Mark as attached
+            setIdx(pos.w);
+            isAttached = true;
+            isBallInPauseZone = true;
+            activePausePosition = pos;
 
-            // Gradual movement logic
-            const interval = setInterval(() => {
-              ballBody.velocity.set(0, 0, 0); // Stop velocity for smooth control
-              ballBody.angularVelocity.set(0, 0, 0); // Stop angular velocity
-
-              const lerpFactor = 0.08; // Adjust for smoother or faster transitions
-              ballBody.position.x += (pos.x - ballPosition.x) * lerpFactor;
-              ballBody.position.y += (pos.y - ballPosition.y) * lerpFactor;
-              ballBody.position.z += (pos.z - ballPosition.z) * lerpFactor;
-
-              const currentDistance = calculateDistance(ballPosition, pos);
-
-              // Stop interpolation once very close to the target
-              if (currentDistance < 0.05) {
-                clearInterval(interval);
-                ballBody.position.set(pos.x, pos.y, pos.z); // Snap to exact position
-
-                // Automatically release after 3 seconds
-                setTimeout(() => {
-                  isAttached = false;
-                  setShowPauseCard(false); // Release the ball
-                }, 800); // Stuck duration: 1 second
-              }
-            }, 16); // 60 FPS update interval
+            // Attach and monitor exit separately
+            attachBall(pos);
           }
         }
       });
+    }
+
+    // Separate function to handle ball sticking & detachment
+    function attachBall(targetPos) {
+      const interval = setInterval(() => {
+        if (!isAttached) {
+          clearInterval(interval);
+          return;
+        }
+
+        ballBody.velocity.set(0, 0, 0);
+        ballBody.angularVelocity.set(0, 0, 0);
+
+        const lerpFactor = 0.08;
+        ballBody.position.x += (targetPos.x - ballBody.position.x) * lerpFactor;
+        ballBody.position.y += (targetPos.y - ballBody.position.y) * lerpFactor;
+        ballBody.position.z += (targetPos.z - ballBody.position.z) * lerpFactor;
+
+        const currentDistance = calculateDistance(ballBody.position, targetPos);
+
+        if (currentDistance < 0.05) {
+          clearInterval(interval);
+          ballBody.position.set(targetPos.x, targetPos.y, targetPos.z);
+
+          // Start monitoring if the ball moves away
+          monitorExit(targetPos);
+        }
+      }, 16);
+    }
+
+    // Monitor if the ball leaves the pause zone
+    function monitorExit(targetPos) {
+      const exitInterval = setInterval(() => {
+        const newDistance = calculateDistance(ballBody.position, targetPos);
+
+        if (newDistance > 1.0) {
+          clearInterval(exitInterval);
+          isAttached = false;
+          isBallInPauseZone = false;
+          activePausePosition = null;
+          setShowPauseCard(false);
+        }
+      }, 100);
     }
 
     let hasReachedEndPoint = false; // Flag to ensure EndEff is called only once
