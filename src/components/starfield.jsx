@@ -60,7 +60,7 @@ const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {
       size: starSize,
       map: circleTexture,
       transparent: true,
-      opacity: 0.7
+      opacity: 0.9
     });
 
     const stars = new THREE.Points(starGeometry, starMaterial);
