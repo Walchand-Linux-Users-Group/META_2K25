@@ -457,8 +457,8 @@ const BallSimulation = () => {
         ballBody.velocity.z +=
           -joystickPosition.x * rightVector.z * adjustedSpeed;
       } else {
-        ballBody.velocity.x *= damping + 20;
-        ballBody.velocity.z *= damping + 20;
+        ballBody.velocity.x *= damping + 5;
+        ballBody.velocity.z *= damping + 5;
       }
 
       if (keyState["KeyS"]) {
