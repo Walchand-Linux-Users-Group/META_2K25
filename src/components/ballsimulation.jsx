@@ -447,7 +447,7 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed + 10;
+        const adjustedSpeed = speed + 0.08;
 
         const forwardForce = joystickPosition.y * adjustedSpeed;
         const rightForce = -joystickPosition.x * adjustedSpeed;
