@@ -422,6 +422,7 @@ const BallSimulation = () => {
     function handleBallMovement(deltaTime) {
       const baseSpeed = 7;
       const damping = Math.pow(0.99, deltaTime * 60);
+      const stopDamping = Math.pow(0.9, deltaTime * 60); // Stronger damping when joystick is released
 
       const speed = baseSpeed * deltaTime;
 
@@ -448,20 +449,47 @@ const BallSimulation = () => {
       if (isJoystickActive) {
         const adjustedSpeed = speed;
 
-        // Normalize joystick movement to avoid diagonal speed boost
-        const magnitude = Math.sqrt(
-          joystickPosition.x ** 2 + joystickPosition.y ** 2
-        );
-        if (magnitude > 1) {
-          joystickPosition.x /= magnitude;
-          joystickPosition.y /= magnitude;
+        const forwardForce = joystickPosition.y * adjustedSpeed;
+        const rightForce = -joystickPosition.x * adjustedSpeed;
+
+        // Braking Effect: If velocity and input are in opposite directions, apply braking
+        if (
+          Math.sign(forwardForce) !==
+          Math.sign(ballBody.velocity.x * forwardVector.x)
+        ) {
+          ballBody.velocity.x *= 0.8; // Reduce speed
+        }
+        if (
+          Math.sign(forwardForce) !==
+          Math.sign(ballBody.velocity.z * forwardVector.z)
+        ) {
+          ballBody.velocity.z *= 0.8;
+        }
+        if (
+          Math.sign(rightForce) !==
+          Math.sign(ballBody.velocity.x * rightVector.x)
+        ) {
+          ballBody.velocity.x *= 0.8;
+        }
+        if (
+          Math.sign(rightForce) !==
+          Math.sign(ballBody.velocity.z * rightVector.z)
+        ) {
+          ballBody.velocity.z *= 0.8;
         }
 
-        // Apply joystick movement in a more intuitive way
-        ballBody.velocity.x += joystickPosition.y * adjustedSpeed; // Forward/Backward
-        ballBody.velocity.z += -joystickPosition.x * adjustedSpeed; // Left/Right
+        // Apply movement
+        ballBody.velocity.x += forwardForce * forwardVector.x;
+        ballBody.velocity.z += forwardForce * forwardVector.z;
+        ballBody.velocity.x += rightForce * rightVector.x;
+        ballBody.velocity.z += rightForce * rightVector.z;
+      } else {
+        // If joystick is released, apply stronger damping to stop movement faster
+        ballBody.velocity.x *= stopDamping;
+        ballBody.velocity.z *= stopDamping;
       }
 
+      // Keep keyboard movement unchanged
       if (keyState["KeyS"]) {
         ballBody.velocity.z -= speed;
         ballBody.velocity.x += speed;
