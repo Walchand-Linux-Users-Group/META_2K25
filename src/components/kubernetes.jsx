@@ -66,11 +66,11 @@ export default function Kubernetes() {
     
            <KubernetesModel className="cursor-pointer relative z-50  xl:right-0.5" />
            <div className="md:block items-center justify-center w-full">
-            <img
+{/*             <img
               src="base1.png"
               alt="model base image"
               className="absolute  top-60  fhd:top-32 lg:top-36 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
-            />
+            /> */}
             </div>
 
           </div>
