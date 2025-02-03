@@ -13,7 +13,10 @@ import { z } from "zod";
 import QRCode from "react-qr-code";
 import Swal from "sweetalert2";
 import { CustomNumberInput } from "@/components/ui/custom-number-input";
-import '../css/infoSec.css'
+import "../css/infoSec.css";
+import Qr1 from "../assets/qr1.jpeg";
+import Qr2 from "../assets/qr2.jpeg";
+import Qr3 from "../assets/qr3.jpeg";
 
 const userSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters."),
@@ -54,12 +57,13 @@ export default function RegistrationForm() {
     });
     const [errors, setErrors] = useState({});
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [qrCode, setQrCode] = useState(Qr1);
 
     const handleParticipantChange = (value) => {
         const count = Number(value);
         setFormState((prev) => ({
             ...prev,
-            totalAmount:(count==1)?349:(count*299), 
+            totalAmount: count == 1 ? 349 : count * 299,
             numOfParticipants: count,
             participants: Array(count)
                 .fill({})
@@ -75,7 +79,7 @@ export default function RegistrationForm() {
                         }
                 ),
         }));
-        console.log(formState)
+        setQrCode(count == 1 ? Qr1 : count == 2 ? Qr2 : Qr3);
     };
 
     const validateStep = () => {
@@ -222,8 +226,6 @@ export default function RegistrationForm() {
         ? 0
         : (formState.currentStep / (totalSteps - 1)) * 100;
 
-    const paymentQRCode = "https://example.com/payment"; // Replace with actual payment link
-
     return (
         <div className="w-full max-w-2xl  rounded-lg">
             <div className="relative">
@@ -231,13 +233,10 @@ export default function RegistrationForm() {
                 <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
                     <div className="title text-3xl font-bold text-center py-10 md:p-5">
                         {" "}
-                        <h1 className="title">Registration</h1> 
+                        <h1 className="title">Registration</h1>
                     </div>
                     <div className="mb-6">
-                        <Progress
-                            value={progress}
-                            className="h-1"
-                        />
+                        <Progress value={progress} className="h-1" />
                     </div>
 
                     <AnimatePresence mode="wait">
@@ -458,14 +457,15 @@ export default function RegistrationForm() {
                                     Payment Details
                                 </h2>
                                 <div className="flex justify-center mb-4">
-                                    <QRCode value={paymentQRCode} size={200} />
+                                    <img src={qrCode} alt="QR Code" className="h-[300px]"/>
                                 </div>
                                 <p className="text-center text-white mb-2">
                                     Scan the QR code to make the payment
                                 </p>
-                                <p className="text-center text-white mb-4 font-semibold"> ₹ {
-                                    formState.totalAmount
-                                }</p>
+                                <p className="text-center text-white mb-4 font-semibold">
+                                    {" "}
+                                    ₹ {formState.totalAmount}
+                                </p>
                                 <div className="space-y-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="transactionId">
