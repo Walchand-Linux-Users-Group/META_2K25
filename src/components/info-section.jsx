@@ -18,9 +18,10 @@ const item = {
 }
 
 const images = [
-  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738435018/IMG_7684_11zon_qb8eul.png",
-  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738434932/20240310_155302_11zon_y54klt.png",
-  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738434897/IMG_7830_11zon_kxwsip.jpg",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607987/4_hxxzyr.svg",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/1_jhybr7.svg",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/2_bxobta.svg",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/3_kaabt9.svg"
 ]
 
 function Carousel() {
@@ -29,7 +30,7 @@ function Carousel() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length)
-    }, 5000) // Change image every 5 seconds
+    }, 8000) 
 
     return () => clearInterval(timer)
   }, [])
