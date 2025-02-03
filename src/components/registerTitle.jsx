@@ -29,9 +29,9 @@ export default function RegisterTitle() {
       </div>
 
       {/* Scroll arrow */}
-      <div className="flex flex-col gap-5 sm:gap-4 justify-center items-center absolute sm:bottom-10 bottom-10 w-full z-50">
+      <div className="flex flex-col gap-5 sm:gap-4 justify-center items-center absolute sm:bottom-10 mb-10 md:mb-0 bottom-10 w-full z-50">
         <h1 className="title text-[#0abfba] text-xl">Scroll</h1>
-        <FaArrowAltCircleDown className="text-[#0abfba] text-2xl animate-bounce" />
+        <FaArrowAltCircleDown className="text-[#0abfba] text-2xl bouncyArrow" />
       </div>
     </div>
   );

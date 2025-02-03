@@ -8,7 +8,7 @@ export default function Kubernetes() {
     <>
       {/* <ParticleBackground /> */}
 
-      <div className="relative  min-h-screen flex flex-col justify-center items-center text-white">
+      <div className="relative  min-h-screen mt-20 md:mt-0 flex flex-col justify-center items-center text-white">
         {/* Title */}
         <h1 className="title fhd:text-[5rem] z-10 pt-10 text-[#4879e2] text-4xl md:text-6xl tracking-wider text-center">
           Kubernetes
@@ -59,14 +59,19 @@ export default function Kubernetes() {
               </p>
             </div>
           </div>
-          <div className=" px-10 -bottom-10  md:px-0 h-[550px] md:h-auto w-full md:w-2/6 flex overflow-hidden flex-col items-center relative pb-3">
+          <div className=" px-10   md:px-0 h-[550px] md:h-auto w-full md:w-2/6 flex flex-col overflow-hidden  items-center justify-center md:items-start  relative pb-3">
 
+           
+           
+           
+           <KubernetesModel className="cursor-pointer relative z-50  xl:right-0.5" />
+           <div className="md:block items-center justify-center w-full">
             <img
-              src="base.png"
+              src="base1.png"
               alt="model base image"
-              className="absolute  top-24 fhd:top-32 lg:top-20 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
+              className="absolute  top-60  fhd:top-32 lg:top-36 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
             />
-            <KubernetesModel className="cursor-pointer relative z-50 pb-10 xl:right-0.5" />
+            </div>
 
           </div>
         </div>

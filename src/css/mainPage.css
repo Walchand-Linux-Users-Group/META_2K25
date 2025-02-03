@@ -7,6 +7,10 @@
     }
 }
 
+.bouncyArrow{
+    animation: bounce 2s ease-in-out infinite;
+}
+
 @keyframes bounceFast {
     0%, 100% {
         transform: translateY(0);

@@ -11,34 +11,36 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if the page is already loaded when the component mounts
+   
     if (document.readyState === "complete") {
-      setLoading(false); // If already loaded, hide the loader
+      setLoading(false); 
       return;
     }
 
-    // Define the window load handler for when all resources are loaded
+   
     const handleWindowLoad = () => {
-      setLoading(false); // Hide loader after everything is loaded
+      setTimeout(() => {
+        setLoading(false);
+      }, 3000);
     };
 
-    // Adding event listener for when all resources (images, scripts) have loaded
+
     window.addEventListener("load", handleWindowLoad);
 
-    // Fallback: Set a timeout to hide the loader after a certain time
+ 
     const timeoutId = setTimeout(() => {
       setLoading(false);
-    }, 5000); // 5 seconds fallback
+    }, 5000); 
 
-    // Cleanup the event listener and timeout when the component unmounts
+  
     return () => {
       window.removeEventListener("load", handleWindowLoad);
       clearTimeout(timeoutId);
     };
-  }, []); // Empty dependency array, runs only once
+  }, []); 
 
   if (loading) {
-    // Show the loader while loading
+   
     return (
       <div className="loader-container">
         <div className="vertical-centered-box">
