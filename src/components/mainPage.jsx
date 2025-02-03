@@ -186,8 +186,9 @@ export default function MainPage() {
       onMouseMove={handleMouseMove}
       style={{
         userSelect: "none",
-        overflow: "hidden", // Prevent scrolling
+        overflow: "hidden", // Prevent scrolling within this div
         height: "100vh", // Ensure it takes the full viewport height
+        position: "relative", // Ensure the positioning context is set properly
       }}
     >
       {/* Pass starSpeed to the ThreeDScene component */}
@@ -213,15 +214,11 @@ export default function MainPage() {
         />
       </div>
 
-      {/* <div className="h-48 md:hidden">
-
-      </div> */}
-
       {/* Upper Content */}
       <div className="md:flex-1 bg-transparent flex flex-col justify-center items-center z-10 pt-10 md:h-full">
         {/* Title Section */}
         <div className="mb-4 text-center">
-          <h1 className="text-sm title text-[#d696f1] lg:text-2xl md:text-2xl  tracking-wide">
+          <h1 className="text-sm title text-[#d696f1] lg:text-2xl md:text-2xl tracking-wide">
             Walchand Linux Users' Group
           </h1>
           <h3 className="lg:text-lg title text-[#d696f1] md:text-xl text-xs mt-2 tracking-wide">
@@ -230,17 +227,10 @@ export default function MainPage() {
         </div>
 
         {/* Main Event Title */}
-        {/* <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6">
-    metamorphosis <br/> 2k25
-  </h1> */}
-
-        <h1
-          className="title text-transparent  bg-clip-text  bg-gradient-to-r from-[#d590f3] to-[#8a8eec]
-] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl   tracking-widest text-center md:mt-0 mt-5 mb-6 "
-        >
+        <h1 className="title text-transparent bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec] font-bold lg:text-6xl 2xl:text-8xl md:text-5xl text-4xl tracking-widest text-center md:mt-0 mt-5 mb-6">
           metamorphosis <br />
-          <span className="bg-clip-text  bg-gradient-to-r from-[#d590f3] to-[#8a8eec]">
-            2<span className="title ">k</span>25
+          <span className="bg-clip-text bg-gradient-to-r from-[#d590f3] to-[#8a8eec]">
+            2<span className="title">k</span>25
           </span>
         </h1>
 
@@ -265,7 +255,7 @@ export default function MainPage() {
       </div>
 
       {/* Spaceship Section */}
-      <div className="md:flex-1  flex h-1/4 justify-center md:items-center items-start relative z-20">
+      <div className="md:flex-1 flex h-1/4 justify-center md:items-center items-start relative z-20">
         <div ref={shipRef} style={spaceShipStyle}>
           <img
             src="spaceship/Spaceship.png"

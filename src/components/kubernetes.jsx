@@ -23,7 +23,7 @@ export default function Kubernetes() {
               <div>
                 <SiKubernetes className=" text-[#4879e2] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
                 <h2 className="text-xl fhd:text-3xl lg:text-lg md:text-sm  text-center font-bold mt-3">
-                  Session 3 <br /> Sailing to k8s
+                  Session 3 <br /> Sailing to K8s
                 </h2>
               </div>
               <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5">
@@ -50,12 +50,12 @@ export default function Kubernetes() {
                 <div className="h-5"></div>
               </div>
               <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5 ">
-                Level up your Kubernetes skills! 🚀 Learn Pods, Services,
+                Level up your Kubernetes skills! Learn Pods, Services,
                 Deployments and more to automate and scale applications
                 seamlessly. Go beyond theory with real-world projects, deploying
                 and managing cloud-native apps like a pro. For the grand
-                finale—dive into epic wargames! 🔥 Test your skills, compete and
-                push your Docker & K8s expertise to the limit! 🎯
+                finale—dive into epic wargames! Test your skills, compete and
+                push your Docker & K8s expertise to the limit!
               </p>
             </div>
           </div>
@@ -63,7 +63,7 @@ export default function Kubernetes() {
 
            
            
-           
+    
            <KubernetesModel className="cursor-pointer relative z-50  xl:right-0.5" />
            <div className="md:block items-center justify-center w-full">
             <img
