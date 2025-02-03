@@ -60,7 +60,7 @@ const KubernetesModel = () => {
       "/models/kubernetes/kube.glb",
       (gltf) => {
         const model = gltf.scene;
-        model.scale.set(2, 2, 2);
+        model.scale.set(1.8, 1.8, 1.8);
 
         // Compute Bounding Box
         const box = new THREE.Box3().setFromObject(model);

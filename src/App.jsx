@@ -5,38 +5,22 @@ import WASDGuidelines from "./components/Guidelines";
 import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
-import "./App.css";
 import BallRegbutton from "./components/ballpageRegbutton";
-// import JoystickComponent from "./components/Joystick";
+import "./App.css";
 
 const App = () => {
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   // Simulate a loading delay
-  //   const timer = setTimeout(() => {
-  //     setLoading(false);
-  //   }, 2000); // Adjust the delay as needed
-
-  //   return () => clearTimeout(timer);
-  // }, []);
-
-  // if (loading) {
-  //   return <PageLoader />;
-  // }
-
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        {/* Wrap MainPage inside a component that handles the loader */}
+        <Route path="/" element={<MainPageWithLoader />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/ball-simulation"
           element={
-            <div className="">
+            <div>
               <BallSimulation />
               <WASDGuidelines />
-              {/* <JoystickComponent /> */}
               <div className="fullscreen-overlay">
                 <BallRegbutton />
               </div>
@@ -46,6 +30,22 @@ const App = () => {
       </Routes>
     </Router>
   );
+};
+
+// ✅ Wrap MainPage inside a component that shows the loader
+const MainPageWithLoader = () => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a loading delay
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 4000); // Adjust time as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return loading ? <PageLoader /> : <MainPage />;
 };
 
 export default App;
