@@ -14,7 +14,7 @@ export default function MainPage() {
   const [bigThrustersSize, setBigThrustersSize] = useState({ width: 95 });
   const [smallThrustersSize, setSmallThrustersSize] = useState({ width: 70 });
   const [mainThrusterSize, setMainThrusterSize] = useState({ width: 45 });
-  const [starSpeed, setStarSpeed] = useState(0.1);
+  const [starSpeed, setStarSpeed] = useState(0.2);
   const [starSize, setStarSize] = useState(0.15);
 
   const navigate = useNavigate();
@@ -164,7 +164,7 @@ export default function MainPage() {
       // shipRef.current.classList.add("bounceFast")
     }
 
-    setStarSpeed(0.4); // Increase star speed on hover
+    setStarSpeed(0.6); // Increase star speed on hover
   };
 
   const handleButtonLeave = () => {
