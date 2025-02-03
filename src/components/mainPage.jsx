@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react"
 import "../css/mainPage.css"
 import { useNavigate } from "react-router-dom"
 import ThreeDScene from "./starfield"
+import { createHoverTimeline } from "./gsapanimation"
+import { getDeviceRefreshRate } from "./adjustfps"
 
 export default function MainPage() {
   const [isHovered, setIsHovered] = useState(false)
@@ -15,12 +17,19 @@ export default function MainPage() {
   const [smallThrustersSize, setSmallThrustersSize] = useState({ width: 70 })
   const [mainThrusterSize, setMainThrusterSize] = useState({ width: 45 })
   const [starSpeed, setStarSpeed] = useState(0.1) 
-   const [starSize, setStarSize] = useState(0.15) 
+  const [starSize, setStarSize] = useState(0.15) 
+  const [fps,setFps]=useState(30);
 
   const navigate = useNavigate()
   const shipRef = useRef(null)
 
   const soundRef = useRef(new Audio('/music/spaceship-passing-by.mp3'))
+
+  useEffect(() => {
+    getDeviceRefreshRate().then((fps) => {
+      setFps(fps);
+    });
+  },[]);
 
   useEffect(() => {
 
@@ -57,7 +66,19 @@ export default function MainPage() {
     updateSizes()
     window.addEventListener("resize", updateSizes)
     return () => window.removeEventListener("resize", updateSizes)
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const timeline = createHoverTimeline(shipRef, setStarSpeed);
+
+    if (isHovered) {
+      timeline.play();
+    } else {
+      timeline.reverse();
+    }
+
+    return () => timeline.kill();
+  }, [isHovered]);
 
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e
