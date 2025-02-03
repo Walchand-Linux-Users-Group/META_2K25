@@ -457,25 +457,25 @@ const BallSimulation = () => {
           Math.sign(forwardForce) !==
           Math.sign(ballBody.velocity.x * forwardVector.x)
         ) {
-          ballBody.velocity.x *= 0.8; // Reduce speed
+          ballBody.velocity.x *= 0.92; // Reduce speed
         }
         if (
           Math.sign(forwardForce) !==
           Math.sign(ballBody.velocity.z * forwardVector.z)
         ) {
-          ballBody.velocity.z *= 0.8;
+          ballBody.velocity.z *= 0.92;
         }
         if (
           Math.sign(rightForce) !==
           Math.sign(ballBody.velocity.x * rightVector.x)
         ) {
-          ballBody.velocity.x *= 0.8;
+          ballBody.velocity.x *= 0.92;
         }
         if (
           Math.sign(rightForce) !==
           Math.sign(ballBody.velocity.z * rightVector.z)
         ) {
-          ballBody.velocity.z *= 0.8;
+          ballBody.velocity.z *= 0.92;
         }
 
         // Apply movement
