@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-import { useState, useEffect, useRef } from "react"
-import "../css/mainPage.css"
-import { useNavigate } from "react-router-dom"
-import ThreeDScene from "./starfield"
-import { createHoverTimeline } from "./gsapanimation"
-import { getDeviceRefreshRate } from "./adjustfps"
-
-export default function MainPage() {
-  const [isHovered, setIsHovered] = useState(false)
-  const [offset, setOffset] = useState(0)
-  const [floatOffset, setFloatOffset] = useState(0)
-  const [targetOffset, setTargetOffset] = useState(0)
-  const [imageRotation, setImageRotation] = useState(0)
-  const [tiltTimeout, setTiltTimeout] = useState(null)
-  const [imageSize, setImageSize] = useState({ width: 400, height: 300 })
-  const [bigThrustersSize, setBigThrustersSize] = useState({ width: 95 })
-  const [smallThrustersSize, setSmallThrustersSize] = useState({ width: 70 })
-  const [mainThrusterSize, setMainThrusterSize] = useState({ width: 45 })
-  const [starSpeed, setStarSpeed] = useState(0.1) 
-  const [starSize, setStarSize] = useState(0.15) 
-  const [fps,setFps]=useState(30);
-=======
 import { useState, useEffect, useRef } from "react";
 import "../css/mainPage.css";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +16,6 @@ export default function MainPage() {
   const [mainThrusterSize, setMainThrusterSize] = useState({ width: 45 });
   const [starSpeed, setStarSpeed] = useState(0.1);
   const [starSize, setStarSize] = useState(0.15);
->>>>>>> 5c7d7f98cfc44855979193e92fdb8988c9b480f0
 
   const navigate = useNavigate();
   const shipRef = useRef(null);
@@ -47,16 +23,6 @@ export default function MainPage() {
   const soundRef = useRef(new Audio("/music/spaceship-passing-by.mp3"));
 
   useEffect(() => {
-<<<<<<< HEAD
-    getDeviceRefreshRate().then((fps) => {
-      setFps(fps);
-    });
-  },[]);
-
-  useEffect(() => {
-
-=======
->>>>>>> 5c7d7f98cfc44855979193e92fdb8988c9b480f0
     // soundRef.current.play()
 
     const updateSizes = () => {
@@ -87,29 +53,10 @@ export default function MainPage() {
       setMainThrusterSize({ width: newImageWidth * 0.11 });
     };
 
-<<<<<<< HEAD
-    updateSizes()
-    window.addEventListener("resize", updateSizes)
-    return () => window.removeEventListener("resize", updateSizes)
-  }, []);
-
-  useEffect(() => {
-    const timeline = createHoverTimeline(shipRef, setStarSpeed);
-
-    if (isHovered) {
-      timeline.play();
-    } else {
-      timeline.reverse();
-    }
-
-    return () => timeline.kill();
-  }, [isHovered]);
-=======
     updateSizes();
     window.addEventListener("resize", updateSizes);
     return () => window.removeEventListener("resize", updateSizes);
   }, []);
->>>>>>> 5c7d7f98cfc44855979193e92fdb8988c9b480f0
 
   const handleMouseMove = (e) => {
     const { clientX, clientY } = e;
@@ -168,30 +115,48 @@ export default function MainPage() {
 
   const handleButtonClick = (val) => {
     if (!shipRef.current) return;
-
-    soundRef.current.play();
-
+  
+    // Stop and reset the audio in case it's already playing
+    soundRef.current.pause();
+    soundRef.current.currentTime = 0;
+  
+    // Play the sound
+    soundRef.current.play().catch((error) => {
+      console.error("Audio play failed:", error);
+    });
+  
     setTimeout(() => {
       if (!shipRef.current) return;
       shipRef.current.style.animation = "none";
       void shipRef.current.offsetWidth;
       shipRef.current.classList.add("gofast");
     }, 2000);
-
+  
     setTimeout(() => {
       val === 0 ? navigate("/ball-simulation") : navigate("/register");
     }, 3500);
-
+  
     setTimeout(() => {
       if (!shipRef.current) return;
       shipRef.current.classList.add("rmPlane");
     }, 3000);
-
+  
     setTimeout(() => {
       if (!shipRef.current) return;
       shipRef.current.classList.remove("gofast");
     }, 5000);
   };
+  
+  // Cleanup effect to stop music on unmount or navigation
+  useEffect(() => {
+    return () => {
+      if (soundRef.current) {
+        soundRef.current.pause();
+        soundRef.current.currentTime = 0;
+      }
+    };
+  }, [navigate]);
+  
 
   const handleButtonHover = () => {
     setIsHovered(true);

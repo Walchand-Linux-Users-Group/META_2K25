@@ -39,7 +39,7 @@ export default function Docker() {
               <FaDocker className=" text-[#0abfba] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
 
               <h2 className="text-xl fhd:text-3xl lg:text-lg md:text-sm text-center font-bold mt-3">
-                Session 2 <br /> Dockerverse
+                Session 2 <br /> DockerVerse
               </h2>
               <p className="fhd:text-lg text-sm lg:text-sm md:text-[10px] text-justify mt-5 ">
                 Now that you know Docker, let’s dive into data management and
