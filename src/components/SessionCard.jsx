@@ -2,7 +2,7 @@ import React from "react";
 
 const sessions = [
   {
-    title: "Let's Docker It!",
+    title: "Let's Dock It!",
     description:
       "This session covers virtualization vs. physical servers, why modern apps prefer containers over VMs and a hands-on introduction to Docker with its core components and commands.",
     date: "15 FEB 2025",

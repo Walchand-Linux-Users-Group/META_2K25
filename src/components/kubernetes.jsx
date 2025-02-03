@@ -23,7 +23,7 @@ export default function Kubernetes() {
               <div>
               <SiKubernetes className=" text-[#4879e2] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
               <h2 className="text-xl fhd:text-3xl lg:text-lg md:text-sm  text-center font-bold mt-3">
-                Session 1 <br /> Selling to k8s
+                Session 3 <br /> Sailing to k8s
               </h2>
               </div>
               <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5">
@@ -40,7 +40,7 @@ In this session, we’ll break down Kubernetes architecture, explore its key com
               <SiKubernetes className=" text-[#4879e2] fhd:text-[110px] lg:text-[60px] md:text-[50px] text-6xl mx-auto" />
 
               <h2 className="text-xl fhd:text-3xl lg:text-lg md:text-sm text-center font-bold mt-3">
-                Session 2 <br /> Pod Power
+                Session 4 <br /> Pod Power
               </h2>
                 <div className="h-5"></div></div>
               <p className="fhd:text-lg text-sm lg:text-sm md:text-[15px] text-justify mt-5 ">

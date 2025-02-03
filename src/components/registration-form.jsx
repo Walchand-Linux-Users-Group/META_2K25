@@ -229,7 +229,7 @@ export default function RegistrationForm() {
             <div className="relative">
                 <div className="absolute" />
                 <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
-                    <div className="title text-4xl font-bold text-center py-10 md:p-5">
+                    <div className="title text-3xl font-bold text-center py-10 md:p-5">
                         {" "}
                         <h1 className="title">Registration</h1> 
                     </div>
@@ -255,7 +255,7 @@ export default function RegistrationForm() {
                                     </h2>
                                     <p className="text-slate-400">
                                         Select the number of team members
-                                        participating in the event
+                                        participating in the event.
                                     </p>
                                 </div>
                                 <div className="space-y-2 pt-8">
