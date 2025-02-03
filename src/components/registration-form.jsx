@@ -52,7 +52,7 @@ export default function RegistrationForm() {
             },
         ],
         currentStep: 0,
-        totalAmount: 0,
+        totalAmount: 349,
         payment: {},
     });
     const [errors, setErrors] = useState({});
@@ -167,7 +167,7 @@ export default function RegistrationForm() {
                 );
                 formData.append(
                     "totalAmount",
-                    formState.totalAmount.toString()
+                    formState.totalAmount
                 );
                 formData.append(
                     "transactionImage",
@@ -175,19 +175,16 @@ export default function RegistrationForm() {
                 );
 
                 const response = await fetch(
-                    "https://metabackend-6ood.onrender.com/register",
+                    "https://metabackendgo.onrender.com/user/registration",
                     {
                         method: "POST",
                         body: formData,
                     }
                 );
 
-                if (!response.ok) {
+                if(!response.ok) {
                     throw new Error("Registration failed");
                 }
-
-                const result = await response.json();
-                console.log("Registration successful:", result);
 
                 // Show success message
                 await Swal.fire({
@@ -201,7 +198,7 @@ export default function RegistrationForm() {
                     numOfParticipants: 1,
                     participants: [],
                     currentStep: 0,
-                    totalAmount: 0,
+                    totalAmount: 349,
                     payment: {},
                 }); // Reset form
             } catch (error) {
