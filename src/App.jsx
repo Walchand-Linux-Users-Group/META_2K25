@@ -1,35 +1,31 @@
 import React, { useState, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import BallSimulation from "./components/ballsimulation";
 import WASDGuidelines from "./components/Guidelines";
 import RegisterPage from "./components/registerPage";
 import PageLoader from "./components/Loader";
 import MainPage from "./components/mainPage";
-import "./App.css"; 
+import "./App.css";
 import BallRegbutton from "./components/ballpageRegbutton";
+// import JoystickComponent from "./components/Joystick";
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simulate a loading delay
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000); // Adjust the delay as needed
+  // useEffect(() => {
+  //   // Simulate a loading delay
+  //   const timer = setTimeout(() => {
+  //     setLoading(false);
+  //   }, 2000); // Adjust the delay as needed
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
-  if (loading) {
-    return <PageLoader />;
-  }
+  // if (loading) {
+  //   return <PageLoader />;
+  // }
 
   return (
-    
     <Router>
       <Routes>
         <Route path="/" element={<MainPage />} />
@@ -37,9 +33,10 @@ const App = () => {
         <Route
           path="/ball-simulation"
           element={
-            <div>
+            <div className="">
               <BallSimulation />
               <WASDGuidelines />
+              {/* <JoystickComponent /> */}
               <div className="fullscreen-overlay">
                 <BallRegbutton />
               </div>
