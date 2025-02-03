@@ -18,8 +18,8 @@ export default function MainPage() {
   const [starSize, setStarSize] = useState(0.15);
 
   const navigate = useNavigate();
+  const shipWrapperRef = useRef(null);
   const shipRef = useRef(null);
-
   const soundRef = useRef(new Audio("/music/spaceship-passing-by.mp3"));
 
   useEffect(() => {
@@ -114,22 +114,24 @@ export default function MainPage() {
   }, [targetOffset]);
 
   const handleButtonClick = (val) => {
-    if (!shipRef.current) return;
+    // console.log("Btn clicked")
+    if (!shipWrapperRef.current) return;
   
-    // Stop and reset the audio in case it's already playing
+   
     soundRef.current.pause();
     soundRef.current.currentTime = 0;
-  
-    // Play the sound
+
     soundRef.current.play().catch((error) => {
       console.error("Audio play failed:", error);
     });
+
+    
   
     setTimeout(() => {
-      if (!shipRef.current) return;
-      shipRef.current.style.animation = "none";
-      void shipRef.current.offsetWidth;
-      shipRef.current.classList.add("gofast");
+      if (!shipWrapperRef.current) return;
+      shipWrapperRef.current.style.animation = "none";
+      void shipWrapperRef.current.offsetWidth;
+      shipWrapperRef.current.classList.add("gofast");
     }, 2000);
   
     setTimeout(() => {
@@ -137,17 +139,17 @@ export default function MainPage() {
     }, 3500);
   
     setTimeout(() => {
-      if (!shipRef.current) return;
-      shipRef.current.classList.add("rmPlane");
+      if (!shipWrapperRef.current) return;
+      shipWrapperRef.current.classList.add("rmPlane");
     }, 3000);
   
     setTimeout(() => {
-      if (!shipRef.current) return;
-      shipRef.current.classList.remove("gofast");
+      if (!shipWrapperRef.current) return;
+      shipWrapperRef.current.classList.remove("gofast");
     }, 5000);
   };
   
-  // Cleanup effect to stop music on unmount or navigation
+ 
   useEffect(() => {
     return () => {
       if (soundRef.current) {
@@ -161,10 +163,10 @@ export default function MainPage() {
   const handleButtonHover = () => {
     setIsHovered(true);
     if (shipRef.current) {
-      // shipRef.current.classList.add("bounceFast")
+      shipRef.current.classList.add("bounceFast");
     }
 
-    setStarSpeed(0.6); // Increase star speed on hover
+    setStarSpeed(0.6); 
   };
 
   const handleButtonLeave = () => {
@@ -173,7 +175,7 @@ export default function MainPage() {
       void shipRef.current.offsetWidth;
       shipRef.current.classList.remove("bounceFast");
     }
-    setStarSpeed(0.1); // Reset to normal speed when not hovered
+    setStarSpeed(0.1); 
   };
 
   const spaceShipStyle = {
@@ -192,10 +194,10 @@ export default function MainPage() {
     MozUserSelect: "none",
     MsUserSelect: "none",
     pointerEvents: "none",
-    // Ensure it stays within the viewport on mobile
+   
     top: "10%",
     left: "0%",
-    transformOrigin: "center center", // Ensures the spaceship doesn't get distorted when rotating
+    transformOrigin: "center center", 
   };
 
   return (
@@ -204,12 +206,12 @@ export default function MainPage() {
       onMouseMove={handleMouseMove}
       style={{
         userSelect: "none",
-        overflow: "hidden", // Prevent scrolling within this div
-        height: "100vh", // Ensure it takes the full viewport height
-        position: "relative", // Ensure the positioning context is set properly
+        overflow: "hidden",
+        height: "100vh", 
+        position: "relative", 
       }}
     >
-      {/* Pass starSpeed to the ThreeDScene component */}
+     
       <ThreeDScene
         speed={starSpeed}
         starSize={starSize}
@@ -272,84 +274,92 @@ export default function MainPage() {
         </div>
       </div>
 
-      {/* Spaceship Section */}
-      <div className="md:flex-1 flex h-1/4 justify-center md:items-center items-start relative z-20">
-        <div ref={shipRef} style={spaceShipStyle}>
-          <img
-            src="spaceship/Spaceship.png"
-            alt="spaceship"
-            width={imageSize.width}
-            height={imageSize.height}
-            style={{ userSelect: "none", pointerEvents: "none" }}
-          />
-          {/* Thrusters */}
-          <img
-            src="spaceship/thrustersRight.png"
-            alt="Thruster Right"
-            className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
-            style={{
-              position: "absolute",
-              top: "25%",
-              left: "54%",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-            width={bigThrustersSize.width}
-          />
-          <img
-            src="spaceship/thrustersLeft.png"
-            alt="Thruster Left"
-            className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
-            style={{
-              position: "absolute",
-              top: "25%",
-              right: "54%",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-            width={bigThrustersSize.width}
-          />
-          <img
-            src="spaceship/smallThrusterLeft.png"
-            alt="Small Thruster Left"
-            className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
-            style={{
-              position: "absolute",
-              bottom: "15%",
-              left: "11%",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-            width={smallThrustersSize.width}
-          />
-          <img
-            src="spaceship/smallThrusterRight.png"
-            alt="Small Thruster Right"
-            className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
-            style={{
-              position: "absolute",
-              bottom: "15%",
-              right: "11%",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-            width={smallThrustersSize.width}
-          />
-          <img
-            src="spaceship/redThruster.png"
-            alt="red Thruster"
-            className={`fast-flicker`}
-            style={{
-              position: "absolute",
-              bottom: "55%",
-              right: "44%",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-            width={mainThrusterSize.width}
-          />
-        </div>
-      </div>
+  
+<div className="md:flex-1 flex h-1/4 justify-center md:items-center items-start relative z-20">
+ 
+  <div ref={shipWrapperRef} style={spaceShipStyle}>
+   
+    <div
+      className={`ship-bounce-container ${isHovered ? "bounceFast" : ""}`}
+      style={{ position: "relative", display: "inline-block" }}
+    >
+      <img
+        src="spaceship/Spaceship.png"
+        alt="spaceship"
+        width={imageSize.width}
+        height={imageSize.height}
+        style={{ userSelect: "none", pointerEvents: "none" }}
+      />
+      {/* Thrusters – absolutely positioned relative to the inner container */}
+      <img
+        src="spaceship/thrustersRight.png"
+        alt="Thruster Right"
+        className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
+        style={{
+          position: "absolute",
+          top: "25%",
+          left: "54%",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        width={bigThrustersSize.width}
+      />
+      <img
+        src="spaceship/thrustersLeft.png"
+        alt="Thruster Left"
+        className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
+        style={{
+          position: "absolute",
+          top: "25%",
+          right: "54%",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        width={bigThrustersSize.width}
+      />
+      <img
+        src="spaceship/smallThrusterLeft.png"
+        alt="Small Thruster Left"
+        className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
+        style={{
+          position: "absolute",
+          bottom: "15%",
+          left: "11%",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        width={smallThrustersSize.width}
+      />
+      <img
+        src="spaceship/smallThrusterRight.png"
+        alt="Small Thruster Right"
+        className={`thruster-flicker ${isHovered ? "fast-flicker" : ""}`}
+        style={{
+          position: "absolute",
+          bottom: "15%",
+          right: "11%",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        width={smallThrustersSize.width}
+      />
+      <img
+        src="spaceship/redThruster.png"
+        alt="red Thruster"
+        className="fast-flicker"
+        style={{
+          position: "absolute",
+          bottom: "55%",
+          right: "44%",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        width={mainThrusterSize.width}
+      />
+    </div>
+  </div>
+</div>
+
     </div>
   );
 }
