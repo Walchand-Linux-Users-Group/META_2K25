@@ -52,7 +52,7 @@ export default function RegistrationForm() {
             },
         ],
         currentStep: 0,
-        totalAmount: 0,
+        totalAmount: 349,
         payment: {},
     });
     const [errors, setErrors] = useState({});
@@ -201,7 +201,7 @@ export default function RegistrationForm() {
                     numOfParticipants: 1,
                     participants: [],
                     currentStep: 0,
-                    totalAmount: 0,
+                    totalAmount: 349,
                     payment: {},
                 }); // Reset form
             } catch (error) {
