@@ -1,9 +1,16 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {  
+const ThreeDScene = ({ speed = 0.1, starSize = 0.15 }) => {
   const mountRef = useRef(null);
+  const targetSpeedRef = useRef(speed); // Store the target speed
+  const currentSpeedRef = useRef(speed); // Store the current speed
+  const lerpFactor = 0.05; // Smooth transition factor
+
+  useEffect(() => {
+    // Update the target speed when the prop speed changes
+    targetSpeedRef.current = speed;
+  }, [speed]);
 
   useEffect(() => {
     // Scene Setup
@@ -18,10 +25,23 @@ const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     if (mountRef.current) {
       mountRef.current.appendChild(renderer.domElement);
     }
+
+    // Resize Handling Function
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      renderer.setSize(width, height);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    };
+
+    // Initialize the resize listener
+    window.addEventListener("resize", handleResize);
 
     // Lighting
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
@@ -60,23 +80,29 @@ const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {
       size: starSize,
       map: circleTexture,
       transparent: true,
-      opacity: 0.7
+      opacity: 0.9
     });
 
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
     // Animation
-    let opacityDirection = 1;
     const animate = () => {
       requestAnimationFrame(animate);
+
+      // Smoothly interpolate speed between currentSpeed and targetSpeed
+      currentSpeedRef.current = THREE.MathUtils.lerp(
+        currentSpeedRef.current,
+        targetSpeedRef.current,
+        lerpFactor
+      );
 
       // Starfield Animation
       const positions = stars.geometry.attributes.position.array;
       for (let i = 0; i < starCount * 3; i += 3) {
-        positions[i + 2] += speed; // Adjust movement speed based on the prop `speed`
+        positions[i + 2] += currentSpeedRef.current;
         if (positions[i + 2] > 5) {
-          positions[i + 2] = -60; // Reset position when it goes out of view
+          positions[i + 2] = -60;
         }
       }
       stars.geometry.attributes.position.needsUpdate = true;
@@ -87,13 +113,28 @@ const ThreeDScene = ({ speed = 0.1 ,starSize=0.15}) => {
 
     // Cleanup
     return () => {
+      window.removeEventListener("resize", handleResize);
       if (mountRef.current) {
         mountRef.current.removeChild(renderer.domElement);
       }
     };
-  }, [speed]);
+  }, []);
 
-  return <div ref={mountRef} className="bg-black" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}></div>;
+  return (
+    <div
+      ref={mountRef}
+      className="bg-black"
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        margin: 0,
+        padding: 0,
+      }}
+    />
+  );
 };
 
 export default ThreeDScene;

@@ -37,9 +37,9 @@ export default function Footer() {
           href={social.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-12 h-12 p-3 rounded-full bg-[#4879e2]/10 hover:bg-[#4879e2]/20 transition-colors group"
+          className="lg:w-12 lg:h-12 w-12 h-12 md:w-8 md:h-8 p-3 lg:p-3 md:p-[7px]  rounded-full bg-[#4879e2]/10 hover:bg-[#4879e2]/20 transition-colors group"
         >
-          <social.icon className="text-[#4879e2] h-6 w-6 group-hover:text-[#0abfba]" />
+          <social.icon className="text-[#4879e2] lg:h-6 lg:w-6 h-6 w-6 md:h-5 md:w-5 group-hover:text-[#0abfba]" />
         </a>
       ))}
     </div>
@@ -51,6 +51,13 @@ export default function Footer() {
               </div>
             </div>
           </div>
+
+          
+            <div className="flex flex-col justify-center gap-5 items-center">
+              <h1 className="font-lilita md:text-3xl text-2xl">Our Sponsors</h1>
+              <img src="Meta_Sponsor.svg" alt="Meta Sponsor" className="w-2/3" />
+            </div>
+          
 
       
           <div className="flex flex-col text-center justify-center gap-8 md:gap-5 items-center mt-5 md:mt-0">

@@ -2,12 +2,17 @@
 
 @keyframes bounce {
     0%, 100% {
-        transform: translateY(0);
+      transform: translateY(0);
     }
     50% {
-        transform: translateY(-20px);
+      transform: translateY(10px);
     }
-}
+  }
+  
+  .bouncyArrow {
+    animation: bounce 1.5s infinite ease-in-out;
+    will-change: transform;
+  }
 
 @keyframes bounceFast {
     0%, 100% {
@@ -62,11 +67,11 @@
 body, html {
     height: 100%;
     margin: 0;
-    font-family: 'Blackpast',Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Blackpast', 'Lilita One', Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .title{
-    font-family: 'Blackpast',Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-family: 'Blackpast', 'Lilita One', Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
 .rmPlane{
