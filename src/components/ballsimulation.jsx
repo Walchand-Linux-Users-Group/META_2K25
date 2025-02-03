@@ -448,17 +448,18 @@ const BallSimulation = () => {
       if (isJoystickActive) {
         const adjustedSpeed = speed;
 
-        ballBody.velocity.x +=
-          joystickPosition.y * forwardVector.x * adjustedSpeed;
-        ballBody.velocity.z +=
-          joystickPosition.y * forwardVector.z * adjustedSpeed;
-        ballBody.velocity.x +=
-          -joystickPosition.x * rightVector.x * adjustedSpeed;
-        ballBody.velocity.z +=
-          -joystickPosition.x * rightVector.z * adjustedSpeed;
-      } else {
-        ballBody.velocity.x *= -1 * damping + 0.001;
-        ballBody.velocity.z *= -1 * damping + 0.001;
+        // Normalize joystick movement to avoid diagonal speed boost
+        const magnitude = Math.sqrt(
+          joystickPosition.x ** 2 + joystickPosition.y ** 2
+        );
+        if (magnitude > 1) {
+          joystickPosition.x /= magnitude;
+          joystickPosition.y /= magnitude;
+        }
+
+        // Apply joystick movement in a more intuitive way
+        ballBody.velocity.x += joystickPosition.y * adjustedSpeed; // Forward/Backward
+        ballBody.velocity.z += -joystickPosition.x * adjustedSpeed; // Left/Right
       }
 
       if (keyState["KeyS"]) {
