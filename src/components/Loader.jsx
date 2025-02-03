@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Loader.css"; // Assuming you have the same CSS file
-import ThreeDScene from "./starfield";
 
 const PageLoader = () => {
   const [isLoading, setIsLoading] = useState(true);

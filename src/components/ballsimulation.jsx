@@ -15,10 +15,11 @@ const BallSimulation = () => {
 
   useEffect(() => {
     const scene = new THREE.Scene();
+    const fov = window.innerWidth < 768 ? 55 : 45;
     const camera = new THREE.PerspectiveCamera(
-      45,
+      fov,
       window.innerWidth / window.innerHeight,
-      0.2,
+      0.4,
       1000
     );
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -390,6 +391,20 @@ const BallSimulation = () => {
       window.addEventListener("pushstate", handleNavigation);
       window.addEventListener("replacestate", handleNavigation);
 
+      // Override the default history methods to trigger the event listeners
+      const originalPushState = history.pushState;
+      history.pushState = function () {
+        originalPushState.apply(this, arguments);
+        window.dispatchEvent(new Event("pushstate"));
+        window.dispatchEvent(new Event("replacestate"));
+      };
+
+      const originalReplaceState = history.replaceState;
+      history.replaceState = function () {
+        originalReplaceState.apply(this, arguments);
+        window.dispatchEvent(new Event("replacestate"));
+      };
+
       // Cleanup function to remove the event listener
       return () => {
         window.removeEventListener("popstate", handleNavigation);
@@ -408,6 +423,7 @@ const BallSimulation = () => {
     function handleBallMovement(deltaTime) {
       const baseSpeed = 7;
       const damping = Math.pow(0.99, deltaTime * 60);
+      const stopDamping = Math.pow(0.9, deltaTime * 60); // Stronger damping when joystick is released
 
       const speed = baseSpeed * deltaTime;
 
@@ -432,21 +448,49 @@ const BallSimulation = () => {
       };
 
       if (isJoystickActive) {
-        const adjustedSpeed = speed * deltaTime * 45;
+        const adjustedSpeed = speed + 0.01;
 
-        ballBody.velocity.x +=
-          joystickPosition.y * forwardVector.x * adjustedSpeed;
-        ballBody.velocity.z +=
-          joystickPosition.y * forwardVector.z * adjustedSpeed;
-        ballBody.velocity.x +=
-          -joystickPosition.x * rightVector.x * adjustedSpeed;
-        ballBody.velocity.z +=
-          -joystickPosition.x * rightVector.z * adjustedSpeed;
+        const forwardForce = joystickPosition.y * adjustedSpeed;
+        const rightForce = -joystickPosition.x * adjustedSpeed;
+
+        // Braking Effect: If velocity and input are in opposite directions, apply braking
+        if (
+          Math.sign(forwardForce) !==
+          Math.sign(ballBody.velocity.x * forwardVector.x)
+        ) {
+          ballBody.velocity.x *= 0.92; // Reduce speed
+        }
+        if (
+          Math.sign(forwardForce) !==
+          Math.sign(ballBody.velocity.z * forwardVector.z)
+        ) {
+          ballBody.velocity.z *= 0.92;
+        }
+        if (
+          Math.sign(rightForce) !==
+          Math.sign(ballBody.velocity.x * rightVector.x)
+        ) {
+          ballBody.velocity.x *= 0.92;
+        }
+        if (
+          Math.sign(rightForce) !==
+          Math.sign(ballBody.velocity.z * rightVector.z)
+        ) {
+          ballBody.velocity.z *= 0.92;
+        }
+
+        // Apply movement
+        ballBody.velocity.x += forwardForce * forwardVector.x;
+        ballBody.velocity.z += forwardForce * forwardVector.z;
+        ballBody.velocity.x += rightForce * rightVector.x;
+        ballBody.velocity.z += rightForce * rightVector.z;
       } else {
+        // If joystick is released, apply stronger damping to stop movement faster
         ballBody.velocity.x *= damping;
         ballBody.velocity.z *= damping;
       }
 
+      // Keep keyboard movement unchanged
       if (keyState["KeyS"]) {
         ballBody.velocity.z -= speed;
         ballBody.velocity.x += speed;
