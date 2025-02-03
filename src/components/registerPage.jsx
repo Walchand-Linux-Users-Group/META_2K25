@@ -62,7 +62,7 @@ export default function RegisterPage() {
 
   // When loading is false, display the main content
   return (
-    <div className="bg-[#000] relative h-full overflow-x-hidden overflow-y-auto space-y-20 py-4 transition-opacity duration-500 opacity-100">
+    <div className="bg-[#000] relative h-full overflow-x-hidden overflow-y-auto py-1 transition-opacity duration-500 opacity-100">
       <RegisterTitle />
       <ParticleBackground />
       <Docker />

@@ -15,10 +15,11 @@ const BallSimulation = () => {
 
   useEffect(() => {
     const scene = new THREE.Scene();
+    const fov = window.innerWidth < 768 ? 55 : 45;
     const camera = new THREE.PerspectiveCamera(
-      45,
+      fov,
       window.innerWidth / window.innerHeight,
-      0.2,
+      0.4,
       1000
     );
     const renderer = new THREE.WebGLRenderer({ antialias: true });

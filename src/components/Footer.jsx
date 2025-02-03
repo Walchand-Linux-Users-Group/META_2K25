@@ -46,7 +46,7 @@ export default function Footer() {
 
               <div>
                 <h1 className="font-lilita font-thin text-sm text-center">
-                  © 2024 WCEWLUG, ALL RIGHTS RESERVED
+                  © 2025 WCEWLUG, ALL RIGHTS RESERVED
                 </h1>
               </div>
             </div>
