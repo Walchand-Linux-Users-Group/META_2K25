@@ -113,6 +113,7 @@ const ParticleBackground = ({ speed = 0.1, starSize = 0.15 }) => {
       ref={mountRef}
       style={{
         position: "fixed",
+        pointerEvents : "none",
         top: 0,
         left: 0,
         width: "100%",
