@@ -59,20 +59,15 @@ export default function Kubernetes() {
               </p>
             </div>
           </div>
-          <div className=" px-10   md:px-0 h-[550px] md:h-auto w-full md:w-2/6 flex flex-col overflow-hidden  items-center justify-center md:items-start  relative pb-3">
-
-           
-           
-    
-           <KubernetesModel className="cursor-pointer relative z-50  xl:right-0.5" />
-           <div className="md:block items-center justify-center w-full">
-{/*             <img
-              src="base1.png"
-              alt="model base image"
-              className="absolute  top-60  fhd:top-32 lg:top-36 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
-            /> */}
+          <div className=" px-10 md:px-0 h-[550px] md:h-auto w-full md:w-2/6 flex flex-col overflow-hidden  items-center justify-center md:items-start  relative pb-3">
+            <KubernetesModel className="cursor-pointer relative z-50  xl:right-0.5" />
+            <div className="md:block items-center justify-center w-full">
+              <img
+                src="base1.png"
+                alt="model base image"
+                className="absolute  top-60 right-4 lg:right-2  fhd:top-32 lg:top-36 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
+              />
             </div>
-
           </div>
         </div>
       </div>

@@ -19,7 +19,11 @@ import Qr2 from "../assets/qr2.jpeg";
 import Qr3 from "../assets/qr3.jpeg";
 
 const userSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters."),
+  name: z
+    .string()
+    .min(2, "Name must be at least 2 characters.")
+    .regex(/^[A-Za-z\s]+$/, "Name must only contain letters and spaces."),
+
   email: z.string().email("Invalid email address."),
   phone: z.string().regex(/^\d{10}$/, "Phone number must be 10 digits."),
   collegeName: z.string().min(2, "College name must be at least 2 characters."),
@@ -87,7 +91,6 @@ export default function RegistrationForm() {
             }
         ),
     }));
-
     setQrCode(count == 1 ? Qr1 : count == 2 ? Qr2 : Qr3);
   };
 
@@ -170,6 +173,8 @@ export default function RegistrationForm() {
         formData.append("totalAmount", formState.totalAmount);
         formData.append("transactionImage", formState.payment.transactionImage);
 
+        formData.append("referralCode", formState.referralCode);
+
         const response = await fetch(
           "https://metabackendgo.onrender.com/user/registration",
           {
@@ -220,7 +225,7 @@ export default function RegistrationForm() {
     : (formState.currentStep / (totalSteps - 1)) * 100;
 
   return (
-    <div className="w-full max-w-2xl  rounded-lg">
+    <div className="w-full max-w-2xl  rounded-lg my-12">
       <div className="relative">
         <div className="absolute" />
         <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
@@ -421,6 +426,20 @@ export default function RegistrationForm() {
                   ₹ {formState.totalAmount}
                 </p>
                 <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="referralCode">Referral Code</Label>
+                    <Input
+                      id="referralCode"
+                      value={formState.referralCode || ""}
+                      onChange={(e) =>
+                        setFormState((prev) => ({
+                          ...prev,
+                          referralCode: e.target.value,
+                        }))
+                      }
+                      className="bg-background/50 border-[#4879e2]"
+                    />
+                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="transactionId">Transaction ID</Label>
                     <Input
