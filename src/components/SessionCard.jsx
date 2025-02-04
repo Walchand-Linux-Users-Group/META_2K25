@@ -29,15 +29,15 @@ const sessions = [
 
 const PromotionalCard = ({ title, description, date }) => {
   return (
-    <div className="relative w-[50%] m-1 md:h-screen h-auto flex flex-col md:items-center md:justify-center">
-      <div className="fixed top-[20%] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
-        <div className="bg-white bg-opacity-20 backdrop-blur-md p-3 w-full md:p-7 rounded-xl shadow-2xl text-center border border-white border-opacity-30 md:scale-75 scale-75">
+    <div className="relative md:w-[50%] m-1 md:h-screen h-auto flex flex-col md:items-center md:justify-center">
+      <div className="max-md:w-full fixed top-[20%] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center">
+        <div className="bg-white bg-opacity-20 backdrop-blur-md p-3 w-full md:p-7 rounded-xl shadow-2xl text-center border border-white border-opacity-30 md:scale-100 scale-90">
           <div className="text-teal-300 text-3xl font-semibold mb-4">
             {title}
           </div>
           <p className="text-gray-300 p-1 text-base md:text-2xl">{description}</p>
         </div>
-        <div className="bg-white bg-opacity-20 backdrop-blur-md p-4 md:p-6 rounded-xl shadow-2xl text-center md:mt-8 border border-white border-opacity-30 md:scale-75 scale-75">
+        <div className="bg-white bg-opacity-20 backdrop-blur-md p-4 md:p-6 rounded-xl shadow-2xl text-center md:mt-8 border border-white border-opacity-30 md:scale-90 scale-75">
           <div className="text-green-400 text-3xl font-bold">{date}</div>
         </div>
       </div>
