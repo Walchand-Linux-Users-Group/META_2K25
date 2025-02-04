@@ -65,7 +65,7 @@ export default function Kubernetes() {
               <img
                 src="base1.png"
                 alt="model base image"
-                className="absolute  top-60 right-4 lg:right-2  fhd:top-32 lg:top-36 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
+                className="absolute  top-60 right-6 lg:right-2  fhd:top-32 lg:top-36 md:top-40 pointer-events-none w-full max-w-[350px] md:max-w-[350px] fhd:max-w-[700px] lg:max-w-[375px] animate-flicker"
               />
             </div>
           </div>
