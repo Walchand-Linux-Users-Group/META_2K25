@@ -37,6 +37,26 @@ const paymentSchema = z.object({
 });
 
 export default function RegistrationForm() {
+    const [formState, setFormState] = useState({
+        numOfParticipants: 1,
+        participants: [
+            {
+                name: "",
+                email: "",
+                phone: "",
+                collegeName: "",
+                yearOfStudy: 1,
+                dualBoot: false,
+            },
+        ],
+        referralCode: "",
+        currentStep: 0,
+        totalAmount: 349,
+        payment: {},
+    });
+    const [errors, setErrors] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [qrCode, setQrCode] = useState(Qr1);
   const [formState, setFormState] = useState({
     numOfParticipants: 1,
     participants: [
@@ -159,18 +179,28 @@ export default function RegistrationForm() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validateStep()) {
-      setIsSubmitting(true);
-      try {
-        const formData = new FormData();
-        formData.append("participants", JSON.stringify(formState.participants));
-        formData.append("transactionId", formState.payment.transactionId);
-        formData.append("totalAmount", formState.totalAmount);
-        formData.append("transactionImage", formState.payment.transactionImage);
-
-        formData.append("referralCode", formState.referralCode);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (validateStep()) {
+            setIsSubmitting(true);
+            try {
+                const formData = new FormData();
+                formData.append(
+                    "participants",
+                    JSON.stringify(formState.participants)
+                );
+                formData.append(
+                    "transactionId",
+                    formState.payment.transactionId
+                );
+                formData.append(
+                    "totalAmount",
+                    formState.totalAmount
+                );
+                formData.append(
+                    "transactionImage",
+                    formState.payment.transactionImage
+                );
 
         const response = await fetch(
           "https://metabackendgo.onrender.com/user/registration",
@@ -180,9 +210,9 @@ export default function RegistrationForm() {
           }
         );
 
-        if (!response.ok) {
-          throw new Error("Registration failed");
-        }
+                if(!response.ok) {
+                    throw new Error("Registration failed");
+                }
 
         // Show success message
         await Swal.fire({
@@ -221,262 +251,297 @@ export default function RegistrationForm() {
     ? 0
     : (formState.currentStep / (totalSteps - 1)) * 100;
 
-  return (
-    <div className="w-full max-w-2xl  rounded-lg my-12">
-      <div className="relative">
-        <div className="absolute" />
-        <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
-          <div className="title text-3xl font-bold text-center py-10 md:p-5">
-            {" "}
-            <h1 className="title">Registration</h1>
-          </div>
-          <div className="mb-6">
-            <Progress value={progress} className="h-1" />
-          </div>
-
-          <AnimatePresence mode="wait">
-            {isFirstStep ? (
-              <motion.div
-                key="participant-select"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <div>
-                  <h2 className="text-2xl py-5 font-bold text-white mb-2">
-                    How many are joining?
-                  </h2>
-                  <p className="text-slate-400">
-                    Select the number of team members participating in the
-                    event.
-                  </p>
-                </div>
-                <div className="space-y-2 pt-8">
-                  <Label htmlFor="participants">Number of Participants</Label>
-                  <CustomNumberInput
-                    value={formState.numOfParticipants}
-                    onChange={(value) => handleParticipantChange(value)}
-                    min={1}
-                    max={3}
-                  />
-                </div>
-              </motion.div>
-            ) : formState.currentStep <= formState.numOfParticipants ? (
-              <motion.div
-                key={`participant-${formState.currentStep}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <h2 className="text-2xl font-bold  text-white mb-2">
-                  Participant {formState.currentStep} Details
-                </h2>
-                {[
-                  {
-                    field: "name",
-                    label: "Name",
-                    type: "text",
-                  },
-                  {
-                    field: "email",
-                    label: "Email",
-                    type: "email",
-                  },
-                  {
-                    field: "phone",
-                    label: "Phone",
-                    type: "tel",
-                  },
-                  {
-                    field: "collegeName",
-                    label: "College Name",
-                    type: "text",
-                  },
-                ].map((field) => (
-                  <div key={field.field} className="space-y-2">
-                    <Label htmlFor={field.field}>{field.label}</Label>
-                    <Input
-                      id={field.field}
-                      type={field.type}
-                      value={
-                        formState.participants[formState.currentStep - 1][
-                          field.field
-                        ]
-                      }
-                      onChange={(e) =>
-                        updateParticipant(
-                          formState.currentStep - 1,
-                          field.field,
-                          e.target.value
-                        )
-                      }
-                      className="bg-background/50 border-[#4879e2]"
-                    />
-                    {errors[field.field] && (
-                      <p className="text-red-500 text-xs">
-                        {errors[field.field]}
-                      </p>
-                    )}
-                  </div>
-                ))}
-                <div className="space-y-2">
-                  <Label htmlFor="yearOfStudy">Year of Study</Label>
-                  <RadioGroup
-                    value={formState.participants[
-                      formState.currentStep - 1
-                    ].yearOfStudy.toString()}
-                    onValueChange={(value) =>
-                      updateParticipant(
-                        formState.currentStep - 1,
-                        "yearOfStudy",
-                        Number(value)
-                      )
-                    }
-                    className="flex space-x-4"
-                  >
-                    {[1, 2, 3, 4].map((year) => (
-                      <div key={year} className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value={year.toString()}
-                          id={`year-${year}`}
-                          className="border-[#4879e2]"
-                        />
-                        <Label htmlFor={`year-${year}`}>{year}</Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                  {errors.yearOfStudy && (
-                    <p className="text-red-500 text-xs">{errors.yearOfStudy}</p>
-                  )}
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="dualBoot"
-                    className="border-[#4879e2] "
-                    checked={
-                      formState.participants[formState.currentStep - 1].dualBoot
-                    }
-                    onCheckedChange={(checked) =>
-                      updateParticipant(
-                        formState.currentStep - 1,
-                        "dualBoot",
-                        checked
-                      )
-                    }
-                  />
-                  <Label htmlFor="dualBoot">
-                    Do you have a dual-booted laptop?
-                  </Label>
-                </div>
-              </motion.div>
-            ) : formState.currentStep === formState.numOfParticipants + 1 ? (
-              <motion.div
-                key="summary"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6 max-h-[80vh]"
-              >
-                <h2 className="text-2xl font-bold text-white mb-2">
-                  Review & Confirm
-                </h2>
-                <div className="space-y-4 max-h-[60vh] overflow-auto">
-                  {formState.participants.map((participant, index) => (
-                    <div key={index} className="p-4 gradient-border space-y-2">
-                      <h3 className="font-semibold text-white">
-                        Participant {index + 1}
-                      </h3>
-                      <p>Name: {participant.name}</p>
-                      <p>Email: {participant.email}</p>
-                      <p>Phone: {participant.phone}</p>
-                      <p>College: {participant.collegeName}</p>
-                      <p>Year of Study: {participant.yearOfStudy}</p>
-                      <p>
-                        Dual-booted Laptop:{" "}
-                        {participant.dualBoot ? "Yes" : "No"}
-                      </p>
+    return (
+        <div className="w-full max-w-2xl  rounded-lg">
+            <div className="relative">
+                <div className="absolute" />
+                <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
+                    <div className="title text-3xl font-bold text-center py-10 md:p-5">
+                        {" "}
+                        <h1 className="title">Registration</h1>
                     </div>
-                  ))}
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="payment"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-6"
-              >
-                <h2 className="text-2xl font-bold text-white mb-2">
-                  Payment Details
-                </h2>
-                <div className="flex justify-center mb-4">
-                  <img src={qrCode} alt="QR Code" className="h-[300px]" />
-                </div>
-                <p className="text-center text-white mb-2">
-                  Scan the QR code to make the payment
-                </p>
-                <p className="text-center text-white mb-4 font-semibold">
-                  {" "}
-                  ₹ {formState.totalAmount}
-                </p>
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="referralCode">Referral Code</Label>
-                    <Input
-                      id="referralCode"
-                      value={formState.referralCode || ""}
-                      onChange={(e) =>
-                        setFormState((prev) => ({
-                          ...prev,
-                          referralCode: e.target.value,
-                        }))
-                      }
-                      className="bg-background/50 border-[#4879e2]"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="transactionId">Transaction ID</Label>
-                    <Input
-                      id="transactionId"
-                      value={formState.payment.transactionId || ""}
-                      onChange={(e) =>
-                        updatePayment("transactionId", e.target.value)
-                      }
-                      className="bg-background/50 border-[#4879e2]"
-                    />
-                    {errors.transactionId && (
-                      <p className="text-red-500 text-xs">
-                        {errors.transactionId}
-                      </p>
-                    )}
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="transactionImage">Payment Screenshot</Label>
-                    <Input
-                      id="transactionImage"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) =>
-                        updatePayment(
-                          "transactionImage",
-                          e.target.files?.[0] || null
-                        )
-                      }
-                      className="bg-background/50 border-[#4879e2]"
-                    />
-                    {errors.transactionImage && (
-                      <p className="text-red-500 text-xs">
-                        {errors.transactionImage}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <div className="mb-6">
+                        <Progress value={progress} className="h-1" />
+                    </div>
+
+                    <AnimatePresence mode="wait">
+                        {isFirstStep ? (
+                            <motion.div
+                                key="participant-select"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="space-y-6"
+                            >
+                                <div>
+                                    <h2 className="text-2xl py-5 font-bold text-white mb-2">
+                                        How many are joining?
+                                    </h2>
+                                    <p className="text-slate-400">
+                                        Select the number of team members
+                                        participating in the event.
+                                    </p>
+                                </div>
+                                <div className="space-y-2 pt-8">
+                                    <Label htmlFor="participants">
+                                        Number of Participants
+                                    </Label>
+                                    <CustomNumberInput
+                                        value={formState.numOfParticipants}
+                                        onChange={(value) =>
+                                            handleParticipantChange(value)
+                                        }
+                                        min={1}
+                                        max={3}
+                                    />
+                                </div>
+                            </motion.div>
+                        ) : formState.currentStep <=
+                          formState.numOfParticipants ? (
+                            <motion.div
+                                key={`participant-${formState.currentStep}`}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="space-y-6"
+                            >
+                                <h2 className="text-2xl font-bold  text-white mb-2">
+                                    Participant {formState.currentStep} Details
+                                </h2>
+                                {[
+                                    {
+                                        field: "name",
+                                        label: "Name",
+                                        type: "text",
+                                    },
+                                    {
+                                        field: "email",
+                                        label: "Email",
+                                        type: "email",
+                                    },
+                                    {
+                                        field: "phone",
+                                        label: "Phone",
+                                        type: "tel",
+                                    },
+                                    {
+                                        field: "collegeName",
+                                        label: "College Name",
+                                        type: "text",
+                                    },
+                                ].map((field) => (
+                                    <div
+                                        key={field.field}
+                                        className="space-y-2"
+                                    >
+                                        <Label htmlFor={field.field}>
+                                            {field.label}
+                                        </Label>
+                                        <Input
+                                            id={field.field}
+                                            type={field.type}
+                                            value={
+                                                formState.participants[
+                                                    formState.currentStep - 1
+                                                ][field.field]
+                                            }
+                                            onChange={(e) =>
+                                                updateParticipant(
+                                                    formState.currentStep - 1,
+                                                    field.field,
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="bg-background/50 border-[#4879e2]"
+                                        />
+                                        {errors[field.field] && (
+                                            <p className="text-red-500 text-xs">
+                                                {errors[field.field]}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                                <div className="space-y-2">
+                                    <Label htmlFor="yearOfStudy">
+                                        Year of Study
+                                    </Label>
+                                    <RadioGroup
+                                        value={formState.participants[
+                                            formState.currentStep - 1
+                                        ].yearOfStudy.toString()}
+                                        onValueChange={(value) =>
+                                            updateParticipant(
+                                                formState.currentStep - 1,
+                                                "yearOfStudy",
+                                                Number(value)
+                                            )
+                                        }
+                                        className="flex space-x-4"
+                                    >
+                                        {[1, 2, 3, 4].map((year) => (
+                                            <div
+                                                key={year}
+                                                className="flex items-center space-x-2"
+                                            >
+                                                <RadioGroupItem
+                                                    value={year.toString()}
+                                                    id={`year-${year}`}
+                                                    className="border-[#4879e2]"
+                                                />
+                                                <Label htmlFor={`year-${year}`}>
+                                                    {year}
+                                                </Label>
+                                            </div>
+                                        ))}
+                                    </RadioGroup>
+                                    {errors.yearOfStudy && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.yearOfStudy}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <Checkbox
+                                        id="dualBoot"
+                                        className="border-[#4879e2] "
+                                        checked={
+                                            formState.participants[
+                                                formState.currentStep - 1
+                                            ].dualBoot
+                                        }
+                                        onCheckedChange={(checked) =>
+                                            updateParticipant(
+                                                formState.currentStep - 1,
+                                                "dualBoot",
+                                                checked
+                                            )
+                                        }
+                                    />
+                                    <Label htmlFor="dualBoot">
+                                        Do you have a dual-booted laptop?
+                                    </Label>
+                                </div>
+                            </motion.div>
+                        ) : formState.currentStep ===
+                          formState.numOfParticipants + 1 ? (
+                            <motion.div
+                                key="summary"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="space-y-6 max-h-[80vh]"
+                            >
+                                <h2 className="text-2xl font-bold text-white mb-2">
+                                    Review & Confirm
+                                </h2>
+                                <div className="space-y-4 max-h-[60vh] overflow-auto">
+                                    {formState.participants.map(
+                                        (participant, index) => (
+                                            <div
+                                                key={index}
+                                                className="p-4 gradient-border space-y-2"
+                                            >
+                                                <h3 className="font-semibold text-white">
+                                                    Participant {index + 1}
+                                                </h3>
+                                                <p>Name: {participant.name}</p>
+                                                <p>
+                                                    Email: {participant.email}
+                                                </p>
+                                                <p>
+                                                    Phone: {participant.phone}
+                                                </p>
+                                                <p>
+                                                    College:{" "}
+                                                    {participant.collegeName}
+                                                </p>
+                                                <p>
+                                                    Year of Study:{" "}
+                                                    {participant.yearOfStudy}
+                                                </p>
+                                                <p>
+                                                    Dual-booted Laptop:{" "}
+                                                    {participant.dualBoot
+                                                        ? "Yes"
+                                                        : "No"}
+                                                </p>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="payment"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                className="space-y-6"
+                            >
+                                <h2 className="text-2xl font-bold text-white mb-2">
+                                    Payment Details
+                                </h2>
+                                <div className="flex justify-center mb-4">
+                                    <img src={qrCode} alt="QR Code" className="h-[300px]"/>
+                                </div>
+                                <p className="text-center text-white mb-2">
+                                    Scan the QR code to make the payment
+                                </p>
+                                <p className="text-center text-white mb-4 font-semibold">
+                                    {" "}
+                                    ₹ {formState.totalAmount}
+                                </p>
+                                <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="transactionId">
+                                            Transaction ID
+                                        </Label>
+                                        <Input
+                                            id="transactionId"
+                                            value={
+                                                formState.payment
+                                                    .transactionId || ""
+                                            }
+                                            onChange={(e) =>
+                                                updatePayment(
+                                                    "transactionId",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className="bg-background/50 border-[#4879e2]"
+                                        />
+                                        {errors.transactionId && (
+                                            <p className="text-red-500 text-xs">
+                                                {errors.transactionId}
+                                            </p>
+                                        )}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="transactionImage">
+                                            Payment Screenshot
+                                        </Label>
+                                        <Input
+                                            id="transactionImage"
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(e) =>
+                                                updatePayment(
+                                                    "transactionImage",
+                                                    e.target.files?.[0] || null
+                                                )
+                                            }
+                                            className="bg-background/50 border-[#4879e2]"
+                                        />
+                                        {errors.transactionImage && (
+                                            <p className="text-red-500 text-xs">
+                                                {errors.transactionImage}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
 
           <div className="flex justify-between mt-12">
             {!isFirstStep && (
