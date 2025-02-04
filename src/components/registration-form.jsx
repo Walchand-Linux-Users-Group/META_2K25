@@ -51,6 +51,7 @@ export default function RegistrationForm() {
                 dualBoot: false,
             },
         ],
+        referralCode: "",
         currentStep: 0,
         totalAmount: 349,
         payment: {},
@@ -165,14 +166,13 @@ export default function RegistrationForm() {
                     "transactionId",
                     formState.payment.transactionId
                 );
-                formData.append(
-                    "totalAmount",
-                    formState.totalAmount
-                );
+                formData.append("totalAmount", formState.totalAmount);
                 formData.append(
                     "transactionImage",
                     formState.payment.transactionImage
                 );
+
+                formData.append("referralCode", formState.referralCode);
 
                 const response = await fetch(
                     "https://metabackendgo.onrender.com/user/registration",
@@ -182,7 +182,7 @@ export default function RegistrationForm() {
                     }
                 );
 
-                if(!response.ok) {
+                if (!response.ok) {
                     throw new Error("Registration failed");
                 }
 
@@ -224,7 +224,7 @@ export default function RegistrationForm() {
         : (formState.currentStep / (totalSteps - 1)) * 100;
 
     return (
-        <div className="w-full max-w-2xl  rounded-lg">
+        <div className="w-full max-w-2xl  rounded-lg my-12">
             <div className="relative">
                 <div className="absolute" />
                 <div className="lg:min-h-[80vh] border-[#4879e2] border-[1px] backdrop-blur-sm bg-black/3 flex flex-col justify-center rounded-2xl p-8 lg:p-8 shadow-2xl purple-glow">
@@ -454,7 +454,11 @@ export default function RegistrationForm() {
                                     Payment Details
                                 </h2>
                                 <div className="flex justify-center mb-4">
-                                    <img src={qrCode} alt="QR Code" className="h-[300px]"/>
+                                    <img
+                                        src={qrCode}
+                                        alt="QR Code"
+                                        className="h-[300px]"
+                                    />
                                 </div>
                                 <p className="text-center text-white mb-2">
                                     Scan the QR code to make the payment
@@ -464,6 +468,23 @@ export default function RegistrationForm() {
                                     ₹ {formState.totalAmount}
                                 </p>
                                 <div className="space-y-4">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="referralCode">
+                                            Referral Code
+                                        </Label>
+                                        <Input
+                                            id="referralCode"
+                                            value={formState.referralCode || ""}
+                                            onChange={(e) =>
+                                                setFormState((prev) => ({
+                                                    ...prev,
+                                                    referralCode:
+                                                        e.target.value,
+                                                }))
+                                            }
+                                            className="bg-background/50 border-[#4879e2]"
+                                        />
+                                    </div>
                                     <div className="space-y-2">
                                         <Label htmlFor="transactionId">
                                             Transaction ID
