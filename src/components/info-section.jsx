@@ -21,7 +21,8 @@ const images = [
   "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607987/4_hxxzyr.svg",
   "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/1_jhybr7.svg",
   "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/2_bxobta.svg",
-  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/3_kaabt9.svg"
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738607988/3_kaabt9.svg",
+  "https://res.cloudinary.com/dldrjl92a/image/upload/v1738434897/IMG_7830_11zon_kxwsip.jpg"
 ]
 
 function Carousel() {
