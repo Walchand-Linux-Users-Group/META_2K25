@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col items-center md:gap-4 gap-8">
-              <h1 className="title 2xl:text-4xl text-xl md:text-2xl font-medium tracking-wider text-center">
+              <h1 className="title 2xl:text-4xl text-xl md:text-xl font-medium tracking-wider text-center">
                 Connect With Us
               </h1>
 
@@ -60,24 +60,21 @@ export default function Footer() {
               </div>
 
               <div>
-                <h1 className="title font-thin 2xl:text-xl text-sm text-center">
+                <h1 className="title font-thin 2xl:text-xl md:text-xs text-sm  text-center">
                   © 2025 WCEWLUG, ALL RIGHTS RESERVED
                 </h1>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col justify-center gap-5 items-center">
-            <h1 className="title md:text-2xl text-1xl 2xl:text-4xl">
-              Our Sponsors
-            </h1>
-            <img
-              src="Meta_Sponsor.svg"
-              alt="Meta Sponsor"
-              className="2xl:w-5/6 w-2/3"
-            />
-          </div>
+          
+            <div className="flex flex-col justify-center gap-5 items-center">
+              <h1 className="title md:text-xl text-1xl 2xl:text-4xl">Our Sponsors</h1>
+              <img src="Meta_Sponsor.svg" alt="Meta Sponsor" className="2xl:w-5/6 w-2/3" />
+            </div>
+          
 
+      
           <div className="flex flex-col text-center justify-center gap-8 md:gap-5 items-center mt-5 md:mt-0">
             <div className="tracking-wider text-lg md:text-lg 2xl:text-4xl lg:text-1xl flex flex-wrap justify-center gap-6 md:gap-5">
               <a href="/">
