@@ -1,8 +1,9 @@
 <div>
-<h1>Landing Page built in React ThreeJs for: </h1>
+<h1>MetaMorphois 2K25</h1>
   
-![Metamorphosis 2k25](https://res.cloudinary.com/dduur8qoo/image/upload/v1710593044/play_game_rnawjl.png)
+![Metamorphosis 2k25](https://res.cloudinary.com/dfuwno067/image/upload/v1744642016/Screenshot_2025-04-14_193558_ridpgr.png)
 
+![Metamorphosis 2k25](https://res.cloudinary.com/dfuwno067/image/upload/v1744642371/Screenshot_2025-04-14_202235_eyxaqe.png)
 <br/><hr/>
 
 # Developer:
@@ -14,7 +15,6 @@
 - ### [Sharvari Jadhav](https://github.com/jyotiradityz/)
 - ### [Vighnesh Potdar](https://github.com/Voodels/)
 - ### [Pranav Gawande](https://github.com/pranavg1203/)
-
 
 <br/><hr/>
 
