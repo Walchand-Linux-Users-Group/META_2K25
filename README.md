@@ -12,7 +12,7 @@
 - ### [Shreyas Patil](https://github.com/thundersp/)
 - ### [Soumitra Bapat](https://github.com/LR7Garmi/)
 - ### [Tanmay Shingde](https://github.com/tanmay-8/)
-- ### [Sharvari Jadhav](https://github.com/jyotiradityz/)
+- ### [Sharvari Jadhav](https://github.com/sharvari-09/)
 - ### [Vighnesh Potdar](https://github.com/Voodels/)
 - ### [Pranav Gawande](https://github.com/pranavg1203/)
 
