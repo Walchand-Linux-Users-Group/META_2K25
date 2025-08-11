@@ -10,7 +10,7 @@
 
 - ### [Sandesh Shinde](https://github.com/sandeshshinde30/)
 - ### [Shreyas Patil](https://github.com/thundersp/)
-- ### [Soumitra Bapat](https://github.com/LR7Garmi/)
+- ### [Soumitra Bapat](https://github.com/Soumitra945/)
 - ### [Tanmay Shingde](https://github.com/tanmay-8/)
 - ### [Sharvari Jadhav](https://github.com/sharvari-09/)
 - ### [Vighnesh Potdar](https://github.com/Voodels/)
